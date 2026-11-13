@@ -332,6 +332,14 @@ foreach ($courses as $idnumber => $spec) {
         $created[$idnumber]['bbb'] = $generator->create_module('bigbluebuttonbn', [
             'course' => $course->id, 'name' => 'Live classroom', 'section' => 0, 'type' => 0,
             'wait' => 1, 'record' => 1,
+            // Everyone joins as a viewer; teachers and assistant teachers run the class.
+            'participants' => json_encode([
+                ['selectiontype' => 'all', 'selectionid' => 'all', 'role' => 'viewer'],
+                ['selectiontype' => 'role', 'selectionid' => (string) $DB->get_field('role', 'id', ['shortname' => 'editingteacher']),
+                    'role' => 'moderator'],
+                ['selectiontype' => 'role', 'selectionid' => (string) $DB->get_field('role', 'id', ['shortname' => 'teacher']),
+                    'role' => 'moderator'],
+            ]),
         ]);
         $created[$idnumber]['attendance'] = $generator->create_module('attendance', [
             'course' => $course->id, 'name' => 'Attendance register', 'section' => 0, 'grade' => 100,

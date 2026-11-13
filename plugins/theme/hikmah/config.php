@@ -53,6 +53,12 @@ $THEME->layouts = [
         'regions' => [],
         'options' => ['nonavbar' => true, 'langmenu' => true],
     ],
+    // In-portal classroom: the live class fills the window, with no site navigation.
+    'classroom' => [
+        'file' => 'classroom.php',
+        'regions' => [],
+        'options' => ['nonavbar' => true, 'nofooter' => true],
+    ],
     'login' => [
         'file' => 'login.php',
         'regions' => [],

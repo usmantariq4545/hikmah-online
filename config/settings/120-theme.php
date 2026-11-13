@@ -21,6 +21,10 @@ hk_set('customusermenuitems', implode("\n", [
     'preferences,moodle|/user/preferences.php',
 ]));
 
+// Live classes and recordings open inside a Hikmah page (theme/hikmah/classroom.php) instead of a
+// separate window. Set HIKMAH_EMBED_CLASSROOM=0 if the BigBlueButton host refuses to be framed.
+hk_set('embedclassroom', hk_env('HIKMAH_EMBED_CLASSROOM', '1') === '0' ? 0 : 1, 'theme_hikmah');
+
 if ($GLOBALS['hkchanges'] > $before) {
     theme_reset_all_caches();
 }

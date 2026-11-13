@@ -1,0 +1,121 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_hikmah/classroom
+
+    A BigBlueButton live class or recording shown inside a Hikmah page.
+
+    data-state on the root is one of: loading, live, ended, moved, error.
+
+    Example context (json):
+    {
+        "classname": "Live class: Makharij practice",
+        "coursename": "Tajweed Foundations",
+        "backurl": "https://example.com/mod/bigbluebuttonbn/view.php?id=3",
+        "dashboardurl": "https://example.com/my/",
+        "logourl": "https://example.com/theme/image.php/hikmah/theme_hikmah/1/logo-light",
+        "frameurl": "https://example.com/mod/bigbluebuttonbn/bbb_view.php?action=join&id=3",
+        "isrecording": false,
+        "motifclass": "hk-classroom__motif hk-motif--animate"
+    }
+}}
+<div class="hk-classroom" data-hk-classroom data-state="loading"{{#isrecording}} data-recording="1"{{/isrecording}}>
+    <header class="hk-classroom__bar">
+        <a class="hk-classroom__logo" href="{{dashboardurl}}" data-hk-leave>
+            <img src="{{logourl}}" alt="{{#str}}classroom_dashboard, theme_hikmah{{/str}}">
+        </a>
+        <div class="hk-classroom__title">
+            <span class="hk-classroom__badge" aria-hidden="true">
+                {{#isrecording}}{{#str}}classroom_badge_recording, theme_hikmah{{/str}}{{/isrecording}}
+                {{^isrecording}}<span class="hk-classroom__dot"></span>{{#str}}classroom_badge_live, theme_hikmah{{/str}}{{/isrecording}}
+            </span>
+            <h1>{{classname}}</h1>
+            <p>{{coursename}}</p>
+        </div>
+        <div class="hk-classroom__actions">
+            <a class="hk-classroom__action" href="{{frameurl}}" target="_blank" rel="noopener" data-hk-newtab
+               title="{{#str}}classroom_newtab_hint, theme_hikmah{{/str}}">
+                <i class="icon fa fa-arrow-up-right-from-square fa-fw" aria-hidden="true"></i>
+                <span>{{#str}}classroom_newtab, theme_hikmah{{/str}}</span>
+            </a>
+            <button type="button" class="hk-classroom__action" data-hk-fullscreen hidden>
+                <i class="icon fa fa-expand fa-fw" aria-hidden="true"></i>
+                <span>{{#str}}classroom_fullscreen, theme_hikmah{{/str}}</span>
+            </button>
+            <a class="hk-classroom__action hk-classroom__action--leave" href="{{backurl}}" data-hk-leave>
+                <i class="icon fa fa-arrow-right-from-bracket fa-fw" aria-hidden="true"></i>
+                <span>{{#isrecording}}{{#str}}classroom_close, theme_hikmah{{/str}}{{/isrecording}}{{^isrecording}}{{#str}}classroom_leave, theme_hikmah{{/str}}{{/isrecording}}</span>
+            </a>
+        </div>
+    </header>
+
+    <div class="hk-classroom__stage" data-hk-stage>
+        <iframe class="hk-classroom__frame"
+                data-src="{{frameurl}}"
+                title="{{classname}}"
+                allow="camera; microphone; display-capture; fullscreen; autoplay; clipboard-write; speaker-selection"
+                allowfullscreen></iframe>
+
+        <div class="hk-classroom__panel hk-classroom__panel--loading" role="status">
+            {{> theme_hikmah/motif }}
+            <div class="hk-classroom__panel-body">
+                <h2>{{#isrecording}}{{#str}}classroom_loading_recording, theme_hikmah{{/str}}{{/isrecording}}{{^isrecording}}{{#str}}classroom_loading, theme_hikmah{{/str}}{{/isrecording}}</h2>
+                <p>{{#str}}classroom_loading_text, theme_hikmah{{/str}}</p>
+            </div>
+        </div>
+
+        <div class="hk-classroom__panel hk-classroom__panel--ended" aria-live="polite">
+            <div class="hk-classroom__panel-body">
+                <h2>{{#str}}classroom_ended, theme_hikmah{{/str}}</h2>
+                <p>{{#str}}classroom_ended_text, theme_hikmah{{/str}}</p>
+                <div class="hk-classroom__panel-actions">
+                    <a class="hk-btn hk-btn--sun" href="{{backurl}}" data-hk-leave>{{#str}}classroom_back, theme_hikmah{{/str}}</a>
+                    <button type="button" class="hk-btn hk-btn--ghost-light" data-hk-rejoin>{{#str}}classroom_rejoin, theme_hikmah{{/str}}</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="hk-classroom__panel hk-classroom__panel--moved" aria-live="polite">
+            <div class="hk-classroom__panel-body">
+                <h2>{{#str}}classroom_moved, theme_hikmah{{/str}}</h2>
+                <p>{{#str}}classroom_moved_text, theme_hikmah{{/str}}</p>
+                <div class="hk-classroom__panel-actions">
+                    <button type="button" class="hk-btn hk-btn--sun" data-hk-rejoin>{{#str}}classroom_bringback, theme_hikmah{{/str}}</button>
+                    <a class="hk-btn hk-btn--ghost-light" href="{{backurl}}" data-hk-leave>{{#str}}classroom_back, theme_hikmah{{/str}}</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="hk-classroom__panel hk-classroom__panel--error" role="alert">
+            <div class="hk-classroom__panel-body">
+                <h2>{{#str}}classroom_error, theme_hikmah{{/str}}</h2>
+                <p>{{#str}}classroom_error_text, theme_hikmah{{/str}}</p>
+                <div class="hk-classroom__panel-actions">
+                    <button type="button" class="hk-btn hk-btn--sun" data-hk-rejoin>{{#str}}classroom_retry, theme_hikmah{{/str}}</button>
+                    <a class="hk-btn hk-btn--ghost-light" href="{{frameurl}}" target="_blank" rel="noopener" data-hk-newtab>{{#str}}classroom_newtab, theme_hikmah{{/str}}</a>
+                    <a class="hk-btn hk-btn--ghost-light" href="{{backurl}}" data-hk-leave>{{#str}}classroom_back, theme_hikmah{{/str}}</a>
+                </div>
+            </div>
+        </div>
+
+        <noscript>
+            <div class="hk-classroom__noscript">
+                <a class="hk-btn hk-btn--sun" href="{{frameurl}}">{{#str}}classroom_newtab, theme_hikmah{{/str}}</a>
+            </div>
+        </noscript>
+    </div>
+</div>

@@ -1381,3 +1381,301 @@
         padding-inline-start: 1.2rem;
     }
 }
+
+// ---- In-portal classroom (live class or recording in a frame) ---------------------------------------
+.hk-classroompage {
+    background: $hk-ink;
+    #page-wrapper #page.hk-classroom-page {
+        display: block;
+        padding: 0;
+        margin: 0;
+    }
+    [role="main"] {
+        padding: 0;
+    }
+    // The class fills the window: no previous/next activity links, nothing to scroll to.
+    overflow: hidden;
+    .activity-navigation,
+    #sticky-footer,
+    #page-footer {
+        display: none;
+    }
+}
+.hk-classroom {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    background: $hk-ink;
+    color: #fff;
+    .hk-staging-banner ~ #page & {
+        height: calc(100vh - 1.9rem);
+        height: calc(100dvh - 1.9rem);
+    }
+    &__bar {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        gap: clamp(.6rem, 2vw, 1.4rem);
+        padding: .55rem clamp(.75rem, 2vw, 1.4rem);
+        border-bottom: 1px solid rgba(255, 255, 255, .1);
+        animation: hk-fade .6s $hk-ease-out both;
+    }
+    &__logo {
+        flex: 0 0 auto;
+        display: inline-flex;
+        border-radius: $hk-radius-sm;
+        img {
+            height: 38px;
+            width: auto;
+            display: block;
+        }
+    }
+    &__title {
+        flex: 1 1 auto;
+        min-width: 0;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        column-gap: .7rem;
+        align-items: center;
+        h1 {
+            font-size: 1.02rem;
+            font-weight: 500;
+            color: #fff;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        p {
+            grid-column: 2;
+            margin: 0;
+            font-size: .8rem;
+            line-height: 1.3;
+            color: rgba(255, 255, 255, .62);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+    &__badge {
+        grid-row: 1 / span 2;
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        padding: .22rem .6rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, .1);
+        font-family: $hk-font-display;
+        font-size: .7rem;
+        font-weight: 500;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+    &__dot {
+        width: .5rem;
+        height: .5rem;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, .4);
+        transition: background .4s $hk-ease;
+    }
+    &[data-state="live"] &__dot {
+        background: $hk-sun;
+        animation: hk-classroom-pulse 2s ease-in-out infinite;
+    }
+    &__actions {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        gap: .35rem;
+    }
+    &__action {
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        min-height: 2.5rem;
+        padding: .4rem .8rem;
+        border: 1px solid rgba(255, 255, 255, .16);
+        border-radius: 999px;
+        background: transparent;
+        color: #fff;
+        font-size: .86rem;
+        font-weight: 500;
+        line-height: 1;
+        cursor: pointer;
+        transition: background .25s $hk-ease, border-color .25s $hk-ease, color .25s $hk-ease;
+        .icon {
+            margin: 0;
+            font-size: .9rem;
+            width: auto;
+            height: auto;
+        }
+        &:hover,
+        &:focus-visible {
+            background: rgba(255, 255, 255, .12);
+            border-color: rgba(255, 255, 255, .4);
+            color: #fff;
+            text-decoration: none;
+        }
+        &:focus-visible {
+            outline: 2px solid $hk-sun;
+            outline-offset: 2px;
+        }
+        &--leave {
+            background: $hk-sun;
+            border-color: $hk-sun;
+            color: $hk-ink;
+            &:hover,
+            &:focus-visible {
+                background: $hk-sun-deep;
+                border-color: $hk-sun-deep;
+                color: $hk-ink;
+            }
+        }
+    }
+    &__stage {
+        position: relative;
+        flex: 1 1 auto;
+        min-height: 0;
+        background: #111;
+        overflow: hidden;
+    }
+    &__frame {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        background: #111;
+        opacity: 0;
+        transition: opacity .6s $hk-ease;
+    }
+    &[data-state="live"] &__frame {
+        opacity: 1;
+    }
+    &__panel {
+        position: absolute;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        text-align: center;
+        overflow: hidden;
+        isolation: isolate;
+        background: radial-gradient(46rem 30rem at 50% 55%, rgba(21, 151, 213, .2), transparent 62%), $hk-ink;
+    }
+    &[data-state="loading"] &__panel--loading,
+    &[data-state="ended"] &__panel--ended,
+    &[data-state="moved"] &__panel--moved,
+    &[data-state="error"] &__panel--error {
+        display: flex;
+        animation: hk-fade .5s $hk-ease-out both;
+    }
+    &__motif {
+        position: absolute;
+        width: min(120%, 620px);
+        left: 50%;
+        top: 50%;
+        translate: -50% -50%;
+        opacity: .5;
+        z-index: -1;
+    }
+    &__panel-body {
+        max-width: 30rem;
+        animation: hk-rise .7s $hk-ease-out .05s both;
+        h2 {
+            color: #fff;
+            font-size: clamp(1.5rem, 3vw, 2.1rem);
+            font-weight: 300;
+            margin-bottom: .6rem;
+        }
+        p {
+            color: rgba(255, 255, 255, .72);
+            margin: 0;
+        }
+    }
+    &__panel--loading h2::after {
+        content: "";
+        display: inline-block;
+        width: 1.2em;
+        text-align: start;
+        animation: hk-classroom-dots 1.4s steps(4, end) infinite;
+    }
+    &__panel-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: .7rem;
+        margin-top: 1.6rem;
+    }
+    &__noscript {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: $hk-ink;
+    }
+}
+.hk-classroom-page__footer {
+    // Scripts and debugging output only; nothing here is meant to be seen.
+    height: 0;
+    overflow: hidden;
+}
+@keyframes hk-classroom-pulse {
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 224, 0, .55);
+    }
+    50% {
+        box-shadow: 0 0 0 .35rem rgba(255, 224, 0, 0);
+    }
+}
+@keyframes hk-classroom-dots {
+    0% {
+        content: "";
+    }
+    25% {
+        content: ".";
+    }
+    50% {
+        content: "..";
+    }
+    75% {
+        content: "...";
+    }
+}
+@media (max-width: 767.98px) {
+    .hk-classroom {
+        &__logo img {
+            height: 30px;
+        }
+        &__title p,
+        &__badge {
+            display: none;
+        }
+        &__title {
+            display: block;
+        }
+        &__action {
+            padding: .4rem .65rem;
+            span {
+                // Icon-only buttons on phones; the text stays for screen readers.
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                overflow: hidden;
+                clip: rect(0, 0, 0, 0);
+                white-space: nowrap;
+            }
+        }
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .hk-classroom__dot,
+    .hk-classroom__panel--loading h2::after {
+        animation: none;
+    }
+}

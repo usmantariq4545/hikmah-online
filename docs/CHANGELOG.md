@@ -1,5 +1,53 @@
 # Changelog
 
+## 2026-11-13 — In-portal classroom (live classes and recordings stay inside Hikmah)
+
+Approved by the owner in chat; not in the original PRD or build guide (see PRD section 15).
+
+### Added
+
+- **Classroom page** `theme/hikmah/classroom.php` with its own `classroom` layout: a slim Hikmah
+  bar (class, course, Open in a new tab, Full screen, Leave) and the BigBlueButton room in a frame
+  that fills the window. The frame loads the BBB activity's own `bbb_view.php` join or play
+  address, so access checks, the Join log and the recording-played event are unchanged, and
+  attendance reconciliation is unaffected. The BBB server stays on its own host.
+- **Link rerouting** (`theme_hikmah/classroom` AMD module): on BBB activity pages, "Join session"
+  and recording playback open the classroom page instead of a new window. Ctrl/middle-click keeps
+  the standard new-window behaviour. No core or BBB module file is changed.
+- **States:** joining, live, left the class (rejoin or back to course), opened in another tab,
+  could not open (retry or new tab). A leave-page prompt guards a running class against a stray
+  Back or reload.
+- **Setting** `theme_hikmah | embedclassroom` from `HIKMAH_EMBED_CLASSROOM` (default 1) in
+  `config/settings/120-theme.php`; set 0 to return to the standard new-window join.
+
+### Fixed
+
+- `theme_hikmah\hook_callbacks::is_active()` used `isset()` on the page's magic `theme` property,
+  which is always false, so the motion script and the staging banner were not being added to any
+  page. Now reads the property directly.
+- Demo seed: live classrooms had an empty participant list with "wait for moderator" on, so no one
+  could start a class. Teachers and assistant teachers are now moderators (existing demo rows
+  updated on this laptop).
+
+### Verified on the laptop
+
+- Teacher clicks "Join session": no new window; the classroom page opens and the BBB host's page
+  renders inside the frame (desktop and 375 px wide).
+- Student opening the classroom before a moderator has joined is sent back to the activity page
+  with a notice.
+- Left-the-class, another-tab and rejoin states; `configure.sh` twice (second run 0 changes);
+  `scripts/dev/check-pages.sh` passes.
+- The BBB host in `.env.dev` sends no `X-Frame-Options` or `frame-ancestors` header on its client
+  page, and its cookies are `SameSite=None; Secure`.
+
+### Not verified
+
+- A full class with audio, camera and screen share inside the frame: browsers only allow these in
+  a framed page on HTTPS, so this needs staging. The BBB host also shows its own "Join meeting"
+  choice screen first, which was not clicked through (it accepts that provider's terms).
+- A student joining a running class, recording playback in the frame (no recordings on dev),
+  Safari and browsers that block third-party cookies, phones, RTL, moodle-plugin-ci, Behat.
+
 ## 2026-11-13 — First full build on the laptop (dev)
 
 Built in one pass at the owner's request, covering the laptop parts of M1, M3, M4, M5 and M7.

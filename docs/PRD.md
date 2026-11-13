@@ -386,6 +386,7 @@ Lean option: launch the pilot after phase 3 with receipts checked by hand and th
 | Hosting and monthly budget | Decided: self-hosted (laptop dev, Oracle staging, VPS production). Still open: VPS provider and purchase date, production BBB route, operational owner |
 | Domain and routing | Approve the HTTPS hostname; test BBB → Moodle callback delivery through firewalls end to end |
 | BBB analytics callback | The payload schema is not formally documented and can change between BBB versions. Pin the BBB version, keep raw payloads, and run the schema regression test on every BBB upgrade |
+| In-portal classroom (added 2026-11-13) | Decided: live classes and recordings open inside a Hikmah page (framed BBB client; BBB still on its own host), with an "Open in a new tab" fallback and an off switch (HIKMAH_EMBED_CLASSROOM). Still open: test audio, camera and screen share on HTTPS staging, and on Safari; for production prefer a BBB host on a subdomain of the Hikmah domain so third-party cookie blocking cannot break the framed class; the Moodle App keeps its own join |
 | Recording privacy | Confirm the chosen BBB host supports protected recordings or equivalent link protection |
 | Plugin compatibility | Confirm 5.3 releases for mod_attendance, tool_certificate, mod_coursecertificate and the approval plugin; replace or fork any without one |
 | Custom plugin effort | Three Hikmah plugins plus a theme need PHP/Moodle API skills and a maintainer after launch |

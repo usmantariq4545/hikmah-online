@@ -34,7 +34,13 @@ class hook_callbacks {
      */
     private static function is_active(): bool {
         global $PAGE;
-        return isset($PAGE->theme) && ($PAGE->theme->name === 'hikmah' || in_array('hikmah', $PAGE->theme->parents ?? [], true));
+        // The theme is a magic property of the page, so isset() cannot be used to test it.
+        try {
+            $theme = $PAGE->theme;
+        } catch (\Throwable $e) {
+            return false;
+        }
+        return $theme->name === 'hikmah' || in_array('hikmah', $theme->parents ?? [], true);
     }
 
     /**
@@ -70,5 +76,12 @@ class hook_callbacks {
                 get_string('stagingbanner', 'theme_hikmah') . '</div>');
         }
         $PAGE->requires->js_call_amd('theme_hikmah/motion', 'init');
+
+        // On BigBlueButton activity pages, "Join session" and recordings open in the in-portal
+        // classroom instead of a separate window.
+        if (get_config('theme_hikmah', 'embedclassroom') && str_starts_with($PAGE->pagetype, 'mod-bigbluebuttonbn-')) {
+            $PAGE->requires->js_call_amd('theme_hikmah/classroom', 'intercept',
+                [(new \moodle_url('/theme/hikmah/classroom.php'))->out(false)]);
+        }
     }
 }
