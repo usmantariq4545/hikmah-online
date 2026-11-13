@@ -16,5 +16,5 @@ dc exec -T -u www-data -w /var/www/moodle -e "HIKMAH_DEMO_PASSWORD=$(env_value H
     moodle php /opt/hikmah/dev/seed.php
 
 echo
-echo "Demo accounts: demo.student1 … demo.student6, demo.teacher, demo.teacher2, demo.finance, demo.manager"
+echo "Demo accounts: demo.student1 … demo.student6, demo.teacher, demo.teacher2, demo.finance, demo.manager, demo.support, demo.assistant"
 echo "Their password is HIKMAH_DEMO_PASSWORD in .env.dev"

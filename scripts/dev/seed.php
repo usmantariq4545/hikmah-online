@@ -39,6 +39,8 @@ $people = [
     'demo.teacher2' => ['Maryam', 'Siddiqui', 'Female'],
     'demo.finance' => ['Bilal', 'Ahmed', 'Male'],
     'demo.manager' => ['Sana', 'Qureshi', 'Female'],
+    'demo.support' => ['Khadija', 'Anwar', 'Female'],
+    'demo.assistant' => ['Usman', 'Tariq', 'Male'],
     'demo.student1' => ['Aisha', 'Khan', 'Female'],
     'demo.student2' => ['Omar', 'Farooq', 'Male'],
     'demo.student3' => ['Fatima', 'Raza', 'Female'],
@@ -86,6 +88,15 @@ foreach ($people as $username => [$first, $last, $gender]) {
 }
 if ($financerole = $DB->get_record('role', ['shortname' => 'financereviewer'])) {
     role_assign($financerole->id, $users['demo.finance']->id, context_system::instance()->id);
+}
+if ($supportrole = $DB->get_record('role', ['shortname' => 'support'])) {
+    role_assign($supportrole->id, $users['demo.support']->id, context_system::instance()->id);
+}
+// A non-editing teacher on the Tajweed course, once that course exists.
+$assistantrole = $DB->get_record('role', ['shortname' => 'teacher']);
+$tajweedid = $DB->get_field('course', 'id', ['idnumber' => 'demo-tajweed']);
+if ($assistantrole && $tajweedid) {
+    enrol_try_internal_enrol($tajweedid, $users['demo.assistant']->id, $assistantrole->id);
 }
 if ($managerrole = $DB->get_record('role', ['shortname' => 'manager'])) {
     role_assign($managerrole->id, $users['demo.manager']->id, context_system::instance()->id);
@@ -373,6 +384,9 @@ $enrol = static function (string $idnumber, array $usernames) use ($created, $us
 $enrol('demo-tajweed', ['demo.student1', 'demo.student4', 'demo.student5', 'demo.student6']);
 $enrol('demo-seerah', ['demo.student1', 'demo.student2', 'demo.student3']);
 $enrol('demo-hadith', ['demo.student1', 'demo.student5']);
+if ($assistantrole) {
+    enrol_try_internal_enrol($created['demo-tajweed']['course']->id, $users['demo.assistant']->id, $assistantrole->id);
+}
 
 // ---- Payments waiting for the finance reviewer -----------------------------------------------------
 $makereceipt = static function (stdClass $user, string $reference, string $amount): int {
