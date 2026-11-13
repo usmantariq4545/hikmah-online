@@ -1,0 +1,74 @@
+# Hikmah Online — Nginx in front of PHP-FPM. Docroot is moodle/public; everything that is
+# not a real file goes to the Moodle Router (r.php). TLS ends at Caddy on staging/prod.
+server {
+    listen 80 default_server;
+    server_name _;
+
+    root /var/www/moodle/public;
+    index index.php;
+
+    client_max_body_size 100M;
+    server_tokens off;
+
+    gzip on;
+    gzip_comp_level 5;
+    gzip_min_length 1024;
+    gzip_types text/css application/javascript application/json image/svg+xml text/plain font/woff2;
+
+    add_header X-Content-Type-Options nosniff always;
+    add_header Referrer-Policy strict-origin-when-cross-origin always;
+
+    # Dotfiles are never served (ACME challenges excepted).
+    location ~ /\.(?!well-known) {
+        return 404;
+    }
+
+    location / {
+        try_files $uri $uri/ /r.php;
+    }
+
+    # moodledata, reachable only through Moodle's X-Accel-Redirect after an access check.
+    location /dataroot/ {
+        internal;
+        alias /var/moodledata/;
+    }
+
+    location ~ ^/fpm-(status|ping)$ {
+        allow 127.0.0.1;
+        deny all;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_pass ${FPM_HOST}:9000;
+    }
+
+    location ~ [^/]\.php(/|$) {
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        set $path_info $fastcgi_path_info;
+        try_files $fastcgi_script_name /r.php;
+
+        include fastcgi_params;
+        fastcgi_index index.php;
+        fastcgi_param PATH_INFO $path_info;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT $document_root;
+        fastcgi_param HTTPS $forwarded_https;
+        # Moodle compares the request with its wwwroot: report the host and port the browser used,
+        # not the port Nginx listens on inside the container.
+        fastcgi_param SERVER_NAME $host;
+        fastcgi_param SERVER_PORT $hk_port;
+        fastcgi_read_timeout 300s;
+        fastcgi_buffers 16 16k;
+        fastcgi_buffer_size 32k;
+        fastcgi_pass ${FPM_HOST}:9000;
+    }
+}
+
+map $http_host $hk_port {
+    default $server_port;
+    "~:(?<hostport>[0-9]+)$" $hostport;
+}
+
+map $http_x_forwarded_proto $forwarded_https {
+    default "";
+    https on;
+}

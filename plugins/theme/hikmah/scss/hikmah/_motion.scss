@@ -1,0 +1,178 @@
+// ---- Motion system ------------------------------------------------------------------------------
+// Everything here is progressive enhancement: content is fully visible without JS, and all of it
+// switches off under prefers-reduced-motion.
+
+@keyframes hk-draw {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+}
+@keyframes hk-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(229, 72, 77, .55); }
+    70% { box-shadow: 0 0 0 .55rem rgba(229, 72, 77, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(229, 72, 77, 0); }
+}
+@keyframes hk-rise {
+    from { opacity: 0; transform: translateY(26px); }
+    to { opacity: 1; transform: none; }
+}
+@keyframes hk-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes hk-spin {
+    to { transform: rotate(360deg); }
+}
+@keyframes hk-tile-in {
+    0% { opacity: 0; transform: scale(.2) rotate(-50deg); }
+    60% { opacity: 1; }
+    100% { opacity: 1; transform: none; }
+}
+@keyframes hk-tile-breathe {
+    0%, 100% { transform: none; }
+    50% { transform: scale(1.07); }
+}
+@keyframes hk-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+@keyframes hk-shimmer {
+    from { background-position: 200% 0; }
+    to { background-position: -200% 0; }
+}
+@keyframes hk-pop {
+    0% { transform: scale(.6); opacity: 0; }
+    70% { transform: scale(1.08); opacity: 1; }
+    100% { transform: none; opacity: 1; }
+}
+@keyframes hk-check {
+    to { stroke-dashoffset: 0; }
+}
+@keyframes hk-page-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: none; }
+}
+
+// The rosette: tiles assemble one by one from the centre, then the whole ring turns slowly.
+.hk-motif {
+    display: block;
+    overflow: visible;
+    .hk-tile {
+        transform-box: fill-box;
+        transform-origin: center;
+        &--y { fill: $hk-sun; }
+        &--b { fill: $hk-sky; }
+    }
+    &--animate {
+        .hk-tile {
+            animation: hk-tile-in .9s $hk-ease-out both;
+            animation-delay: calc(var(--i) * 55ms + 150ms);
+        }
+        .hk-tile--b {
+            animation-delay: calc(var(--i) * 55ms + 420ms);
+        }
+        // The whole graphic turns about its own centre.
+        animation: hk-spin 140s linear 1.6s infinite;
+    }
+    &--breathe .hk-tile {
+        animation: hk-tile-breathe 5s ease-in-out infinite;
+        animation-delay: calc(var(--i) * 180ms);
+    }
+    &--spin {
+        animation: hk-spin 9s linear infinite;
+    }
+}
+
+// Scroll reveal. JS adds .hk-js to <html>, then .is-in when an element enters the viewport.
+.hk-js [data-hk-reveal] {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity .8s $hk-ease-out, transform .8s $hk-ease-out;
+    transition-delay: calc(var(--hk-d, 0) * 90ms);
+    will-change: opacity, transform;
+    &[data-hk-reveal="left"] { transform: translateX(-34px); }
+    &[data-hk-reveal="right"] { transform: translateX(34px); }
+    &[data-hk-reveal="scale"] { transform: scale(.94); }
+    &[data-hk-reveal="fade"] { transform: none; }
+    &.is-in {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+// Page entrance for the main region of every Moodle page.
+#page-content,
+.hk-page {
+    animation: hk-page-in .5s $hk-ease-out both;
+}
+
+// Cross-document view transitions where the browser supports them: pages cross-fade softly.
+@view-transition {
+    navigation: auto;
+}
+::view-transition-old(root) {
+    animation: hk-fade .18s ease reverse both;
+}
+::view-transition-new(root) {
+    animation: hk-fade .28s ease both;
+}
+
+.hk-skeleton {
+    background: linear-gradient(90deg, $hk-paper-2 25%, $hk-paper-3 37%, $hk-paper-2 63%);
+    background-size: 400% 100%;
+    animation: hk-shimmer 1.4s ease infinite;
+    border-radius: $hk-radius-sm;
+}
+
+// Animated tick used on success states (payment submitted, certificate valid).
+.hk-tick {
+    width: 84px;
+    height: 84px;
+    circle {
+        fill: none;
+        stroke: $hk-success;
+        stroke-width: 3;
+        stroke-dasharray: 240;
+        stroke-dashoffset: 240;
+        animation: hk-check .7s $hk-ease-out .1s forwards;
+    }
+    path {
+        fill: none;
+        stroke: $hk-success;
+        stroke-width: 4;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 60;
+        stroke-dashoffset: 60;
+        animation: hk-check .45s $hk-ease-out .65s forwards;
+    }
+    &--danger circle,
+    &--danger path {
+        stroke: $hk-danger;
+    }
+    &--pending circle,
+    &--pending path {
+        stroke: $hk-warning;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+        animation-duration: .001ms !important;
+        animation-delay: 0s !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+        transition-delay: 0s !important;
+    }
+    .hk-js [data-hk-reveal] {
+        opacity: 1;
+        transform: none;
+    }
+    @view-transition {
+        navigation: none;
+    }
+}

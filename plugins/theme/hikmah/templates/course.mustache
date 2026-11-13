@@ -1,0 +1,201 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_hikmah/course
+
+    Public course detail page.
+
+    Example context (json):
+    {
+        "id": 4,
+        "fullname": "Foundations of Tajweed",
+        "summary": "Learn to recite with correct articulation.",
+        "category": "Qur'an",
+        "mode": "Live",
+        "language": "English",
+        "homeurl": "#",
+        "catalogurl": "#",
+        "hasdescription": true,
+        "description": "<p>About the course</p>",
+        "hasoutcomes": true,
+        "outcomes": [{"text": "Recite with correct makharij"}],
+        "syllabus": [{"number": 1, "name": "Week 1", "count": 2, "hasitems": true, "open": true, "items": [{"name": "Lesson", "type": "Page"}]}],
+        "hasteacherlist": true,
+        "teacherlist": [{"name": "Ustadh Ahmad", "role": "Teacher", "initials": "UA"}],
+        "facts": [{"label": "Mode", "value": "Live"}],
+        "isfree": false,
+        "pricecurrency": "PKR",
+        "priceamount": "4,500",
+        "action": {"kind": "pay", "label": "Pay by transfer", "url": "#", "disabled": false, "post": false, "note": ""}
+    }
+}}
+<div class="hk-detail">
+    <header class="hk-pagehead hk-detail__head">
+        {{#pagemotif}}{{> theme_hikmah/motif }}{{/pagemotif}}
+        <div class="hk-container">
+            <ol class="hk-crumbs" aria-label="{{#str}}breadcrumb, theme_hikmah{{/str}}">
+                <li><a href="{{homeurl}}">{{#str}}nav_home, theme_hikmah{{/str}}</a></li>
+                <li><a href="{{catalogurl}}">{{#str}}nav_courses, theme_hikmah{{/str}}</a></li>
+                <li aria-current="page">{{category}}</li>
+            </ol>
+            <div style="max-width: 44rem">
+                <h1 class="hk-pagehead__title">{{{fullname}}}</h1>
+                {{#summary}}<p class="hk-pagehead__lead">{{summary}}</p>{{/summary}}
+                <div class="hk-detail__chips">
+                    {{#mode}}
+                        <span class="hk-chip hk-chip--sun{{#islive}} hk-chip--live{{/islive}}">
+                            {{#islive}}<span class="hk-chip__dot"></span>{{/islive}}{{mode}}
+                        </span>
+                    {{/mode}}
+                    {{#language}}<span class="hk-chip hk-chip--ink">{{language}}</span>{{/language}}
+                    {{#length}}<span class="hk-chip hk-chip--ink">{{length}}</span>{{/length}}
+                    {{#status}}<span class="hk-chip {{class}}">{{label}}</span>{{/status}}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="hk-container hk-detail__layout">
+        <div class="hk-detail__main">
+            {{#hasdescription}}
+                <section data-hk-reveal>
+                    <h2>{{#str}}detail_about, theme_hikmah{{/str}}</h2>
+                    <div class="hk-prose">{{{description}}}</div>
+                </section>
+            {{/hasdescription}}
+
+            {{#hasoutcomes}}
+                <section data-hk-reveal>
+                    <h2>{{#str}}detail_outcomes, theme_hikmah{{/str}}</h2>
+                    <ul class="hk-outcomes">
+                        {{#outcomes}}<li>{{text}}</li>{{/outcomes}}
+                    </ul>
+                </section>
+            {{/hasoutcomes}}
+
+            {{#syllabus.0}}
+                <section data-hk-reveal>
+                    <h2>{{#str}}detail_syllabus, theme_hikmah{{/str}}</h2>
+                    <div class="hk-syllabus">
+                        {{#syllabus}}
+                            <details class="hk-syllabus__item" data-hk-acc{{#open}} open{{/open}}>
+                                <summary>
+                                    <span class="hk-syllabus__num" aria-hidden="true">{{number}}</span>
+                                    <span>{{{name}}}</span>
+                                    {{#hasitems}}<span class="hk-syllabus__count">{{#str}}detail_items, theme_hikmah, {{count}}{{/str}}</span>{{/hasitems}}
+                                </summary>
+                                <div class="hk-syllabus__body" data-hk-acc-body>
+                                    <div>
+                                        <ul>
+                                            {{#items}}<li><img src="{{icon}}" alt="" width="18" height="18"> <span>{{{name}}}</span></li>{{/items}}
+                                            {{^hasitems}}<li>{{#str}}detail_comingsoon, theme_hikmah{{/str}}</li>{{/hasitems}}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </details>
+                        {{/syllabus}}
+                    </div>
+                </section>
+            {{/syllabus.0}}
+
+            {{#hasteacherlist}}
+                <section data-hk-reveal>
+                    <h2>{{#str}}detail_teachers, theme_hikmah{{/str}}</h2>
+                    <div class="hk-teachers">
+                        {{#teacherlist}}
+                            <div class="hk-teacher">
+                                <span class="hk-teacher__initials" aria-hidden="true">{{initials}}</span>
+                                <div>
+                                    <div class="hk-teacher__name">{{name}}</div>
+                                    <div class="hk-teacher__role">{{role}}</div>
+                                </div>
+                            </div>
+                        {{/teacherlist}}
+                    </div>
+                </section>
+            {{/hasteacherlist}}
+
+            {{#schedule}}
+                <section data-hk-reveal>
+                    <h2>{{#str}}detail_schedule, theme_hikmah{{/str}}</h2>
+                    <p class="hk-prose mb-2">{{schedule}}</p>
+                    <p class="small text-muted mb-0">{{#str}}detail_timezone, theme_hikmah, {{timezone}}{{/str}}</p>
+                </section>
+            {{/schedule}}
+
+            {{#eligibility}}
+                <section data-hk-reveal>
+                    <h2>{{#str}}detail_eligibility, theme_hikmah{{/str}}</h2>
+                    <p class="hk-prose">{{eligibility}}</p>
+                    {{#prerequisites}}
+                        <h3 class="h5 mt-4">{{#str}}detail_prerequisites, theme_hikmah{{/str}}</h3>
+                        <p class="hk-prose">{{prerequisites}}</p>
+                    {{/prerequisites}}
+                </section>
+            {{/eligibility}}
+        </div>
+
+        <aside class="hk-detail__aside" aria-label="{{#str}}detail_enrol, theme_hikmah{{/str}}">
+            <div class="hk-enrol">
+                <div class="hk-enrol__media">
+                    {{#image}}<img src="{{image}}" alt="">{{/image}}
+                    {{^image}}
+                        <div class="hk-course__cover" style="--hk-hue: {{hue}}">
+                            {{> theme_hikmah/motif }}
+                            <span class="hk-course__cover-word">{{category}}</span>
+                        </div>
+                    {{/image}}
+                </div>
+                <div class="hk-enrol__body">
+                    <div class="hk-enrol__price">
+                        {{#isfree}}{{pricelabel}}{{/isfree}}
+                        {{^isfree}}<small>{{pricecurrency}}</small>{{priceamount}}{{/isfree}}
+                    </div>
+                    {{#action}}
+                        {{#note}}<p class="hk-enrol__note">{{note}}</p>{{/note}}
+                        {{^note}}<p class="hk-enrol__note">&nbsp;</p>{{/note}}
+                        {{#notice}}
+                            <div class="hk-enrol__status {{class}}" role="status">{{text}}</div>
+                        {{/notice}}
+                        {{#post}}
+                            <form method="post" action="{{url}}">
+                                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                                <input type="hidden" name="enrol" value="1">
+                                <button type="submit" class="hk-btn hk-btn--sun hk-btn--block">
+                                    {{label}} <span class="hk-btn__arrow" aria-hidden="true">→</span>
+                                </button>
+                            </form>
+                        {{/post}}
+                        {{^post}}
+                            {{#disabled}}
+                                <button type="button" class="hk-btn hk-btn--block" disabled>{{label}}</button>
+                            {{/disabled}}
+                            {{^disabled}}
+                                <a class="hk-btn hk-btn--sun hk-btn--block" href="{{url}}">
+                                    {{label}} <span class="hk-btn__arrow" aria-hidden="true">→</span>
+                                </a>
+                            {{/disabled}}
+                        {{/post}}
+                    {{/action}}
+                    <ul class="hk-enrol__facts">
+                        {{#facts}}<li><span>{{label}}</span><span>{{value}}</span></li>{{/facts}}
+                    </ul>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+{
+  "_comment": "A payload shape this plugin does not know: attendance moved under a new key. Must go to the exceptions queue, never be guessed at.",
+  "version": "9.9",
+  "data": {
+    "attendees": [
+      {
+        "ext_user_id": "FULLSTAY",
+        "name": "Full Stay",
+        "sessions": [{"joined_at": 1794315600, "left_at": 1794319200}]
+      }
+    ]
+  }
+}

@@ -1,0 +1,1383 @@
+// ---- Hikmah-owned pages: home, catalog, course detail, FAQ, login ---------------------------------
+
+// Hero (home).
+.hk-hero {
+    position: relative;
+    background: $hk-ink;
+    color: #fff;
+    overflow: hidden;
+    isolation: isolate;
+    padding-block: clamp(4rem, 9vw, 7.5rem) clamp(6rem, 11vw, 9.5rem);
+    &::before {
+        // Soft light pooled behind the rosette.
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(60rem 36rem at 82% 40%, rgba(21, 151, 213, .2), transparent 62%),
+            radial-gradient(40rem 26rem at 88% 58%, rgba(255, 224, 0, .1), transparent 60%);
+        z-index: -2;
+    }
+    &__grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+        align-items: center;
+        gap: clamp(2rem, 5vw, 4rem);
+    }
+    &__title {
+        font-family: $hk-font-display;
+        font-size: clamp(2.6rem, 6.2vw, 5rem);
+        font-weight: 300;
+        line-height: 1.04;
+        letter-spacing: -.02em;
+        margin: 1.4rem 0 1.4rem;
+        color: #fff;
+        .hk-mark {
+            font-weight: 500;
+            color: $hk-ink;
+            padding-inline: .12em;
+            &::after {
+                height: 100%;
+                bottom: 0;
+                border-radius: .12em;
+            }
+        }
+    }
+    &__line {
+        display: block;
+        overflow: hidden;
+        > span {
+            display: inline-block;
+            animation: hk-line-up 1s $hk-ease-out both;
+        }
+        &:nth-child(2) > span { animation-delay: .12s; }
+        &:nth-child(3) > span { animation-delay: .24s; }
+    }
+    &__lead {
+        font-size: clamp(1.05rem, 1.5vw, 1.22rem);
+        line-height: 1.65;
+        color: rgba(255, 255, 255, .74);
+        max-width: 34rem;
+        margin-bottom: 2.2rem;
+        animation: hk-rise .9s $hk-ease-out .45s both;
+    }
+    &__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .9rem;
+        animation: hk-rise .9s $hk-ease-out .6s both;
+    }
+    &__eyebrow {
+        animation: hk-fade 1s ease .1s both;
+    }
+    &__art {
+        position: relative;
+        aspect-ratio: 1;
+        max-width: 520px;
+        width: 100%;
+        justify-self: end;
+    }
+    &__motif {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+    }
+    &__word {
+        // The Arabic word at the heart of the rosette.
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        font-family: $hk-font-arabic-display;
+        font-size: clamp(2.2rem, 4.4vw, 3.5rem);
+        font-weight: 700;
+        color: #fff;
+        animation: hk-pop 1s $hk-ease-out 1.25s both;
+        user-select: none;
+    }
+    &__curve {
+        // Paper curve that the next section tucks under.
+        position: absolute;
+        inset-inline: 0;
+        bottom: -1px;
+        width: 100%;
+        height: clamp(40px, 6vw, 90px);
+        fill: $hk-paper;
+        z-index: -1;
+    }
+}
+@keyframes hk-line-up {
+    from { transform: translateY(110%); }
+    to { transform: none; }
+}
+
+// Stats strip overlapping the hero.
+.hk-stats {
+    position: relative;
+    z-index: 2;
+    margin-top: clamp(-5.5rem, -7vw, -3.5rem);
+    &__grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        background: #fff;
+        border-radius: $hk-radius-lg;
+        box-shadow: $hk-shadow-2;
+        border: 1px solid $hk-line;
+        overflow: hidden;
+    }
+    &__item {
+        padding: clamp(1.2rem, 2.4vw, 2rem);
+        border-inline-start: 1px solid $hk-line;
+        &:first-child {
+            border-inline-start: 0;
+        }
+    }
+    &__num {
+        font-family: $hk-font-display;
+        font-size: clamp(1.9rem, 3.4vw, 2.8rem);
+        font-weight: 400;
+        line-height: 1;
+        letter-spacing: -.02em;
+        font-variant-numeric: tabular-nums;
+    }
+    &__label {
+        margin-top: .5rem;
+        font-size: .88rem;
+        color: $hk-muted;
+    }
+}
+
+// Three ways to learn.
+.hk-modes {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+}
+.hk-mode {
+    position: relative;
+    padding: 2rem 1.75rem 1.9rem;
+    background: #fff;
+    border: 1px solid $hk-line;
+    border-radius: $hk-radius-lg;
+    overflow: hidden;
+    color: inherit;
+    text-decoration: none;
+    display: block;
+    transition: transform .45s $hk-ease, box-shadow .45s $hk-ease, border-color .3s ease;
+    &::after {
+        // A quarter rosette blooms from the corner on hover.
+        content: "";
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        inset-inline-end: -110px;
+        top: -110px;
+        background: url([[pix:theme|motif]]) center / contain no-repeat;
+        opacity: .16;
+        transform: rotate(0deg) scale(.82);
+        transition: transform 1.1s $hk-ease-out, opacity .5s ease;
+    }
+    &:hover,
+    &:focus-visible {
+        transform: translateY(-6px);
+        box-shadow: $hk-shadow-2;
+        border-color: transparent;
+        color: inherit;
+        text-decoration: none;
+        &::after {
+            opacity: .9;
+            transform: rotate(40deg) scale(1);
+        }
+        .hk-mode__more {
+            gap: .7rem;
+            color: $hk-ink;
+        }
+    }
+    &__icon {
+        width: 3.25rem;
+        height: 3.25rem;
+        display: grid;
+        place-items: center;
+        border-radius: 1rem;
+        background: $hk-ink;
+        color: $hk-sun;
+        margin-bottom: 1.4rem;
+        svg {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+    }
+    &__title {
+        font-size: 1.4rem;
+        margin-bottom: .5rem;
+    }
+    &__text {
+        color: $hk-muted;
+        margin-bottom: 1.2rem;
+        font-size: .97rem;
+    }
+    &__more {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        font-weight: 600;
+        font-size: .9rem;
+        color: $hk-sky-deep;
+        transition: gap .3s $hk-ease, color .2s ease;
+    }
+}
+
+// Course cards (home + catalog).
+.hk-courses {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 1.5rem;
+}
+.hk-course {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid $hk-line;
+    border-radius: $hk-radius-lg;
+    overflow: hidden;
+    transition: transform .45s $hk-ease, box-shadow .45s $hk-ease, border-color .3s ease;
+    &:hover,
+    &:focus-within {
+        transform: translateY(-6px);
+        box-shadow: $hk-shadow-2;
+        border-color: transparent;
+        .hk-course__media img,
+        .hk-course__cover {
+            transform: scale(1.06);
+        }
+        .hk-course__cover .hk-motif {
+            transform: rotate(24deg);
+        }
+        .hk-course__cta-arrow {
+            transform: translateX(4px);
+        }
+    }
+    &__media {
+        position: relative;
+        aspect-ratio: 16 / 9;
+        overflow: hidden;
+        background: $hk-ink;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .9s $hk-ease-out;
+        }
+    }
+    &__cover {
+        // Generated cover when a course has no image: ink field + rosette, tinted per course.
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        background:
+            radial-gradient(120% 120% at 85% 10%, hsla(var(--hk-hue, 200), 80%, 55%, .34), transparent 55%),
+            $hk-ink;
+        transition: transform .9s $hk-ease-out;
+        .hk-motif {
+            position: absolute;
+            width: 78%;
+            inset-inline-end: -22%;
+            top: -30%;
+            opacity: .95;
+            transition: transform 1.4s $hk-ease-out;
+        }
+    }
+    &__cover-word {
+        position: relative;
+        align-self: end;
+        justify-self: start;
+        padding: 1rem 1.2rem;
+        font-family: $hk-font-display;
+        font-size: .72rem;
+        letter-spacing: .32em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, .7);
+    }
+    &__badges {
+        position: absolute;
+        inset-inline-start: .85rem;
+        top: .85rem;
+        display: flex;
+        gap: .4rem;
+        flex-wrap: wrap;
+        z-index: 1;
+    }
+    &__body {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        padding: 1.3rem 1.4rem 1.4rem;
+    }
+    &__category {
+        font-size: .72rem;
+        font-weight: 600;
+        letter-spacing: .16em;
+        text-transform: uppercase;
+        color: $hk-muted;
+        margin-bottom: .45rem;
+    }
+    &__title {
+        font-size: 1.28rem;
+        font-weight: 500;
+        line-height: 1.25;
+        margin-bottom: .55rem;
+        a {
+            color: $hk-ink;
+            text-decoration: none;
+            &::after {
+                // Whole card is the click target.
+                content: "";
+                position: absolute;
+                inset: 0;
+                z-index: 0;
+            }
+        }
+    }
+    &__summary {
+        color: $hk-muted;
+        font-size: .93rem;
+        margin-bottom: 1rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    &__meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .35rem 1rem;
+        font-size: .84rem;
+        color: $hk-muted;
+        margin-bottom: 1.1rem;
+        span {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+        }
+        svg {
+            width: 1rem;
+            height: 1rem;
+            flex: none;
+            opacity: .75;
+        }
+    }
+    &__foot {
+        margin-top: auto;
+        padding-top: 1rem;
+        border-top: 1px solid $hk-line;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+    &__price {
+        font-family: $hk-font-display;
+        font-size: 1.2rem;
+        font-weight: 500;
+        small {
+            font-family: $hk-font-body;
+            font-size: .72rem;
+            font-weight: 600;
+            color: $hk-muted;
+            letter-spacing: .08em;
+            margin-inline-end: .25rem;
+        }
+    }
+    &__cta {
+        font-weight: 600;
+        font-size: .9rem;
+        color: $hk-sky-deep;
+        display: inline-flex;
+        gap: .35rem;
+        align-items: center;
+    }
+    &__cta-arrow {
+        transition: transform .3s $hk-ease;
+    }
+}
+
+// Learner journey: a line that draws itself as the steps arrive.
+.hk-journey {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1.25rem;
+    counter-reset: hk-step;
+    &::before {
+        content: "";
+        position: absolute;
+        top: 1.6rem;
+        inset-inline: 4%;
+        height: 2px;
+        background: linear-gradient(90deg, $hk-sun, $hk-sky);
+        transform: scaleX(0);
+        transform-origin: left center;
+        transition: transform 1.8s $hk-ease-out .2s;
+    }
+    &.is-in::before {
+        transform: scaleX(1);
+    }
+    &__step {
+        position: relative;
+        counter-increment: hk-step;
+        padding-top: 4.4rem;
+        &::before {
+            content: counter(hk-step);
+            position: absolute;
+            top: 0;
+            inset-inline-start: 0;
+            width: 3.2rem;
+            height: 3.2rem;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: $hk-ink;
+            color: $hk-sun;
+            font-family: $hk-font-display;
+            font-size: 1.2rem;
+            font-weight: 500;
+            box-shadow: 0 0 0 6px $hk-paper-2;
+        }
+        h3 {
+            font-size: 1.15rem;
+            margin-bottom: .4rem;
+        }
+        p {
+            font-size: .92rem;
+            color: $hk-muted;
+            margin: 0;
+        }
+    }
+}
+[dir="rtl"] .hk-journey::before {
+    transform-origin: right center;
+}
+
+// Quote band.
+.hk-quote {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    &__motif {
+        position: absolute;
+        width: min(760px, 120vw);
+        left: 50%;
+        top: 50%;
+        translate: -50% -50%;
+        opacity: .16;
+        pointer-events: none;
+    }
+    &__inner {
+        position: relative;
+        max-width: 52rem;
+        margin-inline: auto;
+    }
+    &__arabic {
+        font-family: $hk-font-arabic-body;
+        font-size: clamp(1.7rem, 4vw, 2.8rem);
+        line-height: 1.9;
+        color: #fff;
+        margin-bottom: 1.2rem;
+    }
+    &__text {
+        font-family: $hk-font-display;
+        font-size: clamp(1.15rem, 2vw, 1.5rem);
+        font-weight: 300;
+        line-height: 1.5;
+        color: rgba(255, 255, 255, .86);
+        margin-bottom: 1rem;
+    }
+    &__source {
+        font-size: .78rem;
+        letter-spacing: .3em;
+        text-transform: uppercase;
+        color: $hk-sun;
+    }
+}
+
+// Certificate verification band.
+.hk-verify {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 4rem);
+    align-items: center;
+    background: #fff;
+    border: 1px solid $hk-line;
+    border-radius: $hk-radius-lg;
+    box-shadow: $hk-shadow-1;
+    padding: clamp(1.6rem, 4vw, 3.25rem);
+    position: relative;
+    overflow: hidden;
+    &::after {
+        content: "";
+        position: absolute;
+        width: 360px;
+        height: 360px;
+        inset-inline-end: -150px;
+        bottom: -190px;
+        background: url([[pix:theme|motif]]) center / contain no-repeat;
+        opacity: .5;
+        pointer-events: none;
+    }
+    &__form {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        gap: .6rem;
+        background: $hk-paper;
+        border: 1.5px solid $hk-line-strong;
+        border-radius: 999px;
+        padding: .35rem;
+        transition: border-color .2s ease, box-shadow .2s ease;
+        &:focus-within {
+            border-color: $hk-ink;
+            box-shadow: 0 0 0 4px rgba(255, 224, 0, .45);
+        }
+        input {
+            flex: 1;
+            min-width: 0;
+            border: 0;
+            background: transparent;
+            padding: .6rem 1rem;
+            font-size: 1rem;
+            font-family: ui-monospace, "SF Mono", Consolas, monospace;
+            letter-spacing: .08em;
+            outline: none;
+            color: $hk-ink;
+        }
+    }
+    &__hint {
+        position: relative;
+        z-index: 1;
+        margin: .8rem 1rem 0;
+        font-size: .84rem;
+        color: $hk-muted;
+    }
+}
+
+// FAQ accordion (native <details>, animated with grid rows).
+.hk-faq {
+    max-width: 50rem;
+    margin-inline: auto;
+    &__item {
+        border-bottom: 1px solid $hk-line-strong;
+        &:first-child {
+            border-top: 1px solid $hk-line-strong;
+        }
+    }
+    summary {
+        list-style: none;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1.5rem;
+        padding: 1.35rem .25rem;
+        font-family: $hk-font-display;
+        font-size: 1.16rem;
+        font-weight: 500;
+        transition: color .2s ease;
+        &::-webkit-details-marker {
+            display: none;
+        }
+        &:hover {
+            color: $hk-sky-deep;
+        }
+    }
+    &__icon {
+        flex: none;
+        position: relative;
+        width: 2.1rem;
+        height: 2.1rem;
+        border-radius: 50%;
+        background: $hk-paper-2;
+        transition: background-color .3s ease, transform .5s $hk-ease;
+        &::before,
+        &::after {
+            content: "";
+            position: absolute;
+            inset: 50% auto auto 50%;
+            width: .8rem;
+            height: 2px;
+            background: $hk-ink;
+            translate: -50% -50%;
+            transition: transform .4s $hk-ease;
+        }
+        &::after {
+            transform: rotate(90deg);
+        }
+    }
+    details[open] &__icon {
+        background: $hk-sun;
+        transform: rotate(180deg);
+        &::after {
+            transform: rotate(0deg);
+        }
+    }
+    &__answer {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows .45s $hk-ease;
+        > div {
+            overflow: hidden;
+            color: $hk-muted;
+            padding-inline: .25rem;
+            max-width: 44rem;
+        }
+        p:last-child {
+            padding-bottom: 1.4rem;
+            margin: 0;
+        }
+    }
+    details[open] &__answer {
+        grid-template-rows: 1fr;
+    }
+}
+
+// Closing call to action.
+.hk-cta {
+    position: relative;
+    overflow: hidden;
+    background: $hk-sun;
+    border-radius: $hk-radius-lg;
+    padding: clamp(2rem, 5vw, 4rem);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    &__title {
+        font-size: clamp(1.7rem, 3.4vw, 2.6rem);
+        font-weight: 400;
+        margin: 0;
+        max-width: 22ch;
+    }
+    &::after {
+        content: "";
+        position: absolute;
+        width: 420px;
+        height: 420px;
+        inset-inline-end: -120px;
+        top: -210px;
+        background: url([[pix:theme|motif-ink]]) center / contain no-repeat;
+        opacity: 1;
+        pointer-events: none;
+    }
+    > * {
+        position: relative;
+        z-index: 1;
+    }
+}
+
+// ---- Page header band for catalog / detail / FAQ ---------------------------------------------------
+.hk-pagehead {
+    position: relative;
+    overflow: hidden;
+    background: $hk-ink;
+    color: #fff;
+    padding-block: clamp(2.6rem, 6vw, 4.5rem);
+    isolation: isolate;
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(50rem 26rem at 90% 0%, rgba(21, 151, 213, .22), transparent 60%);
+        z-index: -1;
+    }
+    &__motif {
+        position: absolute;
+        width: 460px;
+        inset-inline-end: -120px;
+        top: -200px;
+        opacity: .9;
+        z-index: -1;
+    }
+    &__title {
+        font-size: clamp(2rem, 4.6vw, 3.4rem);
+        font-weight: 300;
+        color: #fff;
+        margin: .9rem 0 .6rem;
+        animation: hk-rise .8s $hk-ease-out both;
+    }
+    &__lead {
+        color: rgba(255, 255, 255, .72);
+        font-size: 1.08rem;
+        max-width: 40rem;
+        margin: 0;
+        animation: hk-rise .8s $hk-ease-out .1s both;
+    }
+    .hk-crumbs {
+        animation: hk-fade .8s ease both;
+    }
+}
+.hk-crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    font-size: .84rem;
+    color: rgba(255, 255, 255, .6);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    a {
+        color: rgba(255, 255, 255, .8);
+        &:hover {
+            color: $hk-sun;
+        }
+    }
+    li + li::before {
+        content: "/";
+        margin-inline-end: .5rem;
+        opacity: .5;
+    }
+}
+
+// ---- Catalog ---------------------------------------------------------------------------------------
+.hk-catalog {
+    padding-block: 2rem clamp(3rem, 7vw, 5.5rem);
+    &__bar {
+        position: sticky;
+        top: $navbar-height + 10px;
+        z-index: 20;
+        margin-top: -3.4rem;
+        margin-bottom: 2rem;
+        background: rgba(255, 255, 255, .92);
+        backdrop-filter: saturate(160%) blur(14px);
+        border: 1px solid $hk-line;
+        border-radius: $hk-radius-lg;
+        box-shadow: $hk-shadow-2;
+        padding: .8rem;
+        display: grid;
+        grid-template-columns: minmax(220px, 1.6fr) repeat(4, minmax(130px, 1fr)) auto;
+        gap: .6rem;
+        align-items: center;
+    }
+    &__search {
+        position: relative;
+        svg {
+            position: absolute;
+            inset-inline-start: 1rem;
+            top: 50%;
+            translate: 0 -50%;
+            width: 1.1rem;
+            height: 1.1rem;
+            color: $hk-muted;
+            pointer-events: none;
+        }
+        input {
+            width: 100%;
+            border: 1.5px solid transparent;
+            background: $hk-paper-2;
+            border-radius: 999px;
+            padding: .7rem 1rem;
+            padding-inline-start: 2.7rem;
+            font-size: .97rem;
+            color: $hk-ink;
+            transition: border-color .2s ease, background-color .2s ease, box-shadow .2s ease;
+            &:focus {
+                outline: none;
+                background: #fff;
+                border-color: $hk-ink;
+                box-shadow: 0 0 0 4px rgba(255, 224, 0, .45);
+            }
+        }
+    }
+    &__select {
+        appearance: none;
+        width: 100%;
+        border: 1.5px solid transparent;
+        background: $hk-paper-2 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%231a1a1a' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' d='m4 6 4 4 4-4'/%3E%3C/svg%3E") no-repeat right .9rem center / .9rem;
+        border-radius: 999px;
+        padding: .7rem 2.2rem .7rem 1rem;
+        font-size: .92rem;
+        font-weight: 500;
+        color: $hk-ink;
+        cursor: pointer;
+        transition: border-color .2s ease, background-color .2s ease;
+        &:hover {
+            border-color: $hk-line-strong;
+        }
+        &:focus {
+            outline: none;
+            border-color: $hk-ink;
+            background-color: #fff;
+        }
+        &.is-active {
+            background-color: $hk-sun-soft;
+            border-color: $hk-sun-deep;
+        }
+    }
+    &__summary {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: .75rem;
+        margin-bottom: 1.4rem;
+        color: $hk-muted;
+        font-size: .93rem;
+        strong {
+            color: $hk-ink;
+        }
+    }
+    &__results {
+        transition: opacity .25s ease;
+        &.is-loading {
+            opacity: .45;
+            pointer-events: none;
+        }
+    }
+}
+[dir="rtl"] .hk-catalog__select {
+    background-position: left .9rem center;
+    padding: .7rem 1rem .7rem 2.2rem;
+}
+
+// ---- Course detail ---------------------------------------------------------------------------------
+.hk-detail {
+    &__head {
+        padding-bottom: clamp(4rem, 8vw, 6rem);
+    }
+    &__chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .45rem;
+        margin-top: 1.4rem;
+        animation: hk-rise .8s $hk-ease-out .2s both;
+    }
+    &__layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 380px;
+        gap: clamp(1.5rem, 4vw, 3.5rem);
+        align-items: start;
+        padding-bottom: clamp(3rem, 7vw, 5.5rem);
+    }
+    &__main > section {
+        padding-block: 2.2rem;
+        border-bottom: 1px solid $hk-line;
+        &:last-child {
+            border-bottom: 0;
+        }
+        > h2 {
+            font-size: 1.6rem;
+            margin-bottom: 1.2rem;
+        }
+    }
+    &__aside {
+        position: sticky;
+        top: $navbar-height + 20px;
+        margin-top: clamp(-9rem, -12vw, -5rem);
+        z-index: 3;
+    }
+}
+.hk-enrol {
+    background: #fff;
+    border: 1px solid $hk-line;
+    border-radius: $hk-radius-lg;
+    box-shadow: $hk-shadow-3;
+    overflow: hidden;
+    animation: hk-rise .9s $hk-ease-out .25s both;
+    &__media {
+        position: relative;
+        aspect-ratio: 16 / 9;
+        background: $hk-ink;
+        overflow: hidden;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+    &__body {
+        padding: 1.5rem;
+    }
+    &__price {
+        font-family: $hk-font-display;
+        font-size: 2.1rem;
+        font-weight: 400;
+        line-height: 1;
+        margin-bottom: .35rem;
+        small {
+            font-size: .85rem;
+            font-family: $hk-font-body;
+            font-weight: 600;
+            color: $hk-muted;
+            letter-spacing: .08em;
+            margin-inline-end: .3rem;
+        }
+    }
+    &__note {
+        font-size: .88rem;
+        color: $hk-muted;
+        margin-bottom: 1.2rem;
+    }
+    &__facts {
+        list-style: none;
+        padding: 0;
+        margin: 1.3rem 0 0;
+        font-size: .92rem;
+        li {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: .7rem 0;
+            border-top: 1px solid $hk-line;
+            span:first-child {
+                color: $hk-muted;
+            }
+            span:last-child {
+                font-weight: 600;
+                text-align: end;
+            }
+        }
+    }
+    &__status {
+        display: flex;
+        gap: .7rem;
+        align-items: flex-start;
+        padding: .85rem 1rem;
+        border-radius: $hk-radius-sm;
+        background: $hk-paper-2;
+        font-size: .9rem;
+        margin-bottom: 1rem;
+        &--success { background: #e2f3ea; color: darken($hk-success, 6%); }
+        &--pending { background: #fff3cd; color: #6b4700; }
+        &--danger { background: #fbe9e7; color: $hk-danger; }
+    }
+}
+.hk-outcomes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .9rem 1.6rem;
+    li {
+        position: relative;
+        padding-inline-start: 2rem;
+        &::before {
+            content: "";
+            position: absolute;
+            inset-inline-start: 0;
+            top: .18rem;
+            width: 1.3rem;
+            height: 1.3rem;
+            border-radius: 50%;
+            background: $hk-sun url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%231a1a1a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='m4 8.5 2.6 2.6L12 5.6'/%3E%3C/svg%3E") center / .8rem no-repeat;
+        }
+    }
+}
+.hk-syllabus {
+    border: 1px solid $hk-line;
+    border-radius: $hk-radius;
+    background: #fff;
+    overflow: hidden;
+    &__item {
+        border-bottom: 1px solid $hk-line;
+        &:last-child {
+            border-bottom: 0;
+        }
+    }
+    summary {
+        list-style: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 1.2rem;
+        font-weight: 600;
+        transition: background-color .2s ease;
+        &::-webkit-details-marker {
+            display: none;
+        }
+        &:hover {
+            background: $hk-paper;
+        }
+    }
+    &__num {
+        flex: none;
+        width: 2rem;
+        height: 2rem;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: $hk-paper-2;
+        font-family: $hk-font-display;
+        font-size: .9rem;
+        transition: background-color .3s ease;
+    }
+    details[open] &__num {
+        background: $hk-sun;
+    }
+    &__count {
+        margin-inline-start: auto;
+        font-size: .82rem;
+        font-weight: 500;
+        color: $hk-muted;
+    }
+    &__body {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows .4s $hk-ease;
+        > div {
+            overflow: hidden;
+        }
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0 1.2rem 1rem 4.2rem;
+            font-size: .93rem;
+            color: $hk-muted;
+        }
+        li {
+            padding: .35rem 0;
+            display: flex;
+            gap: .6rem;
+            align-items: center;
+        }
+    }
+    details[open] &__body {
+        grid-template-rows: 1fr;
+    }
+}
+.hk-teachers {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 1rem;
+}
+.hk-teacher {
+    display: flex;
+    align-items: center;
+    gap: .9rem;
+    padding: .9rem;
+    background: #fff;
+    border: 1px solid $hk-line;
+    border-radius: $hk-radius;
+    img,
+    &__initials {
+        width: 3.2rem;
+        height: 3.2rem;
+        border-radius: 50%;
+        flex: none;
+        object-fit: cover;
+    }
+    &__initials {
+        display: grid;
+        place-items: center;
+        background: $hk-ink;
+        color: $hk-sun;
+        font-family: $hk-font-display;
+        font-weight: 500;
+    }
+    &__name {
+        font-weight: 600;
+        line-height: 1.3;
+    }
+    &__role {
+        font-size: .82rem;
+        color: $hk-muted;
+    }
+}
+.hk-prose {
+    color: $hk-ink-3;
+    font-size: 1.02rem;
+    > :last-child {
+        margin-bottom: 0;
+    }
+}
+
+// ---- Login / signup --------------------------------------------------------------------------------
+.hk-auth {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    background: $hk-paper;
+    &__art {
+        position: relative;
+        overflow: hidden;
+        background: $hk-ink;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: clamp(1.75rem, 4vw, 3.5rem);
+        isolation: isolate;
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(46rem 30rem at 30% 62%, rgba(21, 151, 213, .22), transparent 62%);
+            z-index: -2;
+        }
+    }
+    &__motif {
+        position: absolute;
+        width: min(140%, 760px);
+        left: 50%;
+        top: 54%;
+        translate: -50% -50%;
+        z-index: -1;
+    }
+    &__logo img {
+        height: 74px;
+        width: auto;
+    }
+    &__quote {
+        max-width: 26rem;
+        h2 {
+            font-size: clamp(1.7rem, 3vw, 2.5rem);
+            font-weight: 300;
+            color: #fff;
+            margin-bottom: .8rem;
+        }
+        p {
+            color: rgba(255, 255, 255, .7);
+            margin: 0;
+        }
+    }
+    &__panel {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(1.5rem, 5vw, 4rem);
+    }
+    &__card {
+        width: 100%;
+        max-width: 27rem;
+        animation: hk-rise .8s $hk-ease-out .1s both;
+    }
+    &__title {
+        font-size: clamp(1.9rem, 3vw, 2.4rem);
+        font-weight: 400;
+        margin: .8rem 0 .4rem;
+    }
+    &__lead {
+        color: $hk-muted;
+        margin-bottom: 1.8rem;
+    }
+    &__mobile-logo {
+        display: none;
+        margin-bottom: 1.5rem;
+        img {
+            height: 60px;
+        }
+    }
+    &__alt {
+        margin-top: 1.6rem;
+        text-align: center;
+        font-size: .93rem;
+        color: $hk-muted;
+    }
+    &__divider {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin: 1.5rem 0;
+        font-size: .76rem;
+        letter-spacing: .22em;
+        text-transform: uppercase;
+        color: $hk-muted;
+        &::before,
+        &::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: $hk-line-strong;
+        }
+    }
+    &__idp {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: .7rem;
+        width: 100%;
+        padding: .8rem 1rem;
+        border-radius: 999px;
+        border: 1.5px solid $hk-line-strong;
+        background: #fff;
+        color: $hk-ink;
+        font-weight: 600;
+        text-decoration: none;
+        transition: border-color .2s ease, transform .25s $hk-ease, box-shadow .25s $hk-ease;
+        img {
+            width: 1.2rem;
+            height: 1.2rem;
+        }
+        &:hover {
+            border-color: $hk-ink;
+            color: $hk-ink;
+            text-decoration: none;
+            transform: translateY(-2px);
+            box-shadow: $hk-shadow-1;
+        }
+    }
+    &__field {
+        position: relative;
+        margin-bottom: 1rem;
+        label {
+            display: block;
+            font-size: .84rem;
+            font-weight: 600;
+            margin-bottom: .35rem;
+        }
+        input {
+            width: 100%;
+            padding: .8rem 1rem;
+            border: 1.5px solid $hk-line-strong;
+            border-radius: $hk-radius-sm;
+            background: #fff;
+            font-size: 1rem;
+            color: $hk-ink;
+            transition: border-color .2s ease, box-shadow .2s ease;
+            &:focus {
+                outline: none;
+                border-color: $hk-ink;
+                box-shadow: 0 0 0 4px rgba(255, 224, 0, .45);
+            }
+        }
+    }
+    &__row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: .88rem;
+        margin: -.2rem 0 1.3rem;
+    }
+    &__error {
+        display: flex;
+        gap: .6rem;
+        align-items: flex-start;
+        background: #fbe9e7;
+        color: $hk-danger;
+        border-radius: $hk-radius-sm;
+        padding: .8rem 1rem;
+        font-size: .92rem;
+        margin-bottom: 1.2rem;
+        animation: hk-shake .5s ease both;
+    }
+    &__legal {
+        margin-top: 2rem;
+        font-size: .8rem;
+        color: $hk-muted;
+        text-align: center;
+    }
+}
+@keyframes hk-shake {
+    10%, 90% { transform: translateX(-1px); }
+    20%, 80% { transform: translateX(3px); }
+    30%, 50%, 70% { transform: translateX(-5px); }
+    40%, 60% { transform: translateX(5px); }
+}
+
+// ---- Responsive ------------------------------------------------------------------------------------
+@media (max-width: 991.98px) {
+    .hk-hero__grid {
+        grid-template-columns: 1fr;
+    }
+    .hk-hero__art {
+        position: absolute;
+        width: 520px;
+        max-width: none;
+        inset-inline-end: -220px;
+        top: -140px;
+        opacity: .5;
+        z-index: -1;
+    }
+    .hk-hero__word {
+        display: none;
+    }
+    .hk-stats__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .hk-stats__item:nth-child(3) {
+        border-inline-start: 0;
+    }
+    .hk-stats__item:nth-child(n+3) {
+        border-top: 1px solid $hk-line;
+    }
+    .hk-modes {
+        grid-template-columns: 1fr;
+    }
+    .hk-journey {
+        grid-template-columns: 1fr;
+        gap: 1.6rem;
+        &::before {
+            top: 0;
+            bottom: 0;
+            inset-inline: 1.55rem auto;
+            width: 2px;
+            height: auto;
+            background: linear-gradient(180deg, $hk-sun, $hk-sky);
+            transform: scaleY(0);
+            transform-origin: center top;
+        }
+        &.is-in::before {
+            transform: scaleY(1);
+        }
+        &__step {
+            padding-top: .2rem;
+            padding-inline-start: 4.6rem;
+            min-height: 3.4rem;
+        }
+    }
+    .hk-verify {
+        grid-template-columns: 1fr;
+    }
+    .hk-catalog__bar {
+        position: static;
+        grid-template-columns: 1fr 1fr;
+        > :first-child {
+            grid-column: 1 / -1;
+        }
+    }
+    .hk-detail__layout {
+        grid-template-columns: 1fr;
+    }
+    .hk-detail__aside {
+        position: static;
+        margin-top: -4rem;
+        order: -1;
+    }
+    .hk-detail__head {
+        padding-bottom: 6rem;
+    }
+    .hk-outcomes {
+        grid-template-columns: 1fr;
+    }
+    .hk-auth {
+        grid-template-columns: 1fr;
+        &__art {
+            display: none;
+        }
+        &__mobile-logo {
+            display: block;
+        }
+    }
+}
+@media (max-width: 575.98px) {
+    .hk-courses {
+        grid-template-columns: 1fr;
+    }
+    .hk-hero__actions .hk-btn {
+        width: 100%;
+    }
+    .hk-verify__form {
+        flex-direction: column;
+        border-radius: $hk-radius;
+        input {
+            text-align: center;
+        }
+    }
+    .hk-syllabus__body ul {
+        padding-inline-start: 1.2rem;
+    }
+}

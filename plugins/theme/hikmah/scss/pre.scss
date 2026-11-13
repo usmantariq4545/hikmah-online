@@ -1,0 +1,95 @@
+// Hikmah Online — variables loaded before Boost/Bootstrap.
+// Palette comes straight from the Hikmah mark: ink, sun yellow, sky blue, on warm paper.
+
+$hk-ink: #1a1a1a;
+$hk-ink-2: #262624;
+$hk-ink-3: #3a3a36;
+$hk-paper: #fbfaf6;
+$hk-paper-2: #f4f1e7;
+$hk-paper-3: #ebe6d6;
+$hk-sun: #ffe000;
+$hk-sun-deep: #f0c400;
+$hk-sun-soft: #fff7b8;
+$hk-sky: #1597d5;
+$hk-sky-deep: #0a6a9c; // 5.6:1 on paper — safe for text links.
+$hk-sky-soft: #e3f3fb;
+$hk-muted: #5c5b55; // 6.4:1 on paper.
+$hk-line: rgba(26, 26, 26, .1);
+$hk-line-strong: rgba(26, 26, 26, .18);
+$hk-success: #1f7a4d;
+$hk-danger: #b3261e;
+$hk-warning: #9a6700;
+
+$hk-font-display: "Jost", "Noto Kufi Arabic", "Segoe UI", system-ui, sans-serif;
+$hk-font-body: "Inter", "Noto Naskh Arabic", "Segoe UI", system-ui, -apple-system, sans-serif;
+$hk-font-arabic-display: "Noto Kufi Arabic", "Jost", sans-serif;
+$hk-font-arabic-body: "Noto Naskh Arabic", "Inter", serif;
+$hk-font-urdu: "Noto Nastaliq Urdu", "Noto Naskh Arabic", serif;
+
+$hk-radius: 14px;
+$hk-radius-lg: 22px;
+$hk-radius-sm: 9px;
+$hk-shadow-1: 0 1px 2px rgba(26, 26, 26, .05), 0 4px 14px rgba(26, 26, 26, .05);
+$hk-shadow-2: 0 2px 4px rgba(26, 26, 26, .05), 0 14px 38px rgba(26, 26, 26, .1);
+$hk-shadow-3: 0 6px 12px rgba(26, 26, 26, .06), 0 28px 64px rgba(26, 26, 26, .16);
+$hk-ease: cubic-bezier(.22, .8, .24, 1);
+$hk-ease-out: cubic-bezier(.16, 1, .3, 1);
+
+// ---- Bootstrap / Boost variable overrides --------------------------------------------------
+$primary: $hk-ink;
+$secondary: #d9d5c7;
+$success: $hk-success;
+$info: $hk-sky-deep;
+$warning: $hk-sun-deep;
+$danger: $hk-danger;
+$light: $hk-paper-2;
+$dark: $hk-ink;
+
+$body-bg: $hk-paper;
+$body-color: $hk-ink;
+$link-color: $hk-sky-deep;
+$link-hover-color: darken($hk-sky-deep, 8%);
+$link-decoration: none;
+
+$font-family-sans-serif: $hk-font-body;
+$headings-font-family: $hk-font-display;
+$headings-font-weight: 500;
+$headings-line-height: 1.15;
+$font-size-base: 1rem;
+$line-height-base: 1.6;
+
+$border-radius: $hk-radius-sm;
+$border-radius-lg: $hk-radius;
+$border-radius-sm: 7px;
+$border-color: $hk-line;
+
+$btn-font-weight: 600;
+$btn-padding-y: .58rem;
+$btn-padding-x: 1.25rem;
+$btn-border-radius: 999px;
+$btn-border-radius-lg: 999px;
+$btn-border-radius-sm: 999px;
+
+$input-border-color: $hk-line-strong;
+$input-focus-border-color: $hk-sky;
+$input-border-radius: $hk-radius-sm;
+$input-padding-y: .6rem;
+$input-padding-x: .85rem;
+
+$card-border-color: $hk-line;
+$card-border-radius: $hk-radius;
+$card-cap-bg: transparent;
+
+$navbar-height: 68px;
+$drawer-bg: $hk-paper;
+$progress-bar-bg: $hk-sky;
+$progress-bg: $hk-paper-3;
+$progress-height: .5rem;
+$progress-border-radius: 999px;
+$dropdown-border-radius: $hk-radius;
+$dropdown-border-color: $hk-line;
+$dropdown-box-shadow: $hk-shadow-2;
+$modal-content-border-radius: $hk-radius-lg;
+$enable-shadows: false;
+$enable-rounded: true;
+$breadcrumb-divider: "›";

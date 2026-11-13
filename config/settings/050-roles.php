@@ -1,0 +1,116 @@
+<?php
+// 050 — Roles (PRD section 3): Finance reviewer and Support, and the limits on instructors.
+// Each role is also exported to config/roles/<shortname>.xml for review.
+require(__DIR__ . '/lib.php');
+
+global $CFG, $DB;
+
+/**
+ * Create a role if it does not exist and return its id.
+ *
+ * @param string $shortname
+ * @param string $name
+ * @param string $description
+ * @param int[] $contextlevels where the role may be assigned
+ * @return int
+ */
+function hk_role(string $shortname, string $name, string $description, array $contextlevels): int {
+    global $DB;
+    $role = $DB->get_record('role', ['shortname' => $shortname]);
+    if ($role) {
+        $roleid = (int) $role->id;
+    } else {
+        $roleid = create_role($name, $shortname, $description);
+        hk_changed("role $shortname created");
+    }
+    $current = get_role_contextlevels($roleid);
+    sort($current);
+    sort($contextlevels);
+    if (array_values($current) != $contextlevels) {
+        set_role_contextlevels($roleid, $contextlevels);
+        hk_changed("role $shortname context levels");
+    }
+    return $roleid;
+}
+
+// Finance reviewer: payment evidence and decisions only. No coursework, no other learner data.
+$finance = hk_role('financereviewer', 'Finance reviewer',
+    'Reviews transfer receipts and approves or rejects payments. No access to coursework.',
+    [CONTEXT_SYSTEM, CONTEXT_COURSECAT]);
+foreach ([
+    'paygw/hikmahtransfer:review',
+    'paygw/hikmahtransfer:viewreceipt',
+    'moodle/payment:viewpayments',
+] as $capability) {
+    hk_role_cap($finance, $capability, CAP_ALLOW);
+}
+
+// Support: account and course access issues with limited data visibility.
+$support = hk_role('support', 'Support',
+    'Resolves account and course access issues. Limited data visibility; every action is logged.',
+    [CONTEXT_SYSTEM, CONTEXT_COURSECAT]);
+foreach ([
+    'moodle/user:viewdetails',
+    'moodle/site:viewparticipants',
+    'moodle/course:view',
+    'moodle/course:viewparticipants',
+    'moodle/course:enrolreview',
+    'enrol/manual:enrol',
+    'enrol/manual:unenrol',
+    'moodle/site:viewuseridentity',
+] as $capability) {
+    hk_role_cap($support, $capability, CAP_ALLOW);
+}
+
+// Instructors run their assigned teaching activities only: they cannot change enrolment, course
+// settings, roles or completion. Only authorised staff (managers) can.
+foreach (['editingteacher', 'teacher'] as $shortname) {
+    $roleid = (int) $DB->get_field('role', 'id', ['shortname' => $shortname], MUST_EXIST);
+    foreach ([
+        'moodle/course:update',
+        'moodle/course:enrolconfig',
+        'moodle/course:visibility',
+        'moodle/course:overridecompletion',
+        'moodle/role:assign',
+        'moodle/restore:restorecourse',
+        'enrol/manual:enrol',
+        'enrol/manual:unenrol',
+        'enrol/manual:manage',
+        'enrol/manual:config',
+        'enrol/self:config',
+        'enrol/self:manage',
+        'enrol/fee:config',
+        'enrol/fee:manage',
+        'enrol/apply:config',
+        'enrol/apply:manageapplications',
+        'enrol/cohort:config',
+    ] as $capability) {
+        hk_role_cap($roleid, $capability, CAP_PREVENT);
+    }
+}
+
+// Managers may assign the two new roles.
+$manager = (int) $DB->get_field('role', 'id', ['shortname' => 'manager'], MUST_EXIST);
+foreach ([$finance, $support] as $target) {
+    if (!$DB->record_exists('role_allow_assign', ['roleid' => $manager, 'allowassign' => $target])) {
+        core_role_set_assign_allowed($manager, $target);
+        hk_changed("manager may assign role $target");
+    }
+}
+
+// Export for review (dev mounts config/roles writable; on servers the directory is read-only).
+$exportdir = '/opt/hikmah/roles';
+if (is_dir($exportdir) && is_writable($exportdir)) {
+    foreach (['financereviewer', 'support', 'editingteacher', 'teacher'] as $shortname) {
+        $roleid = (int) $DB->get_field('role', 'id', ['shortname' => $shortname]);
+        $xml = core_role_preset::get_export_xml($roleid);
+        $file = "$exportdir/$shortname.xml";
+        if (!file_exists($file) || file_get_contents($file) !== $xml) {
+            file_put_contents($file, $xml);
+            cli_writeln("  exported $shortname.xml");
+        }
+    }
+}
+
+accesslib_clear_all_caches(true);
+hk_done(__FILE__);

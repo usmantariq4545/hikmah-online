@@ -1,0 +1,141 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_hikmah/dashboard
+
+    Summary shown at the top of the dashboard.
+
+    Example context (json):
+    {
+        "firstname": "Aisha",
+        "date": "Friday, 13 November",
+        "greeting": "Good morning",
+        "stats": [{"value": 3, "suffix": "", "label": "Courses"}],
+        "hascourses": true,
+        "courses": [{"name": "Foundations of Tajweed", "url": "#", "hasprogress": true, "percent": 40, "offset": 60, "hue": 200}],
+        "hasevents": true,
+        "events": [{"name": "Live class", "course": "Foundations of Tajweed", "day": "14", "month": "Nov", "time": "18:00", "islive": true, "isnow": false, "url": "#"}],
+        "haspayments": false,
+        "payments": [],
+        "work": [],
+        "mycoursesurl": "#",
+        "catalogurl": "#"
+    }
+}}
+<section class="hk-dash" aria-label="{{#str}}dash_label, theme_hikmah{{/str}}">
+    <div class="hk-dash__hero">
+        {{#motif}}{{> theme_hikmah/motif }}{{/motif}}
+        <div class="hk-dash__hero-text">
+            <span class="hk-eyebrow hk-eyebrow--light">{{date}}</span>
+            <h2 class="hk-dash__title">{{greeting}}, {{firstname}}</h2>
+        </div>
+        <dl class="hk-dash__stats">
+            {{#stats}}
+                <div>
+                    <dd class="hk-dash__num" data-hk-count="{{value}}" data-hk-suffix="{{suffix}}">{{value}}{{suffix}}</dd>
+                    <dt>{{label}}</dt>
+                </div>
+            {{/stats}}
+        </dl>
+    </div>
+
+    {{#work.0}}
+        <div class="hk-dash__work" data-hk-stagger>
+            {{#work}}
+                <a class="hk-work{{#urgent}} hk-work--urgent{{/urgent}}" href="{{url}}">
+                    <span class="hk-work__num" data-hk-count="{{value}}">{{value}}</span>
+                    <span class="hk-work__label">{{label}}</span>
+                    <span class="hk-work__arrow" aria-hidden="true">→</span>
+                </a>
+            {{/work}}
+        </div>
+    {{/work.0}}
+
+    {{#haspayments}}
+        <div class="hk-dash__payments">
+            {{#payments}}
+                <a class="hk-dash__payment{{#needsaction}} hk-dash__payment--action{{/needsaction}}" href="{{url}}">
+                    <span class="hk-chip {{status.class}}">{{status.label}}</span>
+                    <span>{{{item}}}</span>
+                    <span aria-hidden="true">→</span>
+                </a>
+            {{/payments}}
+        </div>
+    {{/haspayments}}
+
+    <div class="hk-dash__grid">
+        <div class="hk-dash__panel" data-hk-reveal>
+            <div class="hk-dash__panel-head">
+                <h3>{{#str}}dash_continue, theme_hikmah{{/str}}</h3>
+                <a href="{{mycoursesurl}}">{{#str}}dash_allcourses, theme_hikmah{{/str}}</a>
+            </div>
+            {{#hascourses}}
+                <ul class="hk-dash__courses">
+                    {{#courses}}
+                        <li>
+                            <a href="{{url}}">
+                                <span class="hk-ring" style="--hk-hue: {{hue}}" aria-hidden="true">
+                                    <svg viewBox="0 0 36 36">
+                                        <circle class="hk-ring__track" cx="18" cy="18" r="15.915"/>
+                                        {{#hasprogress}}<circle class="hk-ring__value" cx="18" cy="18" r="15.915" style="--hk-offset: {{offset}}"/>{{/hasprogress}}
+                                    </svg>
+                                    <span>{{#hasprogress}}{{percent}}{{/hasprogress}}{{^hasprogress}}–{{/hasprogress}}</span>
+                                </span>
+                                <span class="hk-dash__course-name">{{{name}}}</span>
+                                <span class="hk-dash__go" aria-hidden="true">→</span>
+                                {{#hasprogress}}<span class="visually-hidden">{{percent}}%</span>{{/hasprogress}}
+                            </a>
+                        </li>
+                    {{/courses}}
+                </ul>
+            {{/hascourses}}
+            {{^hascourses}}
+                <div class="hk-dash__empty">
+                    <p>{{#str}}dash_nocourses, theme_hikmah{{/str}}</p>
+                    <a class="hk-btn hk-btn--sun hk-btn--sm" href="{{catalogurl}}">{{#str}}hero_cta_courses, theme_hikmah{{/str}}</a>
+                </div>
+            {{/hascourses}}
+        </div>
+
+        <div class="hk-dash__panel" data-hk-reveal style="--hk-d: 1">
+            <div class="hk-dash__panel-head">
+                <h3>{{#str}}dash_upcoming, theme_hikmah{{/str}}</h3>
+            </div>
+            {{#hasevents}}
+                <ul class="hk-dash__events">
+                    {{#events}}
+                        <li>
+                            <a href="{{url}}">
+                                <span class="hk-date" aria-hidden="true"><b>{{day}}</b>{{month}}</span>
+                                <span class="hk-dash__event-text">
+                                    <strong>{{{name}}}</strong>
+                                    <small>{{time}} · {{{course}}}</small>
+                                </span>
+                                {{#islive}}
+                                    <span class="hk-chip hk-chip--ink hk-chip--live"><span class="hk-chip__dot"></span>{{#isnow}}{{#str}}dash_livenow, theme_hikmah{{/str}}{{/isnow}}{{^isnow}}{{#str}}mode_live, theme_hikmah{{/str}}{{/isnow}}</span>
+                                {{/islive}}
+                            </a>
+                        </li>
+                    {{/events}}
+                </ul>
+            {{/hasevents}}
+            {{^hasevents}}
+                <div class="hk-dash__empty"><p>{{#str}}dash_noevents, theme_hikmah{{/str}}</p></div>
+            {{/hasevents}}
+        </div>
+    </div>
+</section>

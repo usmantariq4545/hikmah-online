@@ -1,0 +1,8 @@
+# Containers run Linux: keep LF everywhere, including on Windows checkouts.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.webp binary
+*.woff2 binary
+*.pdf binary
+*.ico binary

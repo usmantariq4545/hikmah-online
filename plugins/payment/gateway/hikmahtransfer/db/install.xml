@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="payment/gateway/hikmahtransfer/db" VERSION="20261113" COMMENT="XMLDB file for paygw_hikmahtransfer"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="paygw_hikmahtransfer_req" COMMENT="Manual transfer payment requests awaiting or past review">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="component" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="Component that owns the payable item, e.g. enrol_fee"/>
+        <FIELD NAME="paymentarea" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="itemid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Learner who pays"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Course the payment unlocks, when known"/>
+        <FIELD NAME="accountid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Payment account at the time of the request"/>
+        <FIELD NAME="amount" TYPE="number" LENGTH="15" NOTNULL="true" DEFAULT="0" SEQUENCE="false" DECIMALS="2" COMMENT="Amount due"/>
+        <FIELD NAME="currency" TYPE="char" LENGTH="3" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="paidamount" TYPE="number" LENGTH="15" NOTNULL="false" SEQUENCE="false" DECIMALS="2" COMMENT="Amount the learner says they transferred"/>
+        <FIELD NAME="method" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="bank, jazzcash, easypaisa or raast"/>
+        <FIELD NAME="reference" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" COMMENT="Unique payment reference shown to the learner"/>
+        <FIELD NAME="txnid" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" COMMENT="Transaction ID from the bank or wallet"/>
+        <FIELD NAME="paiddate" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Date of transfer (UTC timestamp)"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="draft" SEQUENCE="false" COMMENT="draft, pending, approved, rejected, resubmit"/>
+        <FIELD NAME="openkey" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="component/area/itemid/userid while the request is open, closed-id afterwards; unique, so one open request per item and learner"/>
+        <FIELD NAME="scanstatus" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="clean or notscanned"/>
+        <FIELD NAME="receiptdeleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="1 once the retention task has removed the receipt file"/>
+        <FIELD NAME="paymentid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Row in the core payments table, set on approval"/>
+        <FIELD NAME="reviewerid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timesubmitted" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="reviewerid" TYPE="foreign" FIELDS="reviewerid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="paymentid" TYPE="foreign" FIELDS="paymentid" REFTABLE="payments" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="openkey" UNIQUE="true" FIELDS="openkey"/>
+        <INDEX NAME="reference" UNIQUE="true" FIELDS="reference"/>
+        <INDEX NAME="status" UNIQUE="false" FIELDS="status, timesubmitted"/>
+        <INDEX NAME="item" UNIQUE="false" FIELDS="component, paymentarea, itemid, userid"/>
+        <INDEX NAME="courseid" UNIQUE="false" FIELDS="courseid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="paygw_hikmahtransfer_hist" COMMENT="Every status transition of a transfer request: who, when, from, to and why">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="requestid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="fromstatus" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="tostatus" TYPE="char" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Who made the transition"/>
+        <FIELD NAME="remarks" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="requestid" TYPE="foreign" FIELDS="requestid" REFTABLE="paygw_hikmahtransfer_req" REFFIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>

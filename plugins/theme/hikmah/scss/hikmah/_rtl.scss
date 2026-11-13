@@ -1,0 +1,73 @@
+// ---- Right-to-left (Arabic, Urdu) ---------------------------------------------------------------
+// Layout uses logical properties throughout, so most of the theme mirrors by itself. What is left
+// here are the few things that are not expressible that way.
+
+[dir="rtl"] {
+    .hk-mark::after,
+    .hk-journey::before,
+    .hk-meter__fill {
+        transform-origin: right center;
+    }
+    .hk-course__cta-arrow,
+    .hk-dash__go,
+    .hk-work__arrow,
+    .hk-mode__more span[aria-hidden],
+    .hk-dash__payment > span[aria-hidden] {
+        display: inline-block;
+        transform: scaleX(-1);
+    }
+    .hk-hero__grid {
+        direction: rtl;
+    }
+    .hk-hero__title,
+    .hk-pagehead__title,
+    .hk-section__title {
+        letter-spacing: 0;
+    }
+    .hk-eyebrow,
+    .hk-footer__title,
+    .hk-course__category,
+    .hk-table th,
+    .hk-facts dt,
+    .hk-pay__label {
+        letter-spacing: 0;
+    }
+    .hk-verify__form input,
+    .hk-pay__ref code,
+    .hk-table code {
+        direction: ltr;
+        unicode-bidi: isolate;
+    }
+}
+
+// Urdu Nastaliq hangs low: give lines and controls room.
+html[lang|="ur"] {
+    .hk-btn,
+    .btn {
+        line-height: 2;
+        padding-block: .35rem;
+    }
+    .hk-hero__title {
+        line-height: 1.7;
+    }
+    .hk-chip {
+        line-height: 2;
+    }
+    .form-control,
+    .form-select {
+        line-height: 2;
+    }
+}
+
+@media print {
+    .hk-navbar,
+    .hk-footer,
+    .hk-hero__art,
+    .hk-pagehead__motif {
+        display: none !important;
+    }
+    .hk-js [data-hk-reveal] {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+}

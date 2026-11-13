@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/hikmahattendance/db" VERSION="20261113" COMMENT="XMLDB file for local_hikmahattendance"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="local_hikmahatt_link" COMMENT="Links a BigBlueButton activity to an attendance session and its class window">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="bbbid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="bigbluebuttonbn instance id"/>
+        <FIELD NAME="attendanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="attendance instance id"/>
+        <FIELD NAME="sessionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="attendance_sessions id"/>
+        <FIELD NAME="windowstart" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Class window start (UTC)"/>
+        <FIELD NAME="windowend" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Class window end (UTC)"/>
+        <FIELD NAME="threshold" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false" COMMENT="Percent needed for Present; null uses the site default"/>
+        <FIELD NAME="cancelled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="state" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="waiting" SEQUENCE="false" COMMENT="waiting, missing, unknown, ready, applied, cancelled"/>
+        <FIELD NAME="callbackcount" TYPE="int" LENGTH="5" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="bbbversion" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="BBB server version seen when the evidence was processed"/>
+        <FIELD NAME="schemaversion" TYPE="char" LENGTH="30" NOTNULL="false" SEQUENCE="false" COMMENT="Payload parser version that accepted the evidence"/>
+        <FIELD NAME="note" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="timeprocessed" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
+        <KEY NAME="sessionid" TYPE="unique" FIELDS="sessionid"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="state" UNIQUE="false" FIELDS="state, windowend"/>
+        <INDEX NAME="bbbid" UNIQUE="false" FIELDS="bbbid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_hikmahatt_decision" COMMENT="Computed attendance per learner and session, with evidence and review state">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="linkid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="sessionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="seconds" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Verified attended seconds inside the window"/>
+        <FIELD NAME="denominator" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Class window seconds"/>
+        <FIELD NAME="percent" TYPE="int" LENGTH="3" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="threshold" TYPE="int" LENGTH="3" NOTNULL="true" DEFAULT="75" SEQUENCE="false"/>
+        <FIELD NAME="computedstatus" TYPE="char" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="present, partial, absent, pending"/>
+        <FIELD NAME="finalstatus" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="Instructor override, when different from computed"/>
+        <FIELD NAME="evidencehash" TYPE="char" LENGTH="40" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="evidence" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="JSON: intervals, joined, source, notes. Removed after the retention period"/>
+        <FIELD NAME="state" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="preview" SEQUENCE="false" COMMENT="preview, overridden, approved, applied, superseded"/>
+        <FIELD NAME="note" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" COMMENT="manualmark, unmapped, nostatus"/>
+        <FIELD NAME="reason" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Reason given for an override"/>
+        <FIELD NAME="appliedstatusid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="attendance_statuses id written to the register"/>
+        <FIELD NAME="appliedtime" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="timetaken written to the register; identifies our own mark"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="linkid" TYPE="foreign" FIELDS="linkid" REFTABLE="local_hikmahatt_link" REFFIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="evidence" UNIQUE="true" FIELDS="sessionid, userid, evidencehash"/>
+        <INDEX NAME="current" UNIQUE="false" FIELDS="sessionid, userid, state"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_hikmahatt_audit" COMMENT="Who did what to attendance decisions: link, override, approve, apply">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="linkid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="sessionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Learner concerned, when the action is about one learner"/>
+        <FIELD NAME="actorid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="action" TYPE="char" LENGTH="30" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="fromvalue" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="tovalue" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="reason" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="linkid" TYPE="foreign" FIELDS="linkid" REFTABLE="local_hikmahatt_link" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="userid" UNIQUE="false" FIELDS="userid"/>
+        <INDEX NAME="actorid" UNIQUE="false" FIELDS="actorid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_hikmahatt_course" COMMENT="Per-course switches. Autowrite ships off and only the course owner can turn it on">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="autowrite" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="courseid" TYPE="unique" FIELDS="courseid"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>

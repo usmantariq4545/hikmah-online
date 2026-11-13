@@ -1,0 +1,68 @@
+# Hikmah Online — staging / production overrides. Caddy terminates TLS (automatic Let's Encrypt)
+# and proxies to Nginx. Images come from the registry (MOODLE_IMAGE / NGINX_IMAGE in the env file);
+# nothing is built or edited on the server.
+
+services:
+  moodle:
+    pull_policy: always
+    deploy:
+      resources:
+        limits:
+          memory: 3g
+
+  cron:
+    pull_policy: always
+
+  adhoc:
+    image: ${MOODLE_IMAGE:-hikmah-moodle:local}
+    restart: unless-stopped
+    init: true
+    command: ["adhoc"]
+    environment:
+      SITE_ENV: ${SITE_ENV}
+      MOODLE_WWWROOT: ${MOODLE_WWWROOT}
+      DB_HOST: postgres
+      DB_NAME: ${DB_NAME:-moodle}
+      DB_USER: ${DB_USER:-moodle}
+      DB_PASSWORD: ${DB_PASSWORD}
+      REDIS_HOST: redis
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_SECURE: ${SMTP_SECURE:-}
+      SMTP_NOREPLY: ${SMTP_NOREPLY:-}
+      STAGING_MAIL_DIVERT: ${STAGING_MAIL_DIVERT:-}
+      STAGING_MAIL_ALLOWLIST: ${STAGING_MAIL_ALLOWLIST:-}
+    volumes:
+      - moodledata:/var/moodledata
+      - cronlocalcache:/var/localcache
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  nginx:
+    pull_policy: always
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      SITE_HOST: ${SITE_HOST:?set SITE_HOST (for example staging.example.org)}
+      ACME_EMAIL: ${ACME_EMAIL:?set ACME_EMAIL for Let's Encrypt}
+    volumes:
+      - ../docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddydata:/data
+      - caddyconfig:/config
+    depends_on:
+      - nginx
+
+volumes:
+  caddydata:
+  caddyconfig:

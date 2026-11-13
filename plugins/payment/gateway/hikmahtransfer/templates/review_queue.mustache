@@ -1,0 +1,118 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template paygw_hikmahtransfer/review_queue
+
+    Reviewer queue with filters.
+
+    Example context (json):
+    {
+        "action": "#",
+        "hasrows": true,
+        "total": 1,
+        "pending": 1,
+        "statuses": [{"value": "pending", "label": "Pending verification", "selected": true}],
+        "courses": [],
+        "methods": [],
+        "from": "",
+        "to": "",
+        "rows": [{"reference": "HKM-4-12-A1B2C3", "learner": "Aisha Khan", "item": "Foundations of Tajweed", "amount": "PKR 4,500.00", "method": "Bank transfer", "txnid": "TX1", "submitted": "13/11/26", "status": {"label": "Pending verification", "class": "hk-chip--warning"}, "url": "#"}],
+        "paging": ""
+    }
+}}
+<div class="hk-pay hk-pay--wide">
+    <div class="hk-queuehead" data-hk-reveal>
+        <span class="hk-eyebrow">{{#str}}review_eyebrow, paygw_hikmahtransfer{{/str}}</span>
+        <p class="hk-queuehead__count"><strong data-hk-count="{{pending}}">{{pending}}</strong> {{#str}}review_waiting, paygw_hikmahtransfer{{/str}}</p>
+    </div>
+
+    <form class="hk-filters" method="get" action="{{action}}" data-hk-reveal>
+        <div>
+            <label for="hk-f-status">{{#str}}col_status, paygw_hikmahtransfer{{/str}}</label>
+            <select id="hk-f-status" name="status" class="form-select">
+                {{#statuses}}<option value="{{value}}"{{#selected}} selected{{/selected}}>{{label}}</option>{{/statuses}}
+            </select>
+        </div>
+        <div>
+            <label for="hk-f-course">{{#str}}col_item, paygw_hikmahtransfer{{/str}}</label>
+            <select id="hk-f-course" name="courseid" class="form-select">
+                <option value="0">{{#str}}filter_all, paygw_hikmahtransfer{{/str}}</option>
+                {{#courses}}<option value="{{value}}"{{#selected}} selected{{/selected}}>{{{label}}}</option>{{/courses}}
+            </select>
+        </div>
+        <div>
+            <label for="hk-f-method">{{#str}}field_method, paygw_hikmahtransfer{{/str}}</label>
+            <select id="hk-f-method" name="method" class="form-select">
+                <option value="">{{#str}}filter_all, paygw_hikmahtransfer{{/str}}</option>
+                {{#methods}}<option value="{{value}}"{{#selected}} selected{{/selected}}>{{label}}</option>{{/methods}}
+            </select>
+        </div>
+        <div>
+            <label for="hk-f-from">{{#str}}filter_from, paygw_hikmahtransfer{{/str}}</label>
+            <input id="hk-f-from" type="date" name="from" value="{{from}}" class="form-control">
+        </div>
+        <div>
+            <label for="hk-f-to">{{#str}}filter_to, paygw_hikmahtransfer{{/str}}</label>
+            <input id="hk-f-to" type="date" name="to" value="{{to}}" class="form-control">
+        </div>
+        <button type="submit" class="hk-btn hk-btn--sm">{{#str}}filter_apply, paygw_hikmahtransfer{{/str}}</button>
+    </form>
+
+    {{#hasrows}}
+        <div class="hk-panel hk-panel--flush" data-hk-reveal>
+            <div class="table-responsive">
+                <table class="hk-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">{{#str}}reference, paygw_hikmahtransfer{{/str}}</th>
+                            <th scope="col">{{#str}}col_learner, paygw_hikmahtransfer{{/str}}</th>
+                            <th scope="col">{{#str}}col_item, paygw_hikmahtransfer{{/str}}</th>
+                            <th scope="col">{{#str}}amountdue, paygw_hikmahtransfer{{/str}}</th>
+                            <th scope="col">{{#str}}field_method, paygw_hikmahtransfer{{/str}}</th>
+                            <th scope="col">{{#str}}col_txnid, paygw_hikmahtransfer{{/str}}</th>
+                            <th scope="col">{{#str}}col_submitted, paygw_hikmahtransfer{{/str}}</th>
+                            <th scope="col">{{#str}}col_status, paygw_hikmahtransfer{{/str}}</th>
+                            <th scope="col"><span class="visually-hidden">{{#str}}review, paygw_hikmahtransfer{{/str}}</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#rows}}
+                            <tr>
+                                <td><code>{{reference}}</code></td>
+                                <td>{{learner}}</td>
+                                <td>{{{item}}}</td>
+                                <td>{{amount}}</td>
+                                <td>{{method}}</td>
+                                <td>{{txnid}}</td>
+                                <td>{{submitted}}</td>
+                                <td><span class="hk-chip {{status.class}}">{{status.label}}</span></td>
+                                <td class="text-end"><a class="hk-btn hk-btn--ghost hk-btn--sm" href="{{url}}">{{#str}}review, paygw_hikmahtransfer{{/str}}</a></td>
+                            </tr>
+                        {{/rows}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {{{paging}}}
+    {{/hasrows}}
+    {{^hasrows}}
+        <div class="hk-empty" data-hk-reveal>
+            <h3>{{#str}}queue_empty, paygw_hikmahtransfer{{/str}}</h3>
+            <p>{{#str}}queue_empty_text, paygw_hikmahtransfer{{/str}}</p>
+        </div>
+    {{/hasrows}}
+</div>

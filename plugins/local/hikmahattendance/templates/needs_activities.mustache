@@ -1,0 +1,36 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_hikmahattendance/needs_activities
+
+    Shown when a course has no BigBlueButton or no Attendance activity to link.
+
+    Example context (json):
+    {
+        "nobbb": true,
+        "noattendance": false,
+        "courseurl": "#"
+    }
+}}
+<div class="hk-pay hk-pay--narrow">
+    <div class="hk-empty">
+        <h3>{{#str}}needs_title, local_hikmahattendance{{/str}}</h3>
+        {{#nobbb}}<p>{{#str}}needs_bbb, local_hikmahattendance{{/str}}</p>{{/nobbb}}
+        {{#noattendance}}<p>{{#str}}needs_attendance, local_hikmahattendance{{/str}}</p>{{/noattendance}}
+        <a class="hk-btn hk-btn--sm" href="{{courseurl}}">{{#str}}needs_gotocourse, local_hikmahattendance{{/str}}</a>
+    </div>
+</div>

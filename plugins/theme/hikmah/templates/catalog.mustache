@@ -1,0 +1,112 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_hikmah/catalog
+
+    Course catalog: page head, sticky filter bar, result grid.
+
+    Example context (json):
+    {
+        "action": "#",
+        "homeurl": "#",
+        "q": "",
+        "modes": [{"value": "live", "label": "Live", "selected": false}],
+        "languages": [],
+        "categories": [],
+        "prices": [],
+        "courses": [],
+        "hascourses": false,
+        "resultcount": "0 courses",
+        "filtered": false
+    }
+}}
+<header class="hk-pagehead">
+    {{#pagemotif}}{{> theme_hikmah/motif }}{{/pagemotif}}
+    <div class="hk-container">
+        <ol class="hk-crumbs" aria-label="{{#str}}breadcrumb, theme_hikmah{{/str}}">
+            <li><a href="{{homeurl}}">{{#str}}nav_home, theme_hikmah{{/str}}</a></li>
+            <li aria-current="page">{{#str}}nav_courses, theme_hikmah{{/str}}</li>
+        </ol>
+        <h1 class="hk-pagehead__title">{{#str}}catalog_title, theme_hikmah{{/str}}</h1>
+        <p class="hk-pagehead__lead pb-5">{{#str}}catalog_lead, theme_hikmah{{/str}}</p>
+    </div>
+</header>
+
+<div class="hk-catalog">
+    <div class="hk-container">
+        <form class="hk-catalog__bar" action="{{action}}" method="get" role="search" data-hk-catalog aria-label="{{#str}}catalog_filters, theme_hikmah{{/str}}">
+            <div class="hk-catalog__search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.600-3.600"/></svg>
+                <label class="visually-hidden" for="hk-q">{{#str}}catalog_search, theme_hikmah{{/str}}</label>
+                <input id="hk-q" type="search" name="q" value="{{q}}" placeholder="{{#str}}catalog_search, theme_hikmah{{/str}}" autocomplete="off">
+            </div>
+            <div>
+                <label class="visually-hidden" for="hk-mode">{{#str}}fact_mode, theme_hikmah{{/str}}</label>
+                <select id="hk-mode" class="hk-catalog__select" name="mode">
+                    <option value="">{{#str}}filter_anymode, theme_hikmah{{/str}}</option>
+                    {{#modes}}<option value="{{value}}"{{#selected}} selected{{/selected}}>{{label}}</option>{{/modes}}
+                </select>
+            </div>
+            <div>
+                <label class="visually-hidden" for="hk-language">{{#str}}fact_language, theme_hikmah{{/str}}</label>
+                <select id="hk-language" class="hk-catalog__select" name="language">
+                    <option value="">{{#str}}filter_anylanguage, theme_hikmah{{/str}}</option>
+                    {{#languages}}<option value="{{value}}"{{#selected}} selected{{/selected}}>{{label}}</option>{{/languages}}
+                </select>
+            </div>
+            <div>
+                <label class="visually-hidden" for="hk-price">{{#str}}filter_price, theme_hikmah{{/str}}</label>
+                <select id="hk-price" class="hk-catalog__select" name="price">
+                    <option value="">{{#str}}filter_anyprice, theme_hikmah{{/str}}</option>
+                    {{#prices}}<option value="{{value}}"{{#selected}} selected{{/selected}}>{{label}}</option>{{/prices}}
+                </select>
+            </div>
+            <div>
+                <label class="visually-hidden" for="hk-category">{{#str}}filter_category, theme_hikmah{{/str}}</label>
+                <select id="hk-category" class="hk-catalog__select" name="category">
+                    <option value="">{{#str}}filter_anycategory, theme_hikmah{{/str}}</option>
+                    {{#categories}}<option value="{{value}}"{{#selected}} selected{{/selected}}>{{label}}</option>{{/categories}}
+                </select>
+            </div>
+            <button class="hk-btn hk-btn--sm" type="submit">{{#str}}catalog_apply, theme_hikmah{{/str}}</button>
+        </form>
+
+        <div id="hk-catalog-results" class="hk-catalog__results" aria-live="polite">
+            <div class="hk-catalog__summary">
+                <span><strong>{{resultcount}}</strong></span>
+                {{#filtered}}
+                    <a href="{{action}}" data-hk-catalog-reset>{{#str}}catalog_clear, theme_hikmah{{/str}}</a>
+                {{/filtered}}
+            </div>
+            {{#hascourses}}
+                <div class="hk-courses" data-hk-stagger>
+                    {{#courses}}{{> theme_hikmah/course_card }}{{/courses}}
+                </div>
+            {{/hascourses}}
+            {{^hascourses}}
+                <div class="hk-empty" data-hk-reveal>
+                    <svg viewBox="0 0 96 96" fill="none" aria-hidden="true"><circle cx="42" cy="42" r="26" stroke="#1a1a1a" stroke-width="4"/><path d="m62 62 20 20" stroke="#1a1a1a" stroke-width="4" stroke-linecap="round"/><path d="M32 42h20" stroke="#ffe000" stroke-width="5" stroke-linecap="round"/></svg>
+                    <h3>{{#str}}catalog_empty, theme_hikmah{{/str}}</h3>
+                    <p>{{#str}}catalog_empty_text, theme_hikmah{{/str}}</p>
+                    {{#filtered}}
+                        <a class="hk-btn hk-btn--ghost hk-btn--sm" href="{{action}}" data-hk-catalog-reset>{{#str}}catalog_clear, theme_hikmah{{/str}}</a>
+                    {{/filtered}}
+                </div>
+            {{/hascourses}}
+        </div>
+    </div>
+</div>

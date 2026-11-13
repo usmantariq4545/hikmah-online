@@ -1,0 +1,97 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_hikmah/verify
+
+    Public certificate verification page.
+
+    Example context (json):
+    {
+        "action": "#",
+        "homeurl": "#",
+        "code": "ABC123",
+        "available": true,
+        "searched": true,
+        "valid": true,
+        "expired": false,
+        "invalid": false,
+        "result": {"holder": "Aisha Khan", "course": "Foundations of Tajweed", "certificate": "Certificate of completion", "issued": "1 January 2027", "expires": "", "code": "ABC123"}
+    }
+}}
+<header class="hk-pagehead">
+    {{#pagemotif}}{{> theme_hikmah/motif }}{{/pagemotif}}
+    <div class="hk-container">
+        <ol class="hk-crumbs" aria-label="{{#str}}breadcrumb, theme_hikmah{{/str}}">
+            <li><a href="{{homeurl}}">{{#str}}nav_home, theme_hikmah{{/str}}</a></li>
+            <li aria-current="page">{{#str}}nav_verify, theme_hikmah{{/str}}</li>
+        </ol>
+        <h1 class="hk-pagehead__title">{{#str}}verify_title, theme_hikmah{{/str}}</h1>
+        <p class="hk-pagehead__lead">{{#str}}verify_lead, theme_hikmah{{/str}}</p>
+    </div>
+</header>
+
+<section class="hk-section">
+    <div class="hk-container" style="max-width: 46rem">
+        {{^available}}
+            <div class="hk-empty"><h3>{{#str}}verify_unavailable, theme_hikmah{{/str}}</h3></div>
+        {{/available}}
+        {{#available}}
+            <form class="hk-verify__form" action="{{action}}" method="get" role="search">
+                <label class="visually-hidden" for="hk-verify-code">{{#str}}verify_label, theme_hikmah{{/str}}</label>
+                <input id="hk-verify-code" type="text" name="code" value="{{code}}" placeholder="{{#str}}verify_placeholder, theme_hikmah{{/str}}" autocomplete="off" spellcheck="false" maxlength="40" required>
+                <button class="hk-btn" type="submit">{{#str}}verify_button, theme_hikmah{{/str}}</button>
+            </form>
+            <p class="hk-verify__hint">{{#str}}verify_hint, theme_hikmah{{/str}}</p>
+
+            {{#searched}}
+                <div class="hk-result mt-5" role="status" aria-live="polite">
+                    {{#valid}}
+                        <div class="hk-result__card hk-result__card--valid">
+                            <svg class="hk-tick" viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="38"/><path d="m26 43 11 11 21-23"/></svg>
+                            <h2>{{#str}}verify_valid, theme_hikmah{{/str}}</h2>
+                            <p>{{#str}}verify_valid_text, theme_hikmah{{/str}}</p>
+                        </div>
+                    {{/valid}}
+                    {{#expired}}
+                        <div class="hk-result__card hk-result__card--pending">
+                            <svg class="hk-tick hk-tick--pending" viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="38"/><path d="M42 24v22M42 58v2"/></svg>
+                            <h2>{{#str}}verify_expired, theme_hikmah{{/str}}</h2>
+                            <p>{{#str}}verify_expired_text, theme_hikmah{{/str}}</p>
+                        </div>
+                    {{/expired}}
+                    {{#invalid}}
+                        <div class="hk-result__card hk-result__card--invalid">
+                            <svg class="hk-tick hk-tick--danger" viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="38"/><path d="m30 30 24 24M54 30 30 54"/></svg>
+                            <h2>{{#str}}verify_invalid, theme_hikmah{{/str}}</h2>
+                            <p>{{#str}}verify_invalid_text, theme_hikmah{{/str}}</p>
+                        </div>
+                    {{/invalid}}
+                    {{#result}}
+                        <dl class="hk-result__facts">
+                            <div><dt>{{#str}}verify_holder, theme_hikmah{{/str}}</dt><dd>{{holder}}</dd></div>
+                            {{#course}}<div><dt>{{#str}}verify_course, theme_hikmah{{/str}}</dt><dd>{{{course}}}</dd></div>{{/course}}
+                            <div><dt>{{#str}}verify_certificate, theme_hikmah{{/str}}</dt><dd>{{{certificate}}}</dd></div>
+                            <div><dt>{{#str}}verify_issued, theme_hikmah{{/str}}</dt><dd>{{issued}}</dd></div>
+                            {{#expires}}<div><dt>{{#str}}verify_expires, theme_hikmah{{/str}}</dt><dd>{{expires}}</dd></div>{{/expires}}
+                            <div><dt>{{#str}}verify_code, theme_hikmah{{/str}}</dt><dd><code>{{code}}</code></dd></div>
+                        </dl>
+                    {{/result}}
+                </div>
+            {{/searched}}
+        {{/available}}
+    </div>
+</section>

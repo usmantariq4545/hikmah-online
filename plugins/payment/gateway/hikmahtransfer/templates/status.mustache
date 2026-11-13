@@ -1,0 +1,97 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template paygw_hikmahtransfer/status
+
+    The state of one transfer request, for the learner.
+
+    Example context (json):
+    {
+        "item": "Foundations of Tajweed",
+        "reference": "HKM-4-12-A1B2C3",
+        "amount": "PKR 4,500.00",
+        "method": "Bank transfer",
+        "txnid": "TX123",
+        "submitted": "13/11/26, 10:00",
+        "status": {"key": "pending", "label": "Pending verification", "class": "hk-chip--warning"},
+        "ispending": true,
+        "history": [{"status": {"label": "Pending verification", "class": ""}, "time": "13/11/26, 10:00", "remarks": ""}],
+        "payurl": "#",
+        "successurl": "#",
+        "listurl": "#"
+    }
+}}
+<div class="hk-pay hk-pay--narrow">
+    <div class="hk-panel hk-statuscard hk-statuscard--{{status.key}}" data-hk-reveal="scale">
+        {{#ispending}}
+            <div class="hk-statuscard__icon"><svg class="hk-tick hk-tick--pending" viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="38"/><path d="M42 22v22l13 8"/></svg></div>
+            <h2>{{#str}}state_pending_title, paygw_hikmahtransfer{{/str}}</h2>
+            <p>{{#str}}state_pending_text, paygw_hikmahtransfer{{/str}}</p>
+        {{/ispending}}
+        {{#isapproved}}
+            <div class="hk-statuscard__icon"><svg class="hk-tick" viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="38"/><path d="m26 43 11 11 21-23"/></svg></div>
+            <h2>{{#str}}state_approved_title, paygw_hikmahtransfer{{/str}}</h2>
+            <p>{{#str}}state_approved_text, paygw_hikmahtransfer{{/str}}</p>
+            <a class="hk-btn hk-btn--sun" href="{{successurl}}">{{#str}}gotocourse, paygw_hikmahtransfer{{/str}} <span class="hk-btn__arrow" aria-hidden="true">→</span></a>
+        {{/isapproved}}
+        {{#isrejected}}
+            <div class="hk-statuscard__icon"><svg class="hk-tick hk-tick--danger" viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="38"/><path d="m30 30 24 24M54 30 30 54"/></svg></div>
+            <h2>{{#str}}state_rejected_title, paygw_hikmahtransfer{{/str}}</h2>
+            {{#remarks}}<p class="hk-statuscard__remarks">{{remarks}}</p>{{/remarks}}
+            <a class="hk-btn" href="{{payurl}}">{{#str}}submitagain, paygw_hikmahtransfer{{/str}}</a>
+        {{/isrejected}}
+        {{#isresubmit}}
+            <div class="hk-statuscard__icon"><svg class="hk-tick hk-tick--pending" viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="38"/><path d="M42 24v22M42 58v2"/></svg></div>
+            <h2>{{#str}}state_resubmit_title, paygw_hikmahtransfer{{/str}}</h2>
+            {{#remarks}}<p class="hk-statuscard__remarks">{{remarks}}</p>{{/remarks}}
+            <a class="hk-btn hk-btn--sun" href="{{payurl}}">{{#str}}resubmitnow, paygw_hikmahtransfer{{/str}} <span class="hk-btn__arrow" aria-hidden="true">→</span></a>
+        {{/isresubmit}}
+        {{#isdraft}}
+            <h2>{{#str}}state_draft_title, paygw_hikmahtransfer{{/str}}</h2>
+            <a class="hk-btn hk-btn--sun" href="{{payurl}}">{{#str}}submitreceipt, paygw_hikmahtransfer{{/str}}</a>
+        {{/isdraft}}
+    </div>
+
+    <div class="hk-panel" data-hk-reveal>
+        <h3 class="h5 mb-3">{{#str}}details, paygw_hikmahtransfer{{/str}}</h3>
+        <dl class="hk-facts">
+            <div><dt>{{#str}}col_item, paygw_hikmahtransfer{{/str}}</dt><dd>{{{item}}}</dd></div>
+            <div><dt>{{#str}}reference, paygw_hikmahtransfer{{/str}}</dt><dd><code>{{reference}}</code></dd></div>
+            <div><dt>{{#str}}amountdue, paygw_hikmahtransfer{{/str}}</dt><dd>{{amount}}</dd></div>
+            {{#method}}<div><dt>{{#str}}field_method, paygw_hikmahtransfer{{/str}}</dt><dd>{{method}}</dd></div>{{/method}}
+            {{#txnid}}<div><dt>{{#str}}col_txnid, paygw_hikmahtransfer{{/str}}</dt><dd>{{txnid}}</dd></div>{{/txnid}}
+            {{#submitted}}<div><dt>{{#str}}col_submitted, paygw_hikmahtransfer{{/str}}</dt><dd>{{submitted}}</dd></div>{{/submitted}}
+        </dl>
+    </div>
+
+    {{#history.0}}
+    <div class="hk-panel" data-hk-reveal>
+        <h3 class="h5 mb-3">{{#str}}history, paygw_hikmahtransfer{{/str}}</h3>
+        <ol class="hk-timeline">
+            {{#history}}
+                <li>
+                    <span class="hk-chip {{status.class}}">{{status.label}}</span>
+                    <time>{{time}}</time>
+                    {{#remarks}}<p>{{remarks}}</p>{{/remarks}}
+                </li>
+            {{/history}}
+        </ol>
+    </div>
+    {{/history.0}}
+
+    <p class="text-center"><a href="{{listurl}}">{{#str}}allmypayments, paygw_hikmahtransfer{{/str}}</a></p>
+</div>

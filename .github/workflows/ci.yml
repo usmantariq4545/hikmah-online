@@ -1,0 +1,106 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  plugin-ci:
+    name: ${{ matrix.plugin.name }} on Moodle 5.3
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        plugin:
+          - { name: paygw_hikmahtransfer, path: plugins/payment/gateway/hikmahtransfer, extra: "" }
+          - { name: local_hikmahattendance, path: plugins/local/hikmahattendance, extra: "danmarsden/moodle-mod_attendance" }
+          - { name: theme_hikmah, path: plugins/theme/hikmah, extra: "" }
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    env:
+      MOODLE_BRANCH: MOODLE_503_STABLE
+      DB: pgsql
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          path: repo
+
+      - name: Set up PHP 8.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: pgsql, intl, gd, zip, soap, sodium, mbstring, xml
+          ini-values: max_input_vars=5000
+          coverage: none
+
+      - name: Install moodle-plugin-ci
+        run: |
+          composer create-project -n --no-dev --prefer-dist moodlehq/moodle-plugin-ci ci ^4
+          echo "$(cd ci/bin; pwd)" >> "$GITHUB_PATH"
+          echo "$(cd ci/vendor/bin; pwd)" >> "$GITHUB_PATH"
+          sudo locale-gen en_AU.UTF-8
+          echo "NVM_DIR=$HOME/.nvm" >> "$GITHUB_ENV"
+
+      - name: Add plugin dependencies
+        if: ${{ matrix.plugin.extra != '' }}
+        run: moodle-plugin-ci add-plugin ${{ matrix.plugin.extra }}
+
+      - name: Install Moodle with the plugin
+        run: moodle-plugin-ci install --plugin ./repo/${{ matrix.plugin.path }} --db-host=127.0.0.1
+
+      - name: PHP lint
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci phplint
+
+      - name: Moodle code checker
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci phpcs --max-warnings 0
+
+      - name: PHPDoc checker
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci phpdoc --max-warnings 0
+
+      - name: Validate plugin
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci validate
+
+      - name: Upgrade savepoints
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci savepoints
+
+      - name: Mustache lint
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci mustache
+
+      - name: Grunt
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci grunt --max-lint-warnings 0
+
+      - name: PHPUnit
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci phpunit --fail-on-warning
+
+      - name: Behat
+        if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
+        run: moodle-plugin-ci behat --profile chrome
+
+  secrets-scan:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

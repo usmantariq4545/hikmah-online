@@ -1,0 +1,64 @@
+# Hikmah Online — laptop development overrides (Docker Desktop + WSL2).
+# Hikmah plugins, the theme and settings are bind-mounted for edit-reload; mail goes to Mailpit.
+
+x-dev-code: &dev-code
+  - ../plugins/payment/gateway/hikmahtransfer:/var/www/moodle/public/payment/gateway/hikmahtransfer
+  - ../plugins/local/hikmahattendance:/var/www/moodle/public/local/hikmahattendance
+  - ../plugins/theme/hikmah:/var/www/moodle/public/theme/hikmah
+
+services:
+  moodle:
+    build:
+      args:
+        COMPOSER_DEV: "1"
+    environment:
+      OPCACHE_VALIDATE_TIMESTAMPS: "1"
+      SMTP_HOST: mailpit
+      SMTP_PORT: "1025"
+    volumes:
+      - moodledata:/var/moodledata
+      - localcache:/var/localcache
+      - phpunitdata:/var/phpunitdata
+      - ../plugins/payment/gateway/hikmahtransfer:/var/www/moodle/public/payment/gateway/hikmahtransfer
+      - ../plugins/local/hikmahattendance:/var/www/moodle/public/local/hikmahattendance
+      - ../plugins/theme/hikmah:/var/www/moodle/public/theme/hikmah
+      - ../config/config.php:/var/www/moodle/config.php:ro
+      - ../config/settings:/opt/hikmah/settings:ro
+      - ../config/roles:/opt/hikmah/roles
+      - ../scripts/dev:/opt/hikmah/dev:ro
+
+  cron:
+    build:
+      args:
+        COMPOSER_DEV: "1"
+    environment:
+      SMTP_HOST: mailpit
+      SMTP_PORT: "1025"
+    volumes:
+      - moodledata:/var/moodledata
+      - cronlocalcache:/var/localcache
+      - ../plugins/payment/gateway/hikmahtransfer:/var/www/moodle/public/payment/gateway/hikmahtransfer
+      - ../plugins/local/hikmahattendance:/var/www/moodle/public/local/hikmahattendance
+      - ../plugins/theme/hikmah:/var/www/moodle/public/theme/hikmah
+      - ../config/config.php:/var/www/moodle/config.php:ro
+
+  nginx:
+    ports:
+      - "127.0.0.1:${HTTP_PORT:-8080}:80"
+    volumes:
+      - moodledata:/var/moodledata:ro
+      - ../plugins/payment/gateway/hikmahtransfer:/var/www/moodle/public/payment/gateway/hikmahtransfer:ro
+      - ../plugins/local/hikmahattendance:/var/www/moodle/public/local/hikmahattendance:ro
+      - ../plugins/theme/hikmah:/var/www/moodle/public/theme/hikmah:ro
+
+  mailpit:
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${MAILPIT_PORT:-8025}:8025"
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: "1"
+      MP_SMTP_AUTH_ALLOW_INSECURE: "1"
+
+volumes:
+  phpunitdata:

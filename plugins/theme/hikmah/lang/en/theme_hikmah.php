@@ -1,0 +1,218 @@
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Strings for the Hikmah theme. Every piece of public copy lives here so it can be translated
+ * (Urdu and Arabic packs) or changed with Moodle's language customisation tool.
+ *
+ * @package    theme_hikmah
+ * @copyright  2026 Hikmah Institute
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+defined('MOODLE_INTERNAL') || die();
+
+$string['auth_eyebrow'] = 'Hikmah Online';
+$string['auth_text'] = 'Live classes, recorded lessons and verified certificates from Hikmah Institute.';
+$string['auth_title'] = 'Learning that stays with you.';
+$string['backtohome'] = 'Back to home';
+$string['breadcrumb'] = 'Breadcrumb';
+$string['card_language'] = 'Language:';
+$string['card_starts'] = 'Starts:';
+$string['card_teacher'] = 'Teacher:';
+$string['card_view'] = 'View course';
+$string['catalog_apply'] = 'Search';
+$string['catalog_clear'] = 'Clear filters';
+$string['catalog_count'] = '{$a} courses';
+$string['catalog_count_one'] = '1 course';
+$string['catalog_empty'] = 'No courses match';
+$string['catalog_empty_text'] = 'Try a different word or remove a filter.';
+$string['catalog_filters'] = 'Filter courses';
+$string['catalog_lead'] = 'Live, self-paced and hybrid courses taught by Hikmah instructors.';
+$string['catalog_search'] = 'Search courses';
+$string['catalog_title'] = 'Courses';
+$string['choosereadme'] = 'Hikmah Online is the theme of Hikmah Institute\'s learning platform: a Boost child theme with the Hikmah mark, a public course catalog and course pages, and Arabic and Urdu typography.';
+$string['configtitle'] = 'Hikmah';
+$string['cta_applied'] = 'Application sent';
+$string['cta_apply'] = 'Apply to enrol';
+$string['cta_apply_note'] = 'Free. Places are confirmed by Hikmah staff.';
+$string['cta_button'] = 'Create your account';
+$string['cta_closed'] = 'Enrolment closed';
+$string['cta_enrolfree'] = 'Enrol for free';
+$string['cta_free_note'] = 'Free. You get access straight away.';
+$string['cta_full'] = 'Course full';
+$string['cta_gotocourse'] = 'Go to course';
+$string['cta_login'] = 'Log in to enrol';
+$string['cta_login_note'] = 'New here? You can create an account on the next screen.';
+$string['cta_notyet'] = 'Enrolment opens {$a}';
+$string['cta_opencourse'] = 'Open course';
+$string['cta_pay'] = 'Pay by transfer';
+$string['cta_pay_note'] = 'Bank transfer, JazzCash, Easypaisa or Raast. Access opens once your receipt is verified.';
+$string['cta_resubmit'] = 'Resubmit receipt';
+$string['cta_title'] = 'Begin with one course.';
+$string['cta_viewpayment'] = 'View payment status';
+$string['dash_afternoon'] = 'Good afternoon';
+$string['dash_allcourses'] = 'All my courses';
+$string['dash_certificates'] = 'Certificates';
+$string['dash_completed'] = 'Completed';
+$string['dash_continue'] = 'Continue learning';
+$string['dash_courses'] = 'Courses';
+$string['dash_evening'] = 'Good evening';
+$string['dash_label'] = 'Your learning summary';
+$string['dash_livenow'] = 'Live now';
+$string['dash_morning'] = 'Good morning';
+$string['dash_nocourses'] = 'You are not enrolled in a course yet.';
+$string['dash_noevents'] = 'No classes or deadlines in the next two weeks.';
+$string['dash_progress'] = 'Average progress';
+$string['dash_upcoming'] = 'Coming up';
+$string['detail_about'] = 'About this course';
+$string['detail_comingsoon'] = 'Lessons will appear here.';
+$string['detail_eligibility'] = 'Who can join';
+$string['detail_enrol'] = 'Enrolment';
+$string['detail_items'] = '{$a} items';
+$string['detail_outcomes'] = 'What you will learn';
+$string['detail_prerequisites'] = 'Before you start';
+$string['detail_schedule'] = 'Schedule';
+$string['detail_syllabus'] = 'Syllabus';
+$string['detail_teachers'] = 'Your teachers';
+$string['detail_timezone'] = 'Times are shown in your timezone ({$a}).';
+$string['enrolled_ok'] = 'You are enrolled in {$a}. Welcome.';
+$string['fact_access'] = 'Access';
+$string['fact_ends'] = 'Ends';
+$string['fact_language'] = 'Language';
+$string['fact_length'] = 'Length';
+$string['fact_mode'] = 'Mode';
+$string['fact_starts'] = 'Starts';
+$string['faq_a1'] = 'Create a free account with your email address or Google, confirm your email, and complete your profile once. After that you can enrol in any course you are eligible for.';
+$string['faq_a2'] = 'Open the course page and press the enrol button. Free courses open straight away or after a short approval by Hikmah staff. For paid courses you send the fee by transfer and upload your receipt.';
+$string['faq_a3'] = 'By bank transfer, JazzCash, Easypaisa or Raast. The course page gives you the account details and a payment reference. Upload a photo or PDF of your receipt and our finance team verifies it. You get an email when your place is confirmed.';
+$string['faq_a4'] = 'Live classes run in BigBlueButton inside your course page, with audio, video, slides, chat, polls and breakout rooms. You do not need to install anything; a current browser is enough. The free Moodle app also works on Android and iOS.';
+$string['faq_a5'] = 'Where the instructor publishes it, the recording appears in your course after the class. Recordings can only be watched by enrolled learners who are signed in.';
+$string['faq_a6'] = 'Attendance for live classes is worked out from the time you were actually in the class, then checked by your instructor before it is recorded. If something looks wrong, ask your instructor to review it.';
+$string['faq_a7'] = 'When you meet the completion rules of a course (required activities, pass marks and attendance), a certificate with your name, a unique code and a QR code is issued automatically. You will find it on your dashboard.';
+$string['faq_a8'] = 'Anyone can check a Hikmah certificate on the Verify certificate page by typing its code or scanning its QR code. The page shows only the holder\'s name, the course, the issue date and whether the certificate is valid.';
+$string['faq_all'] = 'All questions';
+$string['faq_eyebrow'] = 'Questions';
+$string['faq_lead'] = 'How enrolment, payments, live classes and certificates work at Hikmah Online.';
+$string['faq_q1'] = 'How do I get started?';
+$string['faq_q2'] = 'How do I enrol in a course?';
+$string['faq_q3'] = 'How do I pay for a paid course?';
+$string['faq_q4'] = 'How do live classes work?';
+$string['faq_q5'] = 'Can I watch a class I missed?';
+$string['faq_q6'] = 'How is my attendance recorded?';
+$string['faq_q7'] = 'How do I get my certificate?';
+$string['faq_q8'] = 'How can someone verify my certificate?';
+$string['faq_title'] = 'Frequently asked questions';
+$string['featured_all'] = 'See all {$a} courses';
+$string['featured_eyebrow'] = 'Courses';
+$string['featured_lead'] = 'Taught live by Hikmah instructors or studied at your own pace.';
+$string['featured_title'] = 'Start with a course';
+$string['filter_anycategory'] = 'Any subject';
+$string['filter_anylanguage'] = 'Any language';
+$string['filter_anymode'] = 'Any mode';
+$string['filter_anyprice'] = 'Free and paid';
+$string['filter_category'] = 'Subject';
+$string['filter_free'] = 'Free';
+$string['filter_paid'] = 'Paid';
+$string['filter_price'] = 'Price';
+$string['footer_account'] = 'Account';
+$string['footer_help'] = 'Help';
+$string['footer_learn'] = 'Learn';
+$string['footer_privacy'] = 'Privacy and terms';
+$string['footer_tagline'] = 'The online learning platform of Hikmah Institute: live, recorded and hybrid Islamic education.';
+$string['free'] = 'Free';
+$string['hero_cta_courses'] = 'Explore courses';
+$string['hero_cta_dashboard'] = 'Go to my dashboard';
+$string['hero_cta_verify'] = 'Verify a certificate';
+$string['hero_eyebrow'] = 'Hikmah Institute';
+$string['hero_lead'] = 'Live classes with your teachers, lessons you can return to, and certificates anyone can verify.';
+$string['hero_line1'] = 'Seek knowledge';
+$string['hero_line2'] = 'with';
+$string['hero_mark'] = 'wisdom';
+$string['journey_1'] = 'Discover';
+$string['journey_1_text'] = 'Browse courses and see the schedule, fee and who can join.';
+$string['journey_2'] = 'Enrol';
+$string['journey_2_text'] = 'Join free courses in a click, or pay by transfer and upload your receipt.';
+$string['journey_3'] = 'Attend';
+$string['journey_3_text'] = 'Take part in live classes, or watch the recordings afterwards.';
+$string['journey_4'] = 'Practise';
+$string['journey_4_text'] = 'Quizzes, written tasks and group work, with feedback from your teacher.';
+$string['journey_5'] = 'Certify';
+$string['journey_5_text'] = 'Complete the course and receive a certificate with a QR code.';
+$string['journey_eyebrow'] = 'How it works';
+$string['journey_lead'] = 'Five steps, all in one place.';
+$string['journey_title'] = 'From first visit to certificate';
+$string['mode_browse'] = 'Browse';
+$string['mode_hybrid'] = 'Hybrid';
+$string['mode_hybrid_text'] = 'Recorded lessons through the week and a live class to bring it together.';
+$string['mode_live'] = 'Live';
+$string['mode_live_text'] = 'Scheduled classes with your teacher: questions, discussion and breakout groups.';
+$string['mode_selfpaced'] = 'Self-paced';
+$string['mode_selfpaced_text'] = 'Recorded lessons and activities you work through in your own time.';
+$string['modes_eyebrow'] = 'Ways to learn';
+$string['modes_lead'] = 'Every course says how it is taught, so you can pick what fits your week.';
+$string['modes_title'] = 'Live, self-paced, or both';
+$string['nav_courses'] = 'Courses';
+$string['nav_dashboard'] = 'Dashboard';
+$string['nav_faq'] = 'FAQ';
+$string['nav_home'] = 'Home';
+$string['nav_signup'] = 'Create account';
+$string['nav_verify'] = 'Verify certificate';
+$string['pluginname'] = 'Hikmah Online';
+$string['quote_arabic'] = 'يُؤْتِي الْحِكْمَةَ مَن يَشَاءُ ۚ وَمَن يُؤْتَ الْحِكْمَةَ فَقَدْ أُوتِيَ خَيْرًا كَثِيرًا';
+$string['quote_source'] = 'Qur\'an 2:269';
+$string['quote_text'] = 'He grants wisdom to whom He wills, and whoever has been granted wisdom has certainly been given much good.';
+$string['region-side-pre'] = 'Right';
+$string['stagingbanner'] = 'Staging · test data only';
+$string['stat_certificates'] = 'Certificates issued';
+$string['stat_courses'] = 'Courses';
+$string['stat_learners'] = 'Learners';
+$string['stat_live'] = 'Live classrooms';
+$string['stats_label'] = 'Hikmah Online in numbers';
+$string['status_applicationpending'] = 'Your application is waiting for approval. We will email you.';
+$string['status_approval'] = 'By approval';
+$string['status_closed'] = 'Closed';
+$string['status_enrolled'] = 'You are enrolled in this course.';
+$string['status_full'] = 'Full';
+$string['status_open'] = 'Enrolling now';
+$string['status_opens'] = 'Opens {$a}';
+$string['status_paymentpending'] = 'We have your receipt and are verifying your payment.';
+$string['status_paymentrejected'] = 'Your last payment was not approved. You can submit a new one.';
+$string['status_paymentresubmit'] = 'We need you to upload your receipt again.';
+$string['verify_button'] = 'Verify';
+$string['verify_certificate'] = 'Certificate';
+$string['verify_code'] = 'Code';
+$string['verify_course'] = 'Course';
+$string['verify_expired'] = 'This certificate has expired';
+$string['verify_expired_text'] = 'It was issued by Hikmah Institute but is past its expiry date.';
+$string['verify_expires'] = 'Expires';
+$string['verify_eyebrow'] = 'Certificates';
+$string['verify_hint'] = 'The code is printed on the certificate, next to the QR code.';
+$string['verify_holder'] = 'Awarded to';
+$string['verify_holderunknown'] = 'Name not available';
+$string['verify_invalid'] = 'No valid certificate found';
+$string['verify_invalid_text'] = 'This code does not match a certificate issued by Hikmah Institute, or the certificate has been revoked. Check the code and try again.';
+$string['verify_issued'] = 'Issued';
+$string['verify_label'] = 'Certificate code';
+$string['verify_lead'] = 'Enter the code on a Hikmah certificate to confirm it is genuine.';
+$string['verify_placeholder'] = 'Certificate code';
+$string['verify_title'] = 'Verify a certificate';
+$string['verify_unavailable'] = 'Certificate verification is not available right now.';
+$string['verify_valid'] = 'This certificate is valid';
+$string['verify_valid_text'] = 'It was issued by Hikmah Institute to the person below.';
+$string['work_attendance'] = 'Live sessions to review';
+$string['work_grading'] = 'Submissions to grade';
+$string['work_payments'] = 'Receipts to verify';

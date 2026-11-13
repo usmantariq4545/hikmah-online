@@ -1,0 +1,87 @@
+{
+  "_comment": "Shape of the post-meeting analytics callback as stored by mod_bigbluebuttonbn (BBB 2.x/3.0). Times are relative to a class window of 2026-11-10T13:00:00Z to 14:00:00Z. ext_user_id values are placeholders replaced by the test.",
+  "version": "1.0",
+  "meeting_id": "placeholder-meeting-id",
+  "internal_meeting_id": "0123456789abcdef0123456789abcdef01234567-1794315600000",
+  "data": {
+    "metadata": {"is_breakout": "false"},
+    "duration": 3720,
+    "start": "2026-11-10 12:58:00 UTC",
+    "finish": "2026-11-10 14:00:00 UTC",
+    "attendees": [
+      {
+        "_case": "fullstay",
+        "ext_user_id": "FULLSTAY",
+        "name": "Full Stay",
+        "moderator": false,
+        "joins": ["2026-11-10T12:58:10Z"],
+        "leaves": ["2026-11-10T14:00:00Z"],
+        "duration": 3710,
+        "recent_talking_time": "",
+        "engagement": {"chats": 2, "talks": 1, "raisehand": 0, "emojis": 0, "poll_votes": 1, "talk_time": 40}
+      },
+      {
+        "_case": "latejoin",
+        "ext_user_id": "LATEJOIN",
+        "name": "Late Join",
+        "moderator": false,
+        "joins": ["2026-11-10T13:20:00Z"],
+        "leaves": ["2026-11-10T14:00:00Z"],
+        "duration": 2400,
+        "engagement": {"chats": 0, "talks": 0, "raisehand": 0, "emojis": 0, "poll_votes": 0, "talk_time": 0}
+      },
+      {
+        "_case": "rejoin",
+        "ext_user_id": "REJOIN",
+        "name": "Leave And Rejoin",
+        "moderator": false,
+        "joins": ["2026-11-10T13:00:00Z", "2026-11-10T13:30:00Z"],
+        "leaves": ["2026-11-10T13:20:00Z", "2026-11-10T14:00:00Z"],
+        "duration": 3000,
+        "engagement": {"chats": 0, "talks": 0, "raisehand": 0, "emojis": 0, "poll_votes": 0, "talk_time": 0}
+      },
+      {
+        "_case": "overlap",
+        "ext_user_id": "OVERLAP",
+        "name": "Two Devices",
+        "moderator": false,
+        "joins": ["2026-11-10T13:00:00Z", "2026-11-10T13:10:00Z"],
+        "leaves": ["2026-11-10T13:40:00Z", "2026-11-10T13:50:00Z"],
+        "duration": 4200,
+        "engagement": {"chats": 0, "talks": 0, "raisehand": 0, "emojis": 0, "poll_votes": 0, "talk_time": 0}
+      },
+      {
+        "_case": "earlyleave",
+        "ext_user_id": "EARLYLEAVE",
+        "name": "Early Leave",
+        "moderator": false,
+        "joins": ["2026-11-10T13:00:00Z"],
+        "leaves": ["2026-11-10T13:10:00Z"],
+        "duration": 600,
+        "engagement": {"chats": 0, "talks": 0, "raisehand": 0, "emojis": 0, "poll_votes": 0, "talk_time": 0}
+      },
+      {
+        "_case": "instructor",
+        "ext_user_id": "TEACHER",
+        "name": "The Teacher",
+        "moderator": true,
+        "joins": ["2026-11-10T12:58:00Z"],
+        "leaves": ["2026-11-10T14:00:00Z"],
+        "duration": 3720,
+        "engagement": {"chats": 5, "talks": 30, "raisehand": 0, "emojis": 0, "poll_votes": 0, "talk_time": 1800}
+      },
+      {
+        "_case": "unmapped",
+        "ext_user_id": "OUTSIDER",
+        "name": "Not Enrolled",
+        "moderator": false,
+        "joins": ["2026-11-10T13:00:00Z"],
+        "leaves": ["2026-11-10T14:00:00Z"],
+        "duration": 3600,
+        "engagement": {"chats": 0, "talks": 0, "raisehand": 0, "emojis": 0, "poll_votes": 0, "talk_time": 0}
+      }
+    ],
+    "files": [],
+    "polls": []
+  }
+}

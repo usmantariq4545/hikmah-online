@@ -1,0 +1,150 @@
+# Hikmah Online — base stack: moodle (PHP-FPM), cron, nginx, postgres, redis, clamav.
+# Always combine with compose.dev.yml (laptop) or compose.server.yml (staging/prod):
+#   scripts/dc.sh up -d
+name: ${COMPOSE_PROJECT_NAME:-hikmah}
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "5"
+
+x-moodle-env: &moodle-env
+  SITE_ENV: ${SITE_ENV:-dev}
+  MOODLE_WWWROOT: ${MOODLE_WWWROOT:-http://localhost:8080}
+  MOODLE_UPGRADE_KEY: ${MOODLE_UPGRADE_KEY:-}
+  DB_HOST: postgres
+  DB_NAME: ${DB_NAME:-moodle}
+  DB_USER: ${DB_USER:-moodle}
+  DB_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in the env file}
+  REDIS_HOST: redis
+  SMTP_HOST: ${SMTP_HOST:-}
+  SMTP_PORT: ${SMTP_PORT:-587}
+  SMTP_USER: ${SMTP_USER:-}
+  SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+  SMTP_SECURE: ${SMTP_SECURE:-}
+  SMTP_NOREPLY: ${SMTP_NOREPLY:-no-reply@example.invalid}
+  STAGING_MAIL_DIVERT: ${STAGING_MAIL_DIVERT:-}
+  STAGING_MAIL_ALLOWLIST: ${STAGING_MAIL_ALLOWLIST:-}
+  GOOGLE_OAUTH_CLIENT_ID: ${GOOGLE_OAUTH_CLIENT_ID:-}
+  GOOGLE_OAUTH_CLIENT_SECRET: ${GOOGLE_OAUTH_CLIENT_SECRET:-}
+  BBB_SERVER_URL: ${BBB_SERVER_URL:-}
+  BBB_SHARED_SECRET: ${BBB_SHARED_SECRET:-}
+  HIKMAH_ADMIN_USER: ${HIKMAH_ADMIN_USER:-admin}
+  HIKMAH_ADMIN_PASSWORD: ${HIKMAH_ADMIN_PASSWORD:-}
+  HIKMAH_ADMIN_EMAIL: ${HIKMAH_ADMIN_EMAIL:-admin@example.invalid}
+  HIKMAH_SITE_NAME: ${HIKMAH_SITE_NAME:-Hikmah Online}
+  HIKMAH_BANK_TITLE: ${HIKMAH_BANK_TITLE:-}
+  HIKMAH_BANK_NAME: ${HIKMAH_BANK_NAME:-}
+  HIKMAH_BANK_IBAN: ${HIKMAH_BANK_IBAN:-}
+  HIKMAH_JAZZCASH: ${HIKMAH_JAZZCASH:-}
+  HIKMAH_EASYPAISA: ${HIKMAH_EASYPAISA:-}
+  HIKMAH_RAAST: ${HIKMAH_RAAST:-}
+
+x-moodle: &moodle
+  image: ${MOODLE_IMAGE:-hikmah-moodle:local}
+  build:
+    context: ..
+    dockerfile: docker/moodle/Dockerfile
+    target: moodle
+  restart: unless-stopped
+  init: true
+  environment: *moodle-env
+  volumes:
+    - moodledata:/var/moodledata
+    - localcache:/var/localcache
+  logging: *logging
+
+services:
+  moodle:
+    <<: *moodle
+    command: ["fpm"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "SCRIPT_NAME=/fpm-ping SCRIPT_FILENAME=/fpm-ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000 | grep -q pong"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  cron:
+    <<: *moodle
+    command: ["cron"]
+    volumes:
+      - moodledata:/var/moodledata
+      - cronlocalcache:/var/localcache
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  nginx:
+    image: ${NGINX_IMAGE:-hikmah-nginx:local}
+    build:
+      context: ..
+      dockerfile: docker/moodle/Dockerfile
+      target: nginx
+    restart: unless-stopped
+    environment:
+      FPM_HOST: moodle
+    volumes:
+      - moodledata:/var/moodledata:ro
+    depends_on:
+      moodle:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS -o /dev/null http://127.0.0.1/theme/hikmah/pix/favicon.svg || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    logging: *logging
+
+  postgres:
+    image: postgres:17-bookworm
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-moodle}
+      POSTGRES_USER: ${DB_USER:-moodle}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in the env file}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - backups:/backups
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 10s
+    logging: *logging
+
+  redis:
+    image: redis:7-bookworm
+    restart: unless-stopped
+    command: ["redis-server", "--save", "", "--appendonly", "no", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    logging: *logging
+
+  clamav:
+    image: clamav/clamav:stable
+    restart: unless-stopped
+    volumes:
+      - clamdb:/var/lib/clamav
+    logging: *logging
+
+volumes:
+  moodledata:
+  localcache:
+  cronlocalcache:
+  pgdata:
+  clamdb:
+  backups:

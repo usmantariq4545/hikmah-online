@@ -1,0 +1,147 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_hikmahattendance/reconcile
+
+    Reconciliation preview for one session.
+
+    Example context (json):
+    {
+        "actionurl": "#",
+        "sesskey": "abc",
+        "backurl": "#",
+        "bbbname": "Live class",
+        "windowstart": "13/11/26, 18:00",
+        "windowend": "19:00",
+        "minutes": 60,
+        "threshold": 75,
+        "state": {"label": "Ready for review", "class": "hk-chip--warning"},
+        "callbackcount": 1,
+        "hasrows": true,
+        "present": 1, "partial": 0, "absent": 0, "pending": 0,
+        "canapply": true,
+        "registerurl": "#",
+        "rows": [{"id": 5, "name": "Aisha Khan", "attended": "52:10", "total": "60:00", "percent": 86, "threshold": 75, "met": true, "joined": true, "computed": {"label": "Present", "class": "hk-chip--success"}, "options": [{"value": "present", "label": "Present", "selected": true}], "register": "", "state": "Preview", "notes": ""}]
+    }
+}}
+<div class="hk-pay hk-pay--wide">
+    <p><a href="{{backurl}}">← {{#str}}backtosessions, local_hikmahattendance{{/str}}</a></p>
+
+    <div class="hk-queuehead" data-hk-reveal>
+        <div>
+            <span class="hk-eyebrow">{{#str}}reconciletitle, local_hikmahattendance{{/str}}</span>
+            <h2 class="hk-pay__title">{{{bbbname}}}</h2>
+            <p class="text-muted mb-0">{{windowstart}} – {{windowend}} · {{#str}}minutes_threshold, local_hikmahattendance, {"minutes": {{minutes}}, "threshold": {{threshold}} }{{/str}}</p>
+        </div>
+        <span class="hk-chip {{state.class}}">{{state.label}}</span>
+    </div>
+
+    {{#ismissing}}
+        <div class="hk-callout hk-callout--danger" role="alert"><strong>{{#str}}missing_title, local_hikmahattendance{{/str}}</strong><p class="mb-0 mt-1">{{#str}}missing_text, local_hikmahattendance{{/str}}</p></div>
+    {{/ismissing}}
+    {{#isunknown}}
+        <div class="hk-callout hk-callout--danger" role="alert"><strong>{{#str}}unknown_title, local_hikmahattendance{{/str}}</strong><p class="mb-0 mt-1">{{#str}}unknown_text, local_hikmahattendance{{/str}} {{note}}</p></div>
+    {{/isunknown}}
+    {{#iswaiting}}
+        <div class="hk-callout hk-callout--sky" role="status"><strong>{{#str}}waiting_title, local_hikmahattendance{{/str}}</strong><p class="mb-0 mt-1">{{#str}}waiting_text, local_hikmahattendance{{/str}}</p></div>
+    {{/iswaiting}}
+    {{#autowrite}}
+        <div class="hk-callout hk-callout--warning" role="status"><strong>{{#str}}autowrite_on, local_hikmahattendance{{/str}}</strong></div>
+    {{/autowrite}}
+
+    {{#hasrows}}
+        <div class="hk-tiles" data-hk-stagger>
+            <div class="hk-tile-stat"><span class="hk-tile-stat__num" data-hk-count="{{present}}">{{present}}</span><span class="hk-tile-stat__label"><i class="hk-dot hk-dot--success"></i>{{#str}}status_present, local_hikmahattendance{{/str}}</span></div>
+            <div class="hk-tile-stat"><span class="hk-tile-stat__num" data-hk-count="{{partial}}">{{partial}}</span><span class="hk-tile-stat__label"><i class="hk-dot hk-dot--warning"></i>{{#str}}status_partial, local_hikmahattendance{{/str}}</span></div>
+            <div class="hk-tile-stat"><span class="hk-tile-stat__num" data-hk-count="{{absent}}">{{absent}}</span><span class="hk-tile-stat__label"><i class="hk-dot hk-dot--danger"></i>{{#str}}status_absent, local_hikmahattendance{{/str}}</span></div>
+            <div class="hk-tile-stat"><span class="hk-tile-stat__num" data-hk-count="{{pending}}">{{pending}}</span><span class="hk-tile-stat__label"><i class="hk-dot hk-dot--sky"></i>{{#str}}status_pending, local_hikmahattendance{{/str}}</span></div>
+        </div>
+
+        {{#hasdifferences}}
+            <div class="hk-callout hk-callout--warning" role="status"><strong>{{#str}}differences, local_hikmahattendance, {{differences}}{{/str}}</strong></div>
+        {{/hasdifferences}}
+
+        <form method="post" action="{{actionurl}}">
+            <input type="hidden" name="sesskey" value="{{sesskey}}">
+            <div class="hk-panel hk-panel--flush" data-hk-reveal>
+                <div class="table-responsive">
+                    <table class="hk-table hk-table--reconcile">
+                        <thead>
+                            <tr>
+                                <th scope="col">{{#str}}col_learner, local_hikmahattendance{{/str}}</th>
+                                <th scope="col">{{#str}}col_evidence, local_hikmahattendance{{/str}}</th>
+                                <th scope="col">{{#str}}col_computed, local_hikmahattendance{{/str}}</th>
+                                <th scope="col">{{#str}}col_register, local_hikmahattendance{{/str}}</th>
+                                <th scope="col">{{#str}}col_final, local_hikmahattendance{{/str}}</th>
+                                <th scope="col">{{#str}}col_reason, local_hikmahattendance{{/str}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#rows}}
+                                <tr>
+                                    <td>
+                                        <strong>{{name}}</strong>
+                                        <div class="small text-muted">{{state}}{{#notes}} · {{notes}}{{/notes}}</div>
+                                    </td>
+                                    <td class="hk-evidence">
+                                        <div class="hk-meter{{#met}} hk-meter--met{{/met}}" role="img" aria-label="{{percent}}%">
+                                            <span class="hk-meter__fill" style="--hk-w: {{percent}}%"></span>
+                                            <span class="hk-meter__mark" style="--hk-t: {{threshold}}%"></span>
+                                        </div>
+                                        <div class="small"><strong>{{percent}}%</strong> · {{attended}} / {{total}}{{^joined}} · <span class="text-muted">{{#str}}nojoin, local_hikmahattendance{{/str}}</span>{{/joined}}</div>
+                                    </td>
+                                    <td><span class="hk-chip {{computed.class}}">{{computed.label}}</span></td>
+                                    <td>
+                                        {{#register}}<span class="hk-chip{{#registerdiffers}} hk-chip--danger{{/registerdiffers}}">{{register}}</span>{{/register}}
+                                        {{^register}}<span class="text-muted">—</span>{{/register}}
+                                    </td>
+                                    <td>
+                                        <label class="visually-hidden" for="hk-status-{{id}}">{{#str}}col_final, local_hikmahattendance{{/str}}: {{name}}</label>
+                                        <select id="hk-status-{{id}}" name="status[{{id}}]" class="form-select form-select-sm">
+                                            {{#options}}<option value="{{value}}"{{#selected}} selected{{/selected}}>{{label}}</option>{{/options}}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <label class="visually-hidden" for="hk-reason-{{id}}">{{#str}}col_reason, local_hikmahattendance{{/str}}: {{name}}</label>
+                                        <input id="hk-reason-{{id}}" type="text" name="reason[{{id}}]" value="{{reason}}" class="form-control form-control-sm" maxlength="255" placeholder="{{#str}}reason_hint, local_hikmahattendance{{/str}}">
+                                    </td>
+                                </tr>
+                            {{/rows}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="hk-decision__actions mt-3">
+                {{#canapply}}<button type="submit" name="action" value="apply" class="hk-btn hk-btn--sun">{{#str}}apply, local_hikmahattendance{{/str}}</button>{{/canapply}}
+                <button type="submit" name="action" value="save" class="hk-btn hk-btn--ghost">{{#str}}savechanges, local_hikmahattendance{{/str}}</button>
+                <button type="submit" name="action" value="recompute" class="hk-btn hk-btn--ghost">{{#str}}recompute, local_hikmahattendance{{/str}}</button>
+                {{#registerurl}}<a class="hk-btn hk-btn--ghost" href="{{registerurl}}">{{#str}}openregister, local_hikmahattendance{{/str}}</a>{{/registerurl}}
+            </div>
+            <p class="small text-muted mt-2">{{#str}}apply_hint, local_hikmahattendance{{/str}}</p>
+        </form>
+    {{/hasrows}}
+    {{^hasrows}}
+        <div class="hk-empty">
+            <h3>{{#str}}nodecisions, local_hikmahattendance{{/str}}</h3>
+            <p>{{#str}}nodecisions_text, local_hikmahattendance{{/str}}</p>
+            <form method="post" action="{{actionurl}}">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                <button type="submit" name="action" value="recompute" class="hk-btn hk-btn--sm">{{#str}}recompute, local_hikmahattendance{{/str}}</button>
+            </form>
+        </div>
+    {{/hasrows}}
+</div>

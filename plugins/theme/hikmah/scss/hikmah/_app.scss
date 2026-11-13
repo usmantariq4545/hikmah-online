@@ -1,0 +1,1069 @@
+// ---- Application surfaces: dashboard summary, payments, attendance reconciliation, verification --
+
+.hk-layout .hk-notifications {
+    padding-top: 0;
+    .alert {
+        margin-top: .75rem;
+    }
+}
+
+// Shared panels and facts.
+.hk-pay {
+    max-width: 1040px;
+    margin-inline: auto;
+    display: grid;
+    gap: 1.25rem;
+    &--narrow {
+        max-width: 720px;
+    }
+    &--wide {
+        max-width: none;
+    }
+    &__title {
+        font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+        font-weight: 400;
+        margin: .7rem 0 .4rem;
+    }
+    &__grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 1.25rem;
+        align-items: start;
+    }
+    &__amount {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 1.5rem 2.5rem;
+        padding: 1.1rem 1.2rem;
+        background: $hk-ink;
+        color: #fff;
+        border-radius: $hk-radius;
+        margin-bottom: .8rem;
+    }
+    &__label {
+        font-size: .7rem;
+        font-weight: 600;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        color: $hk-muted;
+        margin-bottom: .25rem;
+    }
+    &__amount &__label {
+        color: rgba(255, 255, 255, .6);
+    }
+    &__value {
+        font-family: $hk-font-display;
+        font-size: 1.7rem;
+        line-height: 1.1;
+    }
+    &__ref {
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+        flex-wrap: wrap;
+        code {
+            font-size: 1.05rem;
+            color: $hk-sun;
+            background: transparent;
+            padding: 0;
+            letter-spacing: .04em;
+        }
+    }
+    &__note {
+        margin: 1rem 0 0;
+        padding: .8rem 1rem;
+        background: $hk-paper-2;
+        border-radius: $hk-radius-sm;
+        font-size: .92rem;
+    }
+    &__form .mform {
+        .fitem {
+            margin-bottom: .6rem;
+        }
+        .col-md-3,
+        .col-md-9 {
+            flex: 0 0 100%;
+            max-width: 100%;
+            width: 100%;
+        }
+    }
+}
+.hk-panel {
+    background: #fff;
+    border: 1px solid $hk-line;
+    border-radius: $hk-radius-lg;
+    padding: clamp(1.1rem, 2.4vw, 1.75rem);
+    box-shadow: $hk-shadow-1;
+    &--flush {
+        padding: 0;
+        overflow: hidden;
+    }
+}
+#region-main .hk-panel {
+    box-shadow: none;
+}
+.hk-step {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    margin-bottom: 1.1rem;
+    h3 {
+        font-size: 1.25rem;
+        margin: 0;
+    }
+    &__num {
+        width: 2.2rem;
+        height: 2.2rem;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: $hk-sun;
+        font-family: $hk-font-display;
+        font-weight: 600;
+    }
+}
+.hk-accounts {
+    display: grid;
+    gap: .7rem;
+}
+.hk-account {
+    border: 1px solid $hk-line;
+    border-radius: $hk-radius;
+    padding: .9rem 1rem;
+    transition: border-color .25s ease, box-shadow .25s ease, transform .25s $hk-ease;
+    &:hover {
+        border-color: $hk-ink;
+        box-shadow: $hk-shadow-1;
+        transform: translateY(-2px);
+    }
+    &__name {
+        font-family: $hk-font-display;
+        font-weight: 600;
+        margin-bottom: .45rem;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        &::before {
+            content: "";
+            width: .6rem;
+            height: .6rem;
+            border-radius: 2px;
+            background: $hk-sky;
+            transform: rotate(45deg);
+        }
+    }
+    &__lines {
+        margin: 0;
+        display: grid;
+        gap: .3rem;
+        > div {
+            display: grid;
+            grid-template-columns: 9rem 1fr;
+            gap: .75rem;
+            align-items: center;
+            font-size: .93rem;
+        }
+        dt {
+            font-weight: 400;
+            color: $hk-muted;
+        }
+        dd {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: .6rem;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+            word-break: break-all;
+        }
+    }
+}
+.hk-copy {
+    flex: none;
+    border: 1px solid $hk-line-strong;
+    background: #fff;
+    color: $hk-ink;
+    border-radius: 999px;
+    padding: .15rem .7rem;
+    font-size: .74rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color .2s ease, border-color .2s ease, transform .2s $hk-ease;
+    &:hover {
+        border-color: $hk-ink;
+    }
+    &.is-copied {
+        background: $hk-success;
+        border-color: $hk-success;
+        color: #fff;
+        transform: scale(1.06);
+    }
+}
+.hk-pay__ref .hk-copy {
+    background: transparent;
+    color: #fff;
+    border-color: rgba(255, 255, 255, .4);
+}
+.hk-callout {
+    padding: 1rem 1.2rem;
+    border-radius: $hk-radius;
+    background: $hk-paper-2;
+    border-inline-start: 4px solid $hk-ink;
+    animation: hk-rise .5s $hk-ease-out both;
+    &--sky { background: $hk-sky-soft; border-color: $hk-sky-deep; color: darken($hk-sky-deep, 8%); }
+    &--warning { background: #fff3cd; border-color: $hk-sun-deep; color: #5f4000; }
+    &--danger { background: #fbe9e7; border-color: $hk-danger; color: $hk-danger; }
+}
+.hk-facts {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 1.5rem;
+    dt {
+        font-size: .7rem;
+        font-weight: 600;
+        letter-spacing: .16em;
+        text-transform: uppercase;
+        color: $hk-muted;
+        margin-bottom: .2rem;
+    }
+    dd {
+        margin: 0;
+        font-weight: 500;
+        word-break: break-word;
+    }
+}
+.hk-statuscard {
+    text-align: center;
+    padding-block: 2.2rem;
+    h2 {
+        font-size: 1.7rem;
+        margin: 1rem 0 .5rem;
+    }
+    p {
+        color: $hk-muted;
+        max-width: 34rem;
+        margin-inline: auto;
+    }
+    &__remarks {
+        background: $hk-paper-2;
+        border-radius: $hk-radius-sm;
+        padding: .8rem 1rem;
+        color: $hk-ink !important;
+    }
+    .hk-btn {
+        margin-top: .6rem;
+    }
+}
+.hk-timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    &::before {
+        content: "";
+        position: absolute;
+        inset-inline-start: .45rem;
+        top: .5rem;
+        bottom: .5rem;
+        width: 2px;
+        background: $hk-line-strong;
+    }
+    li {
+        position: relative;
+        padding-inline-start: 1.9rem;
+        padding-bottom: 1.1rem;
+        &:last-child {
+            padding-bottom: 0;
+        }
+        &::before {
+            content: "";
+            position: absolute;
+            inset-inline-start: 0;
+            top: .3rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background: #fff;
+            border: 3px solid $hk-ink;
+        }
+        &:last-child::before {
+            background: $hk-sun;
+        }
+    }
+    time {
+        font-size: .84rem;
+        color: $hk-muted;
+        margin-inline-start: .5rem;
+    }
+    p {
+        margin: .4rem 0 0;
+        font-size: .93rem;
+    }
+}
+.hk-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .93rem;
+    th {
+        text-align: start;
+        font-size: .7rem;
+        font-weight: 600;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        color: $hk-muted;
+        padding: .9rem 1rem;
+        background: $hk-paper;
+        border-bottom: 1px solid $hk-line;
+        white-space: nowrap;
+    }
+    td {
+        padding: .85rem 1rem;
+        border-bottom: 1px solid $hk-line;
+        vertical-align: middle;
+    }
+    tbody tr {
+        transition: background-color .15s ease;
+        &:hover {
+            background: $hk-paper;
+        }
+        &:last-child td {
+            border-bottom: 0;
+        }
+    }
+    &__flag td:first-child {
+        box-shadow: inset 4px 0 0 $hk-sun-deep;
+    }
+    code {
+        color: $hk-ink;
+        background: $hk-paper-2;
+        padding: .15rem .4rem;
+        border-radius: 5px;
+        font-size: .84rem;
+    }
+}
+.hk-queuehead {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap;
+    &__count {
+        font-size: 1.05rem;
+        color: $hk-muted;
+        margin: .5rem 0 0;
+        strong {
+            font-family: $hk-font-display;
+            font-size: 2.6rem;
+            font-weight: 400;
+            color: $hk-ink;
+            line-height: 1;
+            margin-inline-end: .4rem;
+        }
+    }
+    &__actions {
+        display: flex;
+        gap: .5rem;
+        flex-wrap: wrap;
+    }
+}
+.hk-filters {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) auto;
+    gap: .75rem;
+    align-items: end;
+    padding: 1rem;
+    background: $hk-paper;
+    border: 1px solid $hk-line;
+    border-radius: $hk-radius;
+    label {
+        display: block;
+        font-size: .7rem;
+        font-weight: 600;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        color: $hk-muted;
+        margin-bottom: .3rem;
+    }
+}
+.hk-review {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, .9fr);
+    gap: 1.25rem;
+    align-items: start;
+    > div:first-child {
+        display: grid;
+        gap: 1.25rem;
+    }
+}
+.hk-receipt {
+    position: sticky;
+    top: $navbar-height + 16px;
+    img {
+        width: 100%;
+        height: auto;
+        border-radius: $hk-radius-sm;
+        border: 1px solid $hk-line;
+        background: $hk-paper-2;
+        transition: transform .4s $hk-ease;
+        &:hover {
+            transform: scale(1.015);
+        }
+    }
+    object {
+        width: 100%;
+        height: 70vh;
+        border-radius: $hk-radius-sm;
+        border: 1px solid $hk-line;
+    }
+}
+.hk-decision__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem;
+    margin-top: 1rem;
+}
+.hk-btn--danger {
+    --hk-btn-fg: #{$hk-danger};
+    &:hover,
+    &:focus-visible {
+        box-shadow: inset 0 0 0 1.5px $hk-danger;
+    }
+}
+
+// Attendance reconciliation.
+.hk-tiles {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: .9rem;
+}
+.hk-tile-stat {
+    background: #fff;
+    border: 1px solid $hk-line;
+    border-radius: $hk-radius;
+    padding: 1rem 1.2rem;
+    &__num {
+        display: block;
+        font-family: $hk-font-display;
+        font-size: 2.2rem;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+    }
+    &__label {
+        display: flex;
+        align-items: center;
+        gap: .45rem;
+        margin-top: .45rem;
+        font-size: .86rem;
+        color: $hk-muted;
+    }
+}
+.hk-dot {
+    display: inline-block;
+    width: .6rem;
+    height: .6rem;
+    border-radius: 50%;
+    background: $hk-muted;
+    &--success { background: $hk-success; }
+    &--warning { background: $hk-sun-deep; }
+    &--danger { background: $hk-danger; }
+    &--sky { background: $hk-sky; }
+}
+.hk-tally {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    margin-inline-end: .7rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+.hk-evidence {
+    min-width: 13rem;
+}
+.hk-meter {
+    position: relative;
+    height: .55rem;
+    border-radius: 999px;
+    background: $hk-paper-3;
+    margin-bottom: .35rem;
+    &__fill {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        width: var(--hk-w, 0%);
+        border-radius: 999px;
+        background: $hk-sun-deep;
+        transform-origin: left center;
+        animation: hk-draw 1s $hk-ease-out both;
+    }
+    &--met &__fill {
+        background: $hk-success;
+    }
+    &__mark {
+        // The threshold line.
+        position: absolute;
+        top: -.25rem;
+        bottom: -.25rem;
+        inset-inline-start: var(--hk-t, 75%);
+        width: 2px;
+        background: $hk-ink;
+        border-radius: 2px;
+    }
+}
+[dir="rtl"] .hk-meter__fill {
+    transform-origin: right center;
+}
+.hk-table--reconcile {
+    select {
+        min-width: 9.5rem;
+    }
+    input[type="text"] {
+        min-width: 12rem;
+    }
+}
+
+// Certificate verification result.
+.hk-result {
+    &__card {
+        text-align: center;
+        padding: 2rem 1.5rem;
+        border-radius: $hk-radius-lg;
+        background: #fff;
+        border: 1px solid $hk-line;
+        box-shadow: $hk-shadow-2;
+        animation: hk-rise .7s $hk-ease-out both;
+        h2 {
+            margin: .9rem 0 .4rem;
+            font-size: 1.8rem;
+        }
+        p {
+            color: $hk-muted;
+            margin: 0;
+        }
+        &--valid { border-top: 5px solid $hk-success; }
+        &--pending { border-top: 5px solid $hk-sun-deep; }
+        &--invalid { border-top: 5px solid $hk-danger; }
+    }
+    &__facts {
+        margin: 1.25rem 0 0;
+        background: #fff;
+        border: 1px solid $hk-line;
+        border-radius: $hk-radius-lg;
+        overflow: hidden;
+        animation: hk-rise .7s $hk-ease-out .15s both;
+        > div {
+            display: grid;
+            grid-template-columns: 11rem 1fr;
+            gap: 1rem;
+            padding: .9rem 1.3rem;
+            border-bottom: 1px solid $hk-line;
+            &:last-child {
+                border-bottom: 0;
+            }
+        }
+        dt {
+            color: $hk-muted;
+            font-weight: 400;
+        }
+        dd {
+            margin: 0;
+            font-weight: 600;
+        }
+    }
+}
+
+// ---- Dashboard summary -------------------------------------------------------------------------
+.hk-dash {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    &__hero {
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+        background: $hk-ink;
+        color: #fff;
+        border-radius: $hk-radius-lg;
+        padding: clamp(1.4rem, 3vw, 2.4rem);
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 1.5rem;
+        align-items: end;
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(34rem 20rem at 96% 0%, rgba(21, 151, 213, .28), transparent 62%);
+            z-index: -1;
+        }
+    }
+    &__motif {
+        position: absolute;
+        width: 330px;
+        inset-inline-end: -110px;
+        top: -150px;
+        z-index: -1;
+        opacity: .9;
+    }
+    &__title {
+        font-size: clamp(1.6rem, 3.2vw, 2.5rem);
+        font-weight: 300;
+        color: #fff;
+        margin: .7rem 0 0;
+        animation: hk-rise .8s $hk-ease-out both;
+    }
+    &__stats {
+        display: flex;
+        gap: clamp(1rem, 2.6vw, 2.4rem);
+        margin: 0;
+        > div {
+            animation: hk-rise .8s $hk-ease-out both;
+            &:nth-child(2) { animation-delay: .08s; }
+            &:nth-child(3) { animation-delay: .16s; }
+            &:nth-child(4) { animation-delay: .24s; }
+        }
+        dt {
+            font-size: .72rem;
+            font-weight: 500;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, .62);
+            white-space: nowrap;
+        }
+        dd {
+            margin: 0;
+        }
+    }
+    &__num {
+        font-family: $hk-font-display;
+        font-size: clamp(1.7rem, 2.8vw, 2.4rem);
+        line-height: 1.1;
+        color: $hk-sun;
+        font-variant-numeric: tabular-nums;
+    }
+    &__work {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        gap: .8rem;
+    }
+    &__payments {
+        display: grid;
+        gap: .5rem;
+    }
+    &__payment {
+        display: flex;
+        align-items: center;
+        gap: .8rem;
+        padding: .7rem 1rem;
+        border-radius: $hk-radius;
+        background: $hk-paper;
+        border: 1px solid $hk-line;
+        color: $hk-ink;
+        text-decoration: none;
+        transition: border-color .2s ease, transform .25s $hk-ease;
+        > span:nth-child(2) {
+            flex: 1;
+            font-weight: 500;
+        }
+        &:hover {
+            border-color: $hk-ink;
+            color: $hk-ink;
+            text-decoration: none;
+            transform: translateX(3px);
+        }
+        &--action {
+            background: $hk-sun-soft;
+            border-color: $hk-sun-deep;
+        }
+    }
+    &__grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 1rem;
+    }
+    &__panel {
+        border: 1px solid $hk-line;
+        border-radius: $hk-radius-lg;
+        padding: 1.2rem 1.3rem;
+        background: #fff;
+    }
+    &__panel-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: .7rem;
+        h3 {
+            font-size: 1.15rem;
+            margin: 0;
+        }
+        a {
+            font-size: .86rem;
+            font-weight: 600;
+        }
+    }
+    &__courses,
+    &__events {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        li + li {
+            border-top: 1px solid $hk-line;
+        }
+        a {
+            display: flex;
+            align-items: center;
+            gap: .9rem;
+            padding: .7rem .3rem;
+            color: $hk-ink;
+            text-decoration: none;
+            border-radius: $hk-radius-sm;
+            transition: background-color .2s ease, padding .25s $hk-ease;
+            &:hover {
+                background: $hk-paper;
+                padding-inline: .7rem;
+                .hk-dash__go {
+                    transform: translateX(4px);
+                    opacity: 1;
+                }
+            }
+        }
+    }
+    &__course-name {
+        flex: 1;
+        font-weight: 500;
+    }
+    &__go {
+        opacity: .35;
+        transition: transform .25s $hk-ease, opacity .2s ease;
+    }
+    &__event-text {
+        flex: 1;
+        min-width: 0;
+        display: grid;
+        strong {
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        small {
+            color: $hk-muted;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+    &__empty {
+        text-align: center;
+        padding: 1.5rem 1rem;
+        color: $hk-muted;
+    }
+}
+.hk-work {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: .9rem;
+    padding: .9rem 1.1rem;
+    border-radius: $hk-radius;
+    border: 1px solid $hk-line;
+    background: #fff;
+    color: $hk-ink;
+    text-decoration: none;
+    transition: transform .3s $hk-ease, box-shadow .3s $hk-ease, border-color .2s ease;
+    &:hover {
+        color: $hk-ink;
+        text-decoration: none;
+        transform: translateY(-3px);
+        box-shadow: $hk-shadow-2;
+        border-color: transparent;
+        .hk-work__arrow {
+            transform: translateX(4px);
+        }
+    }
+    &__num {
+        font-family: $hk-font-display;
+        font-size: 1.9rem;
+        line-height: 1;
+        min-width: 2.2rem;
+        font-variant-numeric: tabular-nums;
+    }
+    &__label {
+        font-size: .92rem;
+        font-weight: 500;
+    }
+    &__arrow {
+        transition: transform .25s $hk-ease;
+    }
+    &--urgent {
+        background: $hk-sun;
+        border-color: transparent;
+    }
+}
+.hk-ring {
+    position: relative;
+    flex: none;
+    width: 2.8rem;
+    height: 2.8rem;
+    display: grid;
+    place-items: center;
+    font-size: .72rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    svg {
+        position: absolute;
+        inset: 0;
+        transform: rotate(-90deg);
+    }
+    circle {
+        fill: none;
+        stroke-width: 3.2;
+    }
+    &__track {
+        stroke: $hk-paper-3;
+    }
+    &__value {
+        stroke: $hk-sky;
+        stroke-linecap: round;
+        stroke-dasharray: 100;
+        stroke-dashoffset: var(--hk-offset, 100);
+        animation: hk-ring 1.2s $hk-ease-out both;
+    }
+}
+@keyframes hk-ring {
+    from { stroke-dashoffset: 100; }
+}
+.hk-date {
+    flex: none;
+    width: 2.9rem;
+    padding: .3rem 0;
+    border-radius: 10px;
+    background: $hk-paper-2;
+    text-align: center;
+    font-size: .64rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: $hk-muted;
+    line-height: 1.2;
+    b {
+        display: block;
+        font-family: $hk-font-display;
+        font-size: 1.15rem;
+        font-weight: 500;
+        letter-spacing: 0;
+        color: $hk-ink;
+    }
+}
+
+// ---- Login form (core/loginform inside the Hikmah auth layout) ---------------------------------
+.hk-authpage {
+    background: $hk-paper;
+    // Boost lays #page out as a flex column; the auth layout needs its two-column grid back.
+    #page-wrapper #page.hk-auth {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+        max-width: none;
+        @media (max-width: 991.98px) {
+            grid-template-columns: 1fr;
+        }
+    }
+    .loginform {
+        h1 {
+            font-size: clamp(1.9rem, 3vw, 2.4rem);
+            font-weight: 400;
+            margin-bottom: .3rem;
+        }
+        #loginlogo {
+            display: none !important;
+        }
+        .form-label {
+            font-weight: 600;
+            font-size: .86rem;
+        }
+        .login-input-wrapper {
+            position: relative;
+            .login-input-icon {
+                position: absolute;
+                inset-inline-start: .9rem;
+                top: 50%;
+                translate: 0 -50%;
+                color: $hk-muted;
+                z-index: 2;
+            }
+            .form-control {
+                padding: .8rem 1rem;
+                padding-inline-start: 2.6rem;
+            }
+        }
+        #loginbtn {
+            padding: .85rem 1rem;
+            font-size: 1rem;
+            border-radius: 999px;
+        }
+        .login-separator {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-block: 1.5rem !important;
+            font-size: .74rem;
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            color: $hk-muted;
+            &::before,
+            &::after {
+                content: "";
+                flex: 1;
+                height: 1px;
+                background: $hk-line-strong;
+            }
+        }
+        .login-identityprovider-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .6rem;
+            padding: .75rem 1rem;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+        .login-cookiesnotice .btn-link {
+            font-size: .82rem;
+            font-weight: 500;
+            color: $hk-muted;
+        }
+    }
+    .login-container,
+    .login-wrapper,
+    .loginform {
+        background: transparent;
+        box-shadow: none;
+        border: 0;
+        padding: 0;
+        max-width: none;
+        width: 100%;
+    }
+    // Sign-up and forgotten-password forms.
+    .mform {
+        .col-md-3,
+        .col-md-9 {
+            flex: 0 0 100%;
+            max-width: 100%;
+            width: 100%;
+        }
+    }
+    .hk-auth__card > h2,
+    .hk-auth__card h2:first-of-type {
+        font-weight: 400;
+    }
+    .hk-auth__card {
+        max-width: 30rem;
+    }
+    &.pagelayout-login #region-main {
+        border: 0;
+        box-shadow: none;
+        background: transparent;
+        padding: 0;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .hk-pay__grid,
+    .hk-review,
+    .hk-dash__grid {
+        grid-template-columns: 1fr;
+    }
+    .hk-receipt {
+        position: static;
+    }
+    .hk-filters {
+        grid-template-columns: 1fr 1fr;
+    }
+    .hk-tiles {
+        grid-template-columns: 1fr 1fr;
+    }
+    .hk-dash__hero {
+        grid-template-columns: 1fr;
+    }
+    .hk-dash__stats {
+        flex-wrap: wrap;
+    }
+}
+@media (max-width: 575.98px) {
+    .hk-facts {
+        grid-template-columns: 1fr;
+    }
+    .hk-pay__amount {
+        grid-template-columns: 1fr;
+    }
+    .hk-account__lines > div,
+    .hk-result__facts > div {
+        grid-template-columns: 1fr;
+        gap: .1rem;
+    }
+}
+
+// The dashboard gets a wider column than Moodle's reading width, and the Hikmah greeting replaces
+// the core "Hi, name" line.
+.pagelayout-mydashboard {
+    &.limitedwidth #page.drawers .main-inner {
+        max-width: 1120px;
+    }
+    #page-header .page-context-header + div,
+    #page-header .me-auto > div:nth-child(2) {
+        display: none;
+    }
+    #page-header {
+        display: none;
+    }
+    #region-main {
+        border: 0;
+        box-shadow: none;
+        background: transparent;
+        padding: 0;
+    }
+}
+.hk-dash__hero {
+    grid-template-columns: 1fr;
+    gap: 1.6rem;
+}
+.hk-dash__stats {
+    flex-wrap: wrap;
+    padding-top: 1.2rem;
+    border-top: 1px solid rgba(255, 255, 255, .14);
+}
+
+// Payment and attendance pages need the full working width, not Moodle's reading width.
+.hk-paypage,
+.hk-attpage {
+    &.limitedwidth #page.drawers .main-inner {
+        max-width: 1180px;
+    }
+    #region-main {
+        border: 0;
+        box-shadow: none;
+        background: transparent;
+        padding: 0;
+    }
+}
+// Account details: label above value, values never broken mid-word.
+.hk-account__lines > div {
+    grid-template-columns: 1fr;
+    gap: .1rem;
+    dd {
+        word-break: normal;
+        overflow-wrap: anywhere;
+    }
+}
+.hk-pay__ref code {
+    white-space: nowrap;
+}
+.hk-pay__amount {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}

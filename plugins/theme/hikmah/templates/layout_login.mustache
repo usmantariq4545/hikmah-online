@@ -1,0 +1,81 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_hikmah/layout_login
+
+    Login, sign-up and password reset: Hikmah artwork on one side, the form on the other.
+
+    Example context (json):
+    {
+        "sitename": "Hikmah Online",
+        "output": {},
+        "bodyattributes": "",
+        "motifclass": "hk-auth__motif hk-motif--animate"
+    }
+}}
+{{> theme_boost/head }}
+
+<body {{{ bodyattributes }}}>
+{{> core/local/toast/wrapper}}
+<div id="page-wrapper">
+
+    {{{ output.standard_top_of_body_html }}}
+
+    <div id="page" class="hk-auth mt-0">
+        <aside class="hk-auth__art" aria-hidden="true">
+            {{> theme_hikmah/motif }}
+            <a class="hk-auth__logo" href="{{output.hk_home_url}}" tabindex="-1">
+                <img src="{{output.hk_logo_light}}" alt="">
+            </a>
+            <div class="hk-auth__quote">
+                <span class="hk-eyebrow hk-eyebrow--light">{{#str}}auth_eyebrow, theme_hikmah{{/str}}</span>
+                <h2>{{#str}}auth_title, theme_hikmah{{/str}}</h2>
+                <p>{{#str}}auth_text, theme_hikmah{{/str}}</p>
+            </div>
+        </aside>
+        <main class="hk-auth__panel" id="hk-main" role="main">
+            <div class="hk-auth__card">
+                <a class="hk-auth__mobile-logo" href="{{output.hk_home_url}}">
+                    <img src="{{output.hk_logo_dark}}" alt="{{sitename}}">
+                </a>
+                {{{ output.course_content_header }}}
+                {{{ output.main_content }}}
+                <p class="hk-auth__legal">
+                    <a href="{{output.hk_home_url}}">{{#str}}backtohome, theme_hikmah{{/str}}</a>
+                    &nbsp;·&nbsp;
+                    <a href="{{output.hk_policies_url}}">{{#str}}footer_privacy, theme_hikmah{{/str}}</a>
+                </p>
+            </div>
+        </main>
+    </div>
+    <div class="hk-auth__footer">
+        {{{ output.standard_footer_html }}}
+        {{{ output.standard_end_of_body_html }}}
+        <div class="footer-content-debugging footer-dark bg-dark text-light">
+            <div class="container-fluid footer-dark-inner">{{{ output.debug_footer_html }}}</div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+{{#js}}
+M.util.js_pending('theme_boost/loader');
+require(['theme_boost/loader'], function() {
+  M.util.js_complete('theme_boost/loader');
+});
+{{/js}}

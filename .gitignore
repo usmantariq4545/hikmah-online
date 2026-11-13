@@ -1,0 +1,17 @@
+# Secrets and local environment files — only .env.example is committed.
+.env
+.env.*
+!.env.example
+
+# Moodle source is fetched at build time, never committed.
+/moodle/
+
+# Local artefacts
+/backups/
+*.dump
+*.tgz
+node_modules/
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

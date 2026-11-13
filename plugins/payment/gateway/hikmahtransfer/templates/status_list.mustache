@@ -1,0 +1,65 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template paygw_hikmahtransfer/status_list
+
+    The transfer requests of one learner.
+
+    Example context (json):
+    {
+        "hasrows": true,
+        "rows": [{"item": "Foundations of Tajweed", "reference": "HKM-4-12-A1B2C3", "amount": "PKR 4,500.00", "submitted": "13/11/26", "status": {"label": "Pending verification", "class": "hk-chip--warning"}, "url": "#"}],
+        "catalogurl": "#"
+    }
+}}
+<div class="hk-pay hk-pay--wide">
+    {{#hasrows}}
+        <div class="hk-panel hk-panel--flush" data-hk-reveal>
+            <div class="table-responsive">
+                <table class="hk-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">{{#str}}col_item, paygw_hikmahtransfer{{/str}}</th>
+                            <th scope="col">{{#str}}reference, paygw_hikmahtransfer{{/str}}</th>
+                            <th scope="col">{{#str}}amountdue, paygw_hikmahtransfer{{/str}}</th>
+                            <th scope="col">{{#str}}col_submitted, paygw_hikmahtransfer{{/str}}</th>
+                            <th scope="col">{{#str}}col_status, paygw_hikmahtransfer{{/str}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#rows}}
+                            <tr>
+                                <td><a href="{{url}}">{{{item}}}</a></td>
+                                <td><code>{{reference}}</code></td>
+                                <td>{{amount}}</td>
+                                <td>{{submitted}}</td>
+                                <td><span class="hk-chip {{status.class}}">{{status.label}}</span></td>
+                            </tr>
+                        {{/rows}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {{/hasrows}}
+    {{^hasrows}}
+        <div class="hk-empty">
+            <h3>{{#str}}nopayments, paygw_hikmahtransfer{{/str}}</h3>
+            <p>{{#str}}nopayments_text, paygw_hikmahtransfer{{/str}}</p>
+            <a class="hk-btn hk-btn--sm" href="{{catalogurl}}">{{#str}}browsecourses, paygw_hikmahtransfer{{/str}}</a>
+        </div>
+    {{/hasrows}}
+</div>

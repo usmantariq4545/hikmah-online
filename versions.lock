@@ -1,0 +1,23 @@
+# Hikmah Online — pinned upstream versions.
+# Sourced by scripts/fetch-moodle.sh (POSIX sh). Bump on a branch, run CI, deploy to staging first.
+
+# Moodle 5.3 LTS (security support to Oct 2029). Stay on 5.3.x until the next LTS.
+MOODLE_REPO=moodle/moodle
+MOODLE_TAG=v5.3.1
+MOODLE_COMMIT=cfe123f26fc7071981fe949cb16cd5a08a8234f1
+
+# Third-party plugins: name|github repo|commit|path inside the Moodle tree
+#
+# mod_attendance        2026110900, requires 5.3 (2026081800). 5.3 support confirmed from version.php.
+# tool_certificate      MOODLE_500_STABLE head, declares support 5.0-5.2. Dev test 2026-11-13 on 5.3.1: installs, template created,
+#                       certificate issued and verified. No upstream 5.3 release yet (needed before production).
+# mod_coursecertificate MOODLE_500_STABLE head, declares support 5.0-5.2. Dev test 2026-11-13 on 5.3.1: installs, activity added to courses.
+#                       Automatic issue on completion not exercised yet.
+# enrol_apply           master head (2023101100). Dev test 2026-11-13 on 5.3.1: installs, instance added, enrol page loads.
+#                       Apply -> approve journey not exercised yet; old code, consider replacing before production.
+PLUGINS='
+mod_attendance|danmarsden/moodle-mod_attendance|d3f16f2edf5f284fd9086bb2499e12bdd863871f|public/mod/attendance
+tool_certificate|moodleworkplace/moodle-tool_certificate|48be6a13a75c8bdd14d49d92e04c3adb4c0ca3c7|public/admin/tool/certificate
+mod_coursecertificate|moodleworkplace/moodle-mod_coursecertificate|9b271a6444e2c26fd6c43e8c1f811669ca3409d5|public/mod/coursecertificate
+enrol_apply|emeneo/moodle-enrol_apply|867e248c9b3473254c5d131c59e3529b6f4a3cab|public/enrol/apply
+'

@@ -1,0 +1,55 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_hikmah/faq
+
+    Public FAQ page.
+
+    Example context (json):
+    {
+        "homeurl": "#",
+        "catalogurl": "#",
+        "faqs": [{"question": "How do I enrol?", "answer": "Choose a course."}]
+    }
+}}
+<header class="hk-pagehead">
+    {{#pagemotif}}{{> theme_hikmah/motif }}{{/pagemotif}}
+    <div class="hk-container">
+        <ol class="hk-crumbs" aria-label="{{#str}}breadcrumb, theme_hikmah{{/str}}">
+            <li><a href="{{homeurl}}">{{#str}}nav_home, theme_hikmah{{/str}}</a></li>
+            <li aria-current="page">{{#str}}nav_faq, theme_hikmah{{/str}}</li>
+        </ol>
+        <h1 class="hk-pagehead__title">{{#str}}faq_title, theme_hikmah{{/str}}</h1>
+        <p class="hk-pagehead__lead">{{#str}}faq_lead, theme_hikmah{{/str}}</p>
+    </div>
+</header>
+
+<section class="hk-section">
+    <div class="hk-container">
+        <div class="hk-faq" data-hk-stagger>
+            {{#faqs}}
+                <details class="hk-faq__item" data-hk-acc>
+                    <summary>{{question}}<span class="hk-faq__icon" aria-hidden="true"></span></summary>
+                    <div class="hk-faq__answer" data-hk-acc-body><div><p>{{answer}}</p></div></div>
+                </details>
+            {{/faqs}}
+        </div>
+        <div class="text-center mt-5" data-hk-reveal>
+            <a class="hk-btn hk-btn--sun" href="{{catalogurl}}">{{#str}}hero_cta_courses, theme_hikmah{{/str}} <span class="hk-btn__arrow" aria-hidden="true">→</span></a>
+        </div>
+    </div>
+</section>

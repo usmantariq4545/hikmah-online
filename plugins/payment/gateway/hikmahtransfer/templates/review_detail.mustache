@@ -1,0 +1,130 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template paygw_hikmahtransfer/review_detail
+
+    One transfer request for a reviewer: details, receipt preview, history and decision.
+
+    Example context (json):
+    {
+        "id": 3,
+        "backurl": "#",
+        "actionurl": "#",
+        "sesskey": "abc",
+        "reference": "HKM-4-12-A1B2C3",
+        "item": "Foundations of Tajweed",
+        "learner": "Aisha Khan",
+        "learneremail": "aisha@example.com",
+        "amount": "PKR 4,500.00",
+        "paidamount": "PKR 4,500.00",
+        "amountmismatch": false,
+        "method": "Bank transfer",
+        "txnid": "TX1",
+        "paiddate": "12 November 2026",
+        "submitted": "13/11/26, 10:00",
+        "status": {"key": "pending", "label": "Pending verification", "class": "hk-chip--warning"},
+        "scanclean": true,
+        "receipt": {"url": "#", "downloadurl": "#", "filename": "receipt.png", "size": "120 KB", "isimage": true, "ispdf": false},
+        "canviewreceipt": true,
+        "candecide": true,
+        "history": []
+    }
+}}
+<div class="hk-pay hk-pay--wide">
+    <p><a href="{{backurl}}">← {{#str}}backtoqueue, paygw_hikmahtransfer{{/str}}</a></p>
+    <div class="hk-review">
+        <div>
+            <div class="hk-panel" data-hk-reveal>
+                <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                    <div>
+                        <div class="hk-pay__label">{{#str}}reference, paygw_hikmahtransfer{{/str}}</div>
+                        <h2 class="h3 mb-0"><code>{{reference}}</code></h2>
+                    </div>
+                    <span class="hk-chip {{status.class}}">{{status.label}}</span>
+                </div>
+                <dl class="hk-facts">
+                    <div><dt>{{#str}}col_learner, paygw_hikmahtransfer{{/str}}</dt><dd>{{learner}}<br><span class="text-muted small">{{learneremail}}</span></dd></div>
+                    <div><dt>{{#str}}col_item, paygw_hikmahtransfer{{/str}}</dt><dd>{{{item}}}</dd></div>
+                    <div><dt>{{#str}}amountdue, paygw_hikmahtransfer{{/str}}</dt><dd>{{amount}}</dd></div>
+                    <div>
+                        <dt>{{#str}}col_paidamount, paygw_hikmahtransfer{{/str}}</dt>
+                        <dd>{{paidamount}}{{#amountmismatch}} <span class="hk-chip hk-chip--danger">{{#str}}amountmismatch, paygw_hikmahtransfer{{/str}}</span>{{/amountmismatch}}</dd>
+                    </div>
+                    <div><dt>{{#str}}field_method, paygw_hikmahtransfer{{/str}}</dt><dd>{{method}}</dd></div>
+                    <div><dt>{{#str}}col_txnid, paygw_hikmahtransfer{{/str}}</dt><dd>{{txnid}}</dd></div>
+                    <div><dt>{{#str}}field_paiddate, paygw_hikmahtransfer{{/str}}</dt><dd>{{paiddate}}</dd></div>
+                    <div><dt>{{#str}}col_submitted, paygw_hikmahtransfer{{/str}}</dt><dd>{{submitted}}</dd></div>
+                    <div>
+                        <dt>{{#str}}col_scan, paygw_hikmahtransfer{{/str}}</dt>
+                        <dd>
+                            {{#scanclean}}<span class="hk-chip hk-chip--success">{{#str}}scan_clean, paygw_hikmahtransfer{{/str}}</span>{{/scanclean}}
+                            {{#scanskipped}}<span class="hk-chip hk-chip--warning">{{#str}}scan_notscanned, paygw_hikmahtransfer{{/str}}</span>{{/scanskipped}}
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+
+            {{#candecide}}
+                <div class="hk-panel" data-hk-reveal>
+                    <h3 class="h5">{{#str}}decision, paygw_hikmahtransfer{{/str}}</h3>
+                    <form method="post" action="{{actionurl}}" class="hk-decision">
+                        <input type="hidden" name="sesskey" value="{{sesskey}}">
+                        <label for="hk-remarks" class="form-label">{{#str}}remarks, paygw_hikmahtransfer{{/str}}</label>
+                        <textarea id="hk-remarks" name="remarks" rows="3" class="form-control" maxlength="1000" placeholder="{{#str}}remarks_hint, paygw_hikmahtransfer{{/str}}"></textarea>
+                        <div class="hk-decision__actions">
+                            <button type="submit" name="action" value="approve" class="hk-btn hk-btn--sun">{{#str}}approve, paygw_hikmahtransfer{{/str}}</button>
+                            <button type="submit" name="action" value="resubmit" class="hk-btn hk-btn--ghost">{{#str}}askresubmit, paygw_hikmahtransfer{{/str}}</button>
+                            <button type="submit" name="action" value="reject" class="hk-btn hk-btn--ghost hk-btn--danger">{{#str}}reject, paygw_hikmahtransfer{{/str}}</button>
+                        </div>
+                        <p class="small text-muted mb-0 mt-2">{{#str}}decision_hint, paygw_hikmahtransfer{{/str}}</p>
+                    </form>
+                </div>
+            {{/candecide}}
+
+            <div class="hk-panel" data-hk-reveal>
+                <h3 class="h5 mb-3">{{#str}}history, paygw_hikmahtransfer{{/str}}</h3>
+                <ol class="hk-timeline">
+                    {{#history}}
+                        <li>
+                            <span class="hk-chip {{status.class}}">{{status.label}}</span>
+                            <time>{{time}}</time> <span class="text-muted">· {{actor}}</span>
+                            {{#remarks}}<p>{{remarks}}</p>{{/remarks}}
+                        </li>
+                    {{/history}}
+                </ol>
+            </div>
+        </div>
+
+        <div class="hk-panel hk-receipt" data-hk-reveal>
+            <h3 class="h5">{{#str}}field_receipt, paygw_hikmahtransfer{{/str}}</h3>
+            {{#receipt}}
+                {{#isimage}}<a href="{{url}}" target="_blank" rel="noopener"><img src="{{url}}" alt="{{#str}}field_receipt, paygw_hikmahtransfer{{/str}}"></a>{{/isimage}}
+                {{#ispdf}}<object data="{{url}}" type="application/pdf" aria-label="{{#str}}field_receipt, paygw_hikmahtransfer{{/str}}"><p><a href="{{url}}" target="_blank" rel="noopener">{{filename}}</a></p></object>{{/ispdf}}
+                <p class="small text-muted mt-2 mb-0">{{filename}} · {{size}} · <a href="{{downloadurl}}">{{#str}}download, paygw_hikmahtransfer{{/str}}</a></p>
+            {{/receipt}}
+            {{#noreceipt}}
+                <p class="text-muted mb-0">
+                    {{#receiptdeleted}}{{#str}}receipt_deleted, paygw_hikmahtransfer{{/str}}{{/receiptdeleted}}
+                    {{^receiptdeleted}}
+                        {{#canviewreceipt}}{{#str}}receipt_none, paygw_hikmahtransfer{{/str}}{{/canviewreceipt}}
+                        {{^canviewreceipt}}{{#str}}receipt_nopermission, paygw_hikmahtransfer{{/str}}{{/canviewreceipt}}
+                    {{/receiptdeleted}}
+                </p>
+            {{/noreceipt}}
+        </div>
+    </div>
+</div>

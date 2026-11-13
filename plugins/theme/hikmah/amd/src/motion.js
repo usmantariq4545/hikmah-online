@@ -1,0 +1,347 @@
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Hikmah motion: scroll reveals, number counters, accordions, navbar state, hero parallax and
+ * live catalog filtering. Pure progressive enhancement; every page works without it.
+ *
+ * @module     theme_hikmah/motion
+ * @copyright  2026 Hikmah Institute
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+let revealObserver = null;
+
+/**
+ * Reveal elements as they enter the viewport. Siblings inside a [data-hk-stagger] parent get an
+ * increasing delay so groups cascade.
+ *
+ * @param {ParentNode} root
+ */
+const setupReveals = (root) => {
+    root.querySelectorAll('[data-hk-stagger]').forEach((group) => {
+        Array.from(group.children).forEach((child, index) => {
+            if (!child.hasAttribute('data-hk-reveal')) {
+                child.setAttribute('data-hk-reveal', '');
+            }
+            child.style.setProperty('--hk-d', Math.min(index, 8));
+        });
+    });
+
+    const targets = root.querySelectorAll('[data-hk-reveal]:not(.is-in), .hk-journey:not(.is-in)');
+    if (!('IntersectionObserver' in window) || reduced()) {
+        targets.forEach((el) => el.classList.add('is-in'));
+        return;
+    }
+    if (!revealObserver) {
+        revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-in');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, {threshold: 0.12, rootMargin: '0px 0px -6% 0px'});
+    }
+    targets.forEach((el) => revealObserver.observe(el));
+};
+
+/**
+ * Count numbers up from zero the first time they are seen.
+ */
+const setupCounters = () => {
+    const counters = document.querySelectorAll('[data-hk-count]');
+    if (!counters.length) {
+        return;
+    }
+    const format = new Intl.NumberFormat(document.documentElement.lang || undefined);
+    const run = (el) => {
+        const target = parseFloat(el.getAttribute('data-hk-count')) || 0;
+        const suffix = el.getAttribute('data-hk-suffix') || '';
+        if (reduced() || target === 0) {
+            el.textContent = format.format(target) + suffix;
+            return;
+        }
+        const duration = 1400;
+        const start = performance.now();
+        const tick = (now) => {
+            const progress = Math.min(1, (now - start) / duration);
+            const eased = 1 - Math.pow(1 - progress, 4);
+            el.textContent = format.format(Math.round(target * eased)) + suffix;
+            if (progress < 1) {
+                requestAnimationFrame(tick);
+            }
+        };
+        requestAnimationFrame(tick);
+    };
+    if (!('IntersectionObserver' in window)) {
+        counters.forEach(run);
+        return;
+    }
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                run(entry.target);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {threshold: 0.4});
+    counters.forEach((el) => observer.observe(el));
+};
+
+/**
+ * Smoothly animated <details> accordions. Native behaviour (and keyboard support) is kept;
+ * the open attribute is only removed once the closing transition has finished.
+ */
+const setupAccordions = () => {
+    document.addEventListener('click', (e) => {
+        const summary = e.target.closest('details[data-hk-acc] > summary');
+        if (!summary || reduced()) {
+            return;
+        }
+        const details = summary.parentElement;
+        const body = details.querySelector('[data-hk-acc-body]');
+        if (!body) {
+            return;
+        }
+        e.preventDefault();
+        if (details.open) {
+            body.style.gridTemplateRows = '0fr';
+            const done = () => {
+                details.open = false;
+                body.style.gridTemplateRows = '';
+                body.removeEventListener('transitionend', done);
+            };
+            body.addEventListener('transitionend', done);
+            // Safety net if the transition never fires.
+            setTimeout(done, 600);
+        } else {
+            body.style.gridTemplateRows = '0fr';
+            details.open = true;
+            // Force a style flush so the browser animates from 0fr to 1fr.
+            void body.offsetHeight;
+            body.style.gridTemplateRows = '1fr';
+            setTimeout(() => {
+                body.style.gridTemplateRows = '';
+            }, 600);
+        }
+    });
+};
+
+/**
+ * Give the navbar a shadow once the page has scrolled. Boost scrolls #page on most layouts and
+ * the window on the Hikmah layouts, so both are watched.
+ */
+const setupNavbar = () => {
+    const navbar = document.querySelector('nav.navbar.fixed-top');
+    if (!navbar) {
+        return;
+    }
+    const page = document.getElementById('page');
+    let ticking = false;
+    const update = () => {
+        const scrolled = (window.scrollY || 0) > 8 || (page && page.scrollTop > 8);
+        navbar.classList.toggle('is-scrolled', !!scrolled);
+        ticking = false;
+    };
+    const onScroll = () => {
+        if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(update);
+        }
+    };
+    window.addEventListener('scroll', onScroll, {passive: true});
+    if (page) {
+        page.addEventListener('scroll', onScroll, {passive: true});
+    }
+    update();
+};
+
+/**
+ * The hero rosette leans gently toward the pointer.
+ */
+const setupHero = () => {
+    const hero = document.querySelector('.hk-hero');
+    const art = hero ? hero.querySelector('.hk-hero__art') : null;
+    if (!art || reduced() || !window.matchMedia('(pointer: fine)').matches) {
+        return;
+    }
+    let frame = null;
+    hero.addEventListener('pointermove', (e) => {
+        if (frame) {
+            return;
+        }
+        frame = requestAnimationFrame(() => {
+            const rect = hero.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+            art.style.transform = `translate3d(${(x * 18).toFixed(1)}px, ${(y * 14).toFixed(1)}px, 0)`;
+            frame = null;
+        });
+    });
+    hero.addEventListener('pointerleave', () => {
+        art.style.transform = '';
+    });
+    art.style.transition = 'transform .6s cubic-bezier(.16, 1, .3, 1)';
+};
+
+/**
+ * Catalog: filter without a full page load. The server still renders the results; the script
+ * fetches the same URL and swaps the results region, keeping the address bar in sync.
+ */
+const setupCatalog = () => {
+    const form = document.querySelector('form[data-hk-catalog]');
+    const results = document.getElementById('hk-catalog-results');
+    if (!form || !results || !window.fetch || !window.DOMParser) {
+        return;
+    }
+    let controller = null;
+    let timer = null;
+
+    const markActive = () => {
+        form.querySelectorAll('select').forEach((select) => {
+            select.classList.toggle('is-active', select.value !== '');
+        });
+    };
+
+    const load = (url, push) => {
+        if (controller) {
+            controller.abort();
+        }
+        controller = new AbortController();
+        results.classList.add('is-loading');
+        results.setAttribute('aria-busy', 'true');
+        fetch(url, {signal: controller.signal, credentials: 'same-origin', headers: {'X-Requested-With': 'XMLHttpRequest'}})
+            .then((response) => response.text())
+            .then((html) => {
+                const doc = new DOMParser().parseFromString(html, 'text/html');
+                const fresh = doc.getElementById('hk-catalog-results');
+                if (!fresh) {
+                    window.location.href = url;
+                    return null;
+                }
+                results.innerHTML = fresh.innerHTML;
+                results.classList.remove('is-loading');
+                results.removeAttribute('aria-busy');
+                setupReveals(results);
+                if (push) {
+                    window.history.pushState({hkCatalog: true}, '', url);
+                }
+                return null;
+            })
+            .catch((error) => {
+                if (error.name !== 'AbortError') {
+                    window.location.href = url;
+                }
+            });
+    };
+
+    const submit = () => {
+        const params = new URLSearchParams(new FormData(form));
+        Array.from(params.keys()).forEach((key) => {
+            if (params.get(key) === '') {
+                params.delete(key);
+            }
+        });
+        const query = params.toString();
+        markActive();
+        load(form.getAttribute('action') + (query ? '?' + query : ''), true);
+    };
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        submit();
+    });
+    form.addEventListener('change', (e) => {
+        if (e.target.matches('select')) {
+            submit();
+        }
+    });
+    form.addEventListener('input', (e) => {
+        if (e.target.matches('input[type="search"]')) {
+            clearTimeout(timer);
+            timer = setTimeout(submit, 320);
+        }
+    });
+    document.addEventListener('click', (e) => {
+        const reset = e.target.closest('[data-hk-catalog-reset]');
+        if (reset) {
+            e.preventDefault();
+            form.reset();
+            form.querySelectorAll('select').forEach((select) => {
+                select.value = '';
+            });
+            const search = form.querySelector('input[type="search"]');
+            if (search) {
+                search.value = '';
+            }
+            submit();
+        }
+    });
+    window.addEventListener('popstate', () => {
+        const params = new URLSearchParams(window.location.search);
+        Array.from(form.elements).forEach((field) => {
+            if (field.name) {
+                field.value = params.get(field.name) || '';
+            }
+        });
+        markActive();
+        load(window.location.href, false);
+    });
+    markActive();
+};
+
+/**
+ * Receipt upload hint and copy-to-clipboard buttons used on the payment pages.
+ */
+const setupCopy = () => {
+    document.addEventListener('click', (e) => {
+        const button = e.target.closest('[data-hk-copy]');
+        if (!button || !navigator.clipboard) {
+            return;
+        }
+        navigator.clipboard.writeText(button.getAttribute('data-hk-copy')).then(() => {
+            const original = button.getAttribute('data-hk-label') || button.textContent;
+            button.setAttribute('data-hk-label', original);
+            button.classList.add('is-copied');
+            button.textContent = button.getAttribute('data-hk-copied') || '✓';
+            setTimeout(() => {
+                button.classList.remove('is-copied');
+                button.textContent = original;
+            }, 1600);
+            return null;
+        }).catch(() => null);
+    });
+};
+
+/**
+ * Start everything once.
+ */
+export const init = () => {
+    if (window.hkMotionReady) {
+        return;
+    }
+    window.hkMotionReady = true;
+    document.documentElement.classList.add('hk-js');
+    setupReveals(document);
+    setupCounters();
+    setupAccordions();
+    setupNavbar();
+    setupHero();
+    setupCatalog();
+    setupCopy();
+};
