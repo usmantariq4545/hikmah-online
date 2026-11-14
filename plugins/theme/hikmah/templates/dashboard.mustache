@@ -93,7 +93,7 @@
                                         <circle class="hk-ring__track" cx="18" cy="18" r="15.915"/>
                                         {{#hasprogress}}<circle class="hk-ring__value" cx="18" cy="18" r="15.915" style="--hk-offset: {{offset}}"/>{{/hasprogress}}
                                     </svg>
-                                    <span>{{#hasprogress}}{{percent}}{{/hasprogress}}{{^hasprogress}}–{{/hasprogress}}</span>
+                                    <span>{{#hasprogress}}{{percent}}<small>%</small>{{/hasprogress}}{{^hasprogress}}–{{/hasprogress}}</span>
                                 </span>
                                 <span class="hk-dash__course-name">{{{name}}}</span>
                                 <span class="hk-dash__go" aria-hidden="true">→</span>

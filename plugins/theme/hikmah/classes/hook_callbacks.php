@@ -54,9 +54,23 @@ class hook_callbacks {
         if (!self::is_active()) {
             return;
         }
+        // Scroll reveals start as soon as the page is parsed, without waiting for Moodle's script
+        // bundle (which can take seconds on a slow connection). Without IntersectionObserver, or
+        // with reduced motion, nothing is ever hidden. The motion module adds the other effects later.
         $hook->add_html(
-            "<script>(function(d){d.classList.add('hk-js');setTimeout(function(){" .
-            "if(!window.hkMotionReady){d.classList.remove('hk-js');}},3000);})(document.documentElement);</script>\n" .
+            "<script>(function(w,d){var h=d.documentElement;" .
+            "if(!('IntersectionObserver' in w)||w.matchMedia('(prefers-reduced-motion: reduce)').matches){return;}" .
+            "h.classList.add('hk-js');" .
+            "d.addEventListener('DOMContentLoaded',function(){" .
+            "d.querySelectorAll('[data-hk-stagger]').forEach(function(g){Array.prototype.forEach.call(g.children," .
+            "function(c,i){if(!c.hasAttribute('data-hk-reveal')){c.setAttribute('data-hk-reveal','');}" .
+            "c.style.setProperty('--hk-d',Math.min(i,8));});});" .
+            "var o=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){" .
+            "e.target.classList.add('is-in');o.unobserve(e.target);}});},{threshold:0.12,rootMargin:'0px 0px -6% 0px'});" .
+            "d.querySelectorAll('[data-hk-reveal],.hk-journey').forEach(function(el){o.observe(el);});" .
+            "w.hkRevealReady=true;});" .
+            "setTimeout(function(){if(!w.hkRevealReady){h.classList.remove('hk-js');}},4000);" .
+            "})(window,document);</script>\n" .
             '<meta name="theme-color" content="#1a1a1a">'
         );
     }

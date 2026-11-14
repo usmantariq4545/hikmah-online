@@ -1,5 +1,90 @@
 # Changelog
 
+## 2026-11-14 — Speed and UI review
+
+### Faster
+
+- **Developer debugging is now opt-in on dev** (`MOODLE_DEBUG=developer`). It made Moodle rescan
+  every plugin folder on each request: about 180 ms for every script, font and image, and a page
+  makes around a hundred of them. Scripts, fonts and images now take under 10 ms each, and pages
+  about 0.08–0.18 s on the server instead of 0.3–0.5 s.
+- PHP: `opcache.revalidate_freq` 0 → 2, longer realpath cache, more spare PHP-FPM workers.
+- Nginx: `open_file_cache`, `gzip_vary`, `gzip_proxied any`, no re-compressing of woff2.
+- Scroll reveals no longer wait for Moodle's script bundle: a small inline script in the page head
+  shows content as it scrolls into view. Before, sections stayed blank until all scripts had loaded.
+
+### UI fixes
+
+- Page titles no longer read "… | Hikmah | Hikmah" (Moodle already adds the site name).
+- Course detail pages highlight "Courses" in the top menu instead of "Home".
+- Dashboard: progress rings show "0%" instead of "0"; on phones the decorative tiles no longer sit
+  on top of the date and greeting.
+
+### Fixed in this pass
+
+- A static-file Nginx rule I added stole Moodle's font and image addresses, so fonts and icons
+  failed to load; removed before finishing.
+
+### Verified on the laptop
+
+- Timings above (curl, 4–5 runs each); page review at 1366 px and 375 px: no sideways scrolling,
+  no broken images; `check-pages.sh`, `smoke-test.sh`, `configure.sh` second run 0 changes.
+
+### Not done
+
+- The stylesheet is 1.4 MB (245 KB compressed), mostly Moodle core's Font Awesome, Noto Sans JP and
+  VideoJS font rules. Trimming it means overriding core styles; left as is.
+- Moodle's policy-acceptance page (shown at sign-up) and the cookie/policy banner still use plain
+  Moodle styling; the policies themselves are drafts.
+- Real-device testing, RTL, accessibility audit, load test.
+
+## 2026-11-13 — Hikmah look inside the live class (bbbext_hikmah)
+
+Approved by the owner in chat; a fourth Hikmah plugin, not in the original PRD or build guide.
+
+### Added
+
+- **`bbbext_hikmah`** (`plugins/mod/bigbluebuttonbn/extension/hikmah`), a BigBlueButton extension
+  subplugin using Moodle's `action_url_addons` extension point (no core or BBB module change). It
+  only adds parameters to the calls Moodle already sends to the BBB server:
+  - join: Hikmah colours (`userdata-bbb_custom_style_url` on HTTPS sites, inline
+    `userdata-bbb_custom_style` on HTTP sites such as the laptop), `userdata-bbb_client_title`,
+    and `userdata-bbb_display_branding_area` on HTTPS;
+  - create: `logo` and `darklogo` from the theme, on HTTPS sites only.
+- Stylesheet `client/classroom.css`: sets the web client's colour variables only, no generated
+  class names. Setting `bbbext_hikmah | brandclient` from `HIKMAH_BBB_BRANDING` (default 1) in
+  `config/settings/080-bbb.php`. Wired into the image, dev mounts, CI matrix and README.
+
+### Fixed
+
+- Classroom page: the "can this class be joined" check read a cached meeting status and could turn
+  people away from a running class. It now asks the BBB server, and lets the join decide if the
+  server cannot be reached.
+
+### Found
+
+- **Why learners still left the portal:** the BBB host in use (BiggerBlueButton) puts its own
+  "Join meeting" screen in front of every class; its "Join from browser" button opens a new
+  window. Only the account owner can switch it off (BiggerBlueButton settings, "mobile" section).
+  Until then the class cannot load inside the frame.
+- The BBB server URL and secret on this laptop were entered in the admin screen, not in `.env.dev`
+  (both are empty there), so a rebuilt site would fall back to Moodle's free tier. Add them to
+  `.env.dev` to make it repeatable.
+
+### Verified on the laptop
+
+- PHPUnit `branding_test` (4 tests, 24 assertions) passes; plugin installs through the upgrade;
+  `configure.sh` second run 0 changes; `scripts/dev/check-pages.sh` passes.
+- A real join link from the dev site carries `userdata-bbb_client_title` and a 601-character
+  inline `userdata-bbb_custom_style`.
+
+### Not verified
+
+- Whether BiggerBlueButton honours the colours, title and logo: the class could not be opened in
+  the frame while the provider's join screen is on. The colour variable names come from the
+  BigBlueButton web client and were not checked against this provider's version.
+- The HTTPS path (stylesheet address and logo), moodle-plugin-ci, Behat.
+
 ## 2026-11-13 — In-portal classroom (live classes and recordings stay inside Hikmah)
 
 Approved by the owner in chat; not in the original PRD or build guide (see PRD section 15).

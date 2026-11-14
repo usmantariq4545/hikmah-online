@@ -15,6 +15,7 @@ jobs:
           - { name: paygw_hikmahtransfer, path: plugins/payment/gateway/hikmahtransfer, extra: "" }
           - { name: local_hikmahattendance, path: plugins/local/hikmahattendance, extra: "danmarsden/moodle-mod_attendance" }
           - { name: theme_hikmah, path: plugins/theme/hikmah, extra: "" }
+          - { name: bbbext_hikmah, path: plugins/mod/bigbluebuttonbn/extension/hikmah, extra: "" }
 
     services:
       postgres:

@@ -32,7 +32,7 @@ $code = trim(optional_param('code', '', PARAM_ALPHANUM));
 $PAGE->set_context(context_system::instance());
 $PAGE->set_url(new moodle_url('/theme/hikmah/verify.php', $code !== '' ? ['code' => $code] : []));
 $PAGE->set_pagelayout('hikmah');
-$PAGE->set_title(get_string('verify_title', 'theme_hikmah') . ' | ' . format_string($SITE->shortname));
+$PAGE->set_title(get_string('verify_title', 'theme_hikmah'));
 $PAGE->set_heading(get_string('verify_title', 'theme_hikmah'));
 $PAGE->add_body_class('hk-verifypage');
 

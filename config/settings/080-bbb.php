@@ -40,4 +40,8 @@ hk_set('bigbluebuttonbn_recording_default', 1);
 hk_set('bigbluebuttonbn_waitformoderator_default', 1);
 hk_set('bigbluebuttonbn_participant_moderator_default', '0');
 
+// Hikmah look inside the live class (bbbext_hikmah): colours and logo are requested from the BBB
+// server on every create and join. Set HIKMAH_BBB_BRANDING=0 to send nothing extra.
+hk_set('brandclient', hk_env('HIKMAH_BBB_BRANDING', '1') === '0' ? 0 : 1, 'bbbext_hikmah');
+
 hk_done(__FILE__);

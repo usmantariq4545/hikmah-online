@@ -50,6 +50,7 @@ scripts/dc.sh exec -T -u www-data moodle php admin/cli/purge_caches.php
 | `plugins/payment/gateway/hikmahtransfer` | Transfer payments: receipt upload, review queue, approval |
 | `plugins/local/hikmahattendance` | BBB evidence to attendance preview, override, apply, report |
 | `plugins/theme/hikmah` | Branding, home, catalog, course detail, FAQ, verification, dashboard |
+| `plugins/mod/bigbluebuttonbn/extension/hikmah` | Hikmah colours and logo inside the live class (BigBlueButton extension) |
 | `config/settings` | Site configuration as code, applied by `scripts/configure.sh` |
 | `docker`, `compose` | Images and Compose files for dev and servers |
 | `docs/runbooks` | Staging, go-live, backup and restore, upgrades |

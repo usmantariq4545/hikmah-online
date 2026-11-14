@@ -43,7 +43,7 @@ if (!empty($CFG->forcelogin)) {
 $PAGE->set_context(context_system::instance());
 $PAGE->set_url(new moodle_url('/theme/hikmah/catalog.php', array_filter($filters)));
 $PAGE->set_pagelayout('hikmah');
-$PAGE->set_title(get_string('catalog_title', 'theme_hikmah') . ' | ' . format_string($SITE->shortname));
+$PAGE->set_title(get_string('catalog_title', 'theme_hikmah'));
 $PAGE->set_heading(get_string('catalog_title', 'theme_hikmah'));
 $PAGE->add_body_class('hk-catalogpage');
 

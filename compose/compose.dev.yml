@@ -5,6 +5,7 @@ x-dev-code: &dev-code
   - ../plugins/payment/gateway/hikmahtransfer:/var/www/moodle/public/payment/gateway/hikmahtransfer
   - ../plugins/local/hikmahattendance:/var/www/moodle/public/local/hikmahattendance
   - ../plugins/theme/hikmah:/var/www/moodle/public/theme/hikmah
+  - ../plugins/mod/bigbluebuttonbn/extension/hikmah:/var/www/moodle/public/mod/bigbluebuttonbn/extension/hikmah
 
 services:
   moodle:
@@ -22,6 +23,7 @@ services:
       - ../plugins/payment/gateway/hikmahtransfer:/var/www/moodle/public/payment/gateway/hikmahtransfer
       - ../plugins/local/hikmahattendance:/var/www/moodle/public/local/hikmahattendance
       - ../plugins/theme/hikmah:/var/www/moodle/public/theme/hikmah
+      - ../plugins/mod/bigbluebuttonbn/extension/hikmah:/var/www/moodle/public/mod/bigbluebuttonbn/extension/hikmah
       - ../config/config.php:/var/www/moodle/config.php:ro
       - ../config/settings:/opt/hikmah/settings:ro
       - ../config/roles:/opt/hikmah/roles
@@ -40,6 +42,7 @@ services:
       - ../plugins/payment/gateway/hikmahtransfer:/var/www/moodle/public/payment/gateway/hikmahtransfer
       - ../plugins/local/hikmahattendance:/var/www/moodle/public/local/hikmahattendance
       - ../plugins/theme/hikmah:/var/www/moodle/public/theme/hikmah
+      - ../plugins/mod/bigbluebuttonbn/extension/hikmah:/var/www/moodle/public/mod/bigbluebuttonbn/extension/hikmah
       - ../config/config.php:/var/www/moodle/config.php:ro
 
   nginx:
@@ -50,6 +53,7 @@ services:
       - ../plugins/payment/gateway/hikmahtransfer:/var/www/moodle/public/payment/gateway/hikmahtransfer:ro
       - ../plugins/local/hikmahattendance:/var/www/moodle/public/local/hikmahattendance:ro
       - ../plugins/theme/hikmah:/var/www/moodle/public/theme/hikmah:ro
+      - ../plugins/mod/bigbluebuttonbn/extension/hikmah:/var/www/moodle/public/mod/bigbluebuttonbn/extension/hikmah:ro
 
   mailpit:
     image: axllent/mailpit:latest

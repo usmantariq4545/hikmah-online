@@ -76,7 +76,10 @@ if ($siteenv === 'staging') {
 }
 
 if ($siteenv === 'dev') {
-    $CFG->debug = 32767; // DEBUG_DEVELOPER.
+    // Developer debugging makes Moodle rescan every plugin folder on each request (about 180 ms
+    // per request on the laptop, and a page makes around a hundred). It is therefore opt-in:
+    // set MOODLE_DEBUG=developer in .env.dev while writing code, leave it unset for testing.
+    $CFG->debug = $hikmahenv('MOODLE_DEBUG', '') === 'developer' ? 32767 : 0;
     $CFG->debugdisplay = 0;
     $CFG->cachejs = true;
     // PHPUnit (docker compose dev only).

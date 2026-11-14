@@ -58,7 +58,7 @@ if (!$course->visible && !has_capability('moodle/course:viewhiddencourses', $con
 $PAGE->set_context(context_system::instance());
 $PAGE->set_url($pageurl);
 $PAGE->set_pagelayout('hikmah');
-$PAGE->set_title(format_string($course->fullname) . ' | ' . format_string($SITE->shortname));
+$PAGE->set_title(format_string($course->fullname));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->add_body_class('hk-coursepage');
 

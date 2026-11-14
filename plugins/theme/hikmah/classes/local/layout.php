@@ -25,6 +25,37 @@ namespace theme_hikmah\local;
  */
 class layout {
     /**
+     * Highlights the menu item whose address has the given path, and no other. Leaves the menu
+     * unchanged when no item has that path.
+     *
+     * @param array $nodes exported menu items (arrays or objects)
+     * @param string $path path of the item to highlight, such as /theme/hikmah/catalog.php
+     * @return array
+     */
+    public static function mark_active(array $nodes, string $path): array {
+        $found = false;
+        foreach ($nodes as $node) {
+            $url = is_array($node) ? ($node['url'] ?? '') : ($node->url ?? '');
+            if (parse_url((string) $url, PHP_URL_PATH) === $path) {
+                $found = true;
+            }
+        }
+        if (!$found) {
+            return $nodes;
+        }
+        foreach ($nodes as $i => $node) {
+            $url = is_array($node) ? ($node['url'] ?? '') : ($node->url ?? '');
+            $active = parse_url((string) $url, PHP_URL_PATH) === $path;
+            if (is_array($node)) {
+                $nodes[$i]['isactive'] = $active;
+            } else {
+                $nodes[$i]->isactive = $active;
+            }
+        }
+        return $nodes;
+    }
+
+    /**
      * Context shared by every Hikmah layout: navigation, user menu and body attributes.
      *
      * @param \moodle_page $page
@@ -37,6 +68,15 @@ class layout {
 
         $primary = new \core\navigation\output\primary($page);
         $primarymenu = $primary->export_for_template($page->get_renderer('core'));
+
+        // A course detail page belongs under "Courses" (the catalog), but Moodle only highlights a
+        // menu item whose address matches the page exactly.
+        if ($page->url->get_path(false) === '/theme/hikmah/course.php') {
+            $primarymenu['moremenu']['nodearray'] = self::mark_active(
+                $primarymenu['moremenu']['nodearray'] ?? [], '/theme/hikmah/catalog.php');
+            $primarymenu['mobileprimarynav'] = self::mark_active(
+                $primarymenu['mobileprimarynav'] ?? [], '/theme/hikmah/catalog.php');
+        }
 
         return [
             'sitename' => format_string($SITE->shortname, true,

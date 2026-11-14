@@ -68,7 +68,7 @@ $PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/theme/hikmah/classroom.php', $pageparams));
 $PAGE->set_pagelayout('classroom');
 $PAGE->set_cacheable(false);
-$PAGE->set_title(format_string($instance->get_meeting_name()) . ' | ' . format_string($course->shortname));
+$PAGE->set_title(format_string($instance->get_meeting_name()) . ' | ' . format_string($course->fullname));
 $PAGE->set_heading(format_string($course->fullname));
 
 // With the in-portal classroom switched off, hand over to the activity page and its own button.
@@ -86,9 +86,11 @@ if ($isrecording) {
     $canjoin = $instance->can_join();
     if ($canjoin) {
         try {
-            $canjoin = (bool) (new meeting($instance))->can_join();
+            // Ask the BigBlueButton server now: a cached "not running" would wrongly turn people away.
+            $canjoin = (bool) meeting::get_meeting_info_for_instance($instance, true)->canjoin;
         } catch (server_not_available_exception $e) {
-            $canjoin = false;
+            // Unknown, so let the join itself decide; the frame shows "could not be opened" if it fails.
+            $canjoin = true;
         }
     }
     if (!$canjoin) {

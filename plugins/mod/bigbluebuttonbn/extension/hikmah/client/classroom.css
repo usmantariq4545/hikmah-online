@@ -1,0 +1,38 @@
+/*
+ * Hikmah look for the BigBlueButton live class (BigBlueButton 2.6 to 3.0 web client).
+ *
+ * Sent to the class by bbbext_hikmah, either as an address (HTTPS sites) or inline (HTTP sites),
+ * so keep it short and free of url() references. It only sets the colour variables the web client
+ * reads; it does not depend on the client's generated class names, which change between versions.
+ *
+ * Palette (theme_hikmah scss/pre.scss): ink #1a1a1a, sun #ffe000, sky #0a6a9c, paper #fbfaf6.
+ */
+:root {
+    --color-primary: #0a6a9c;
+    --color-link: #0a6a9c;
+    --color-blue-light: #1597d5;
+    --color-blue-lighter: #8fd0ee;
+    --color-blue-lightest: #e3f3fb;
+    --color-success: #1f7a4d;
+    --color-danger: #b3261e;
+    --color-warning: #9a6700;
+
+    --color-background: #1a1a1a;
+    --color-gray-dark: #1a1a1a;
+    --color-gray: #5c5b55;
+    --color-off-white: #fbfaf6;
+    --user-list-bg: #f4f1e7;
+
+    --btn-primary-bg: #1a1a1a;
+    --btn-primary-color: #ffffff;
+    --btn-primary-hover-bg: #3a3a36;
+    --btn-primary-active-bg: #3a3a36;
+    --btn-primary-border: #1a1a1a;
+
+    --loader-bg: #1a1a1a;
+    --loader-bullet: #ffe000;
+
+    --unread-messages-bg: #b3261e;
+    --item-focus-border: #0a6a9c;
+    --color-heading: #1a1a1a;
+}

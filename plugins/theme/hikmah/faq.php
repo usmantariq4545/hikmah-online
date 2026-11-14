@@ -28,7 +28,7 @@ require_once(__DIR__ . '/../../config.php');
 $PAGE->set_context(context_system::instance());
 $PAGE->set_url(new moodle_url('/theme/hikmah/faq.php'));
 $PAGE->set_pagelayout('hikmah');
-$PAGE->set_title(get_string('faq_title', 'theme_hikmah') . ' | ' . format_string($SITE->shortname));
+$PAGE->set_title(get_string('faq_title', 'theme_hikmah'));
 $PAGE->set_heading(get_string('faq_title', 'theme_hikmah'));
 $PAGE->add_body_class('hk-faqpage');
 

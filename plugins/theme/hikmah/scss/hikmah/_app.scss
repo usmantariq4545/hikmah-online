@@ -1067,3 +1067,21 @@
     grid-template-columns: 1fr;
     gap: 1rem;
 }
+
+// ---- Phone fixes (2026-11-14 review) ---------------------------------------------------------
+.hk-ring span small {
+    font-size: .7em;
+    margin-inline-start: 1px;
+}
+@media (max-width: 575.98px) {
+    // The decorative tiles sat over the date and greeting; keep them in the corner and faint.
+    .hk-dash__motif {
+        width: 220px;
+        inset-inline-end: -120px;
+        top: -110px;
+        opacity: .35;
+    }
+    .hk-dash__hero .hk-eyebrow {
+        letter-spacing: .18em;
+    }
+}
