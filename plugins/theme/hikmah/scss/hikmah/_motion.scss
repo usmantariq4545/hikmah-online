@@ -176,3 +176,76 @@
         navigation: none;
     }
 }
+
+// ---- Smooth scrolling (2026-11-14) --------------------------------------------------------------
+// The rosettes used to animate every tile for ever, which forced a style recalculation and repaint
+// on every frame while scrolling. Now only the whole graphic turns (a cheap, GPU-composited
+// transform), and it pauses while off screen (.is-paused is set by the head script).
+.hk-motif--animate {
+    will-change: transform;
+}
+.hk-motif.is-paused,
+.hk-motif.is-paused .hk-tile {
+    animation-play-state: paused;
+}
+// The quote rosette breathes as one piece instead of tile by tile.
+.hk-motif--breathe {
+    animation: hk-motif-breathe 6s ease-in-out infinite;
+    will-change: transform;
+    .hk-tile {
+        animation: none;
+    }
+}
+@keyframes hk-motif-breathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.04); }
+}
+// Keep a GPU layer only while an element is waiting to be revealed, and move it less far, so
+// content settles quickly instead of sliding about during a scroll.
+.hk-js [data-hk-reveal] {
+    transform: translateY(16px);
+    transition-duration: .6s;
+    &[data-hk-reveal="left"] { transform: translateX(-20px); }
+    &[data-hk-reveal="right"] { transform: translateX(20px); }
+    &[data-hk-reveal="scale"] { transform: scale(.97); }
+    &[data-hk-reveal="fade"] { transform: none; }
+    &.is-in {
+        transform: none;
+        will-change: auto;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .hk-motif--breathe {
+        animation: none;
+    }
+}
+
+// The "Live" dot pulse used to animate a box-shadow, which repaints the whole course card on every
+// frame for as long as the page is open. The ring is now a separate layer that only scales and
+// fades (both handled by the GPU), and it stops while the card is off screen.
+.hk-chip--live .hk-chip__dot {
+    position: relative;
+    box-shadow: none;
+    animation: none;
+    &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: rgba(229, 72, 77, .55);
+        animation: hk-pulse-ring 1.8s ease-out infinite;
+        will-change: transform, opacity;
+    }
+}
+.is-paused .hk-chip--live .hk-chip__dot::after {
+    animation-play-state: paused;
+}
+@keyframes hk-pulse-ring {
+    0% { transform: scale(1); opacity: 1; }
+    70%, 100% { transform: scale(3.4); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .hk-chip--live .hk-chip__dot::after {
+        animation: none;
+    }
+}

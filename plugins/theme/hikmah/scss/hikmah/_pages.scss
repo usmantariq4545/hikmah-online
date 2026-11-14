@@ -1264,11 +1264,38 @@
         margin-bottom: 1.2rem;
         animation: hk-shake .5s ease both;
     }
+    // One quiet row of links under the form: ours plus Moodle's footer links.
     &__legal {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: .45rem 1.25rem;
         margin-top: 2rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid $hk-line;
         font-size: .8rem;
+        line-height: 1.4;
         color: $hk-muted;
         text-align: center;
+        > a,
+        > div {
+            display: inline-flex;
+            align-items: center;
+        }
+        // Same page as "Privacy and terms" above.
+        > .policiesfooter {
+            display: none;
+        }
+        a {
+            color: $hk-muted;
+            text-decoration: none;
+            &:hover,
+            &:focus-visible {
+                color: $hk-sky-deep;
+                text-decoration: underline;
+            }
+        }
     }
 }
 @keyframes hk-shake {

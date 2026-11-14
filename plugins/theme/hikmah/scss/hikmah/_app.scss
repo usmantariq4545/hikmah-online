@@ -1085,3 +1085,46 @@
         letter-spacing: .18em;
     }
 }
+
+// ---- Smooth scrolling: no live blur behind fixed bars (2026-11-14) -----------------------------
+// A blurred, see-through bar has to be repainted on every scroll frame, which is what made
+// scrolling stutter on ordinary laptops and phones. A solid bar looks the same and costs nothing.
+.navbar.fixed-top {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: $hk-paper !important;
+    &.is-scrolled {
+        background: $hk-paper !important;
+    }
+}
+.hk-catalog__bar {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: #fff;
+}
+
+// ---- Login artwork (2026-11-14) ---------------------------------------------------------------
+// The rosette sat on top of the logo and the text. It is now smaller, set back to the right and
+// faded, with dark shading behind the logo (top) and the message (bottom) so both stay readable.
+.hk-auth {
+    &__motif {
+        width: min(105%, 600px);
+        left: 64%;
+        top: 46%;
+        opacity: .5;
+    }
+    &__art::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        background:
+            linear-gradient(to bottom, rgba(26, 26, 26, .92) 0%, rgba(26, 26, 26, 0) 26%),
+            linear-gradient(to top, rgba(26, 26, 26, .96) 0%, rgba(26, 26, 26, .82) 30%, rgba(26, 26, 26, 0) 58%);
+    }
+    &__logo,
+    &__quote {
+        position: relative;
+    }
+}

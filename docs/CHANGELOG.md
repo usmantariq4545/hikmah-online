@@ -1,5 +1,29 @@
 # Changelog
 
+## 2026-11-14 — Smooth scrolling and login page polish
+
+### Changed
+
+- **Smooth scrolling.** The pulsing red "Live" dot on course cards animated a box-shadow, which
+  repainted the whole card on every frame for as long as the page was open. It is now a separate
+  ring that only scales and fades (GPU-composited) and pauses when off screen. Rosette animations
+  pause off screen; the quote rosette breathes as one piece instead of tile by tile. The top bar
+  and catalog search bar no longer blur what scrolls behind them (a live blur is repainted on
+  every scroll frame). Scroll reveals move less (16 px instead of 28 px) and drop their GPU layer
+  once shown.
+- **Login page.** The rosette is smaller, set back and faded, with dark shading behind the logo
+  and the message so neither is covered. Moodle's footer links (data retention summary, mobile
+  app) now sit in the card's link row instead of an unstyled list under the page; the duplicate
+  "Policies" link is hidden (same page as "Privacy and terms").
+
+### Measured (headless Chrome, CPU slowed 4×, real mouse-wheel input)
+
+- CPU busy time on an idle page, per 3.3 s: catalog 1,415 → 169 ms, course detail 1,017 → 51 ms,
+  home about 17 ms once settled.
+- Home page while scrolling: 40 → 55 frames per second, dropped frames 24 → 4.
+- Not measurable headless: the cost of the removed blur, which falls on the graphics chip.
+  Check on a real laptop and phone.
+
 ## 2026-11-14 — Speed and UI review
 
 ### Faster

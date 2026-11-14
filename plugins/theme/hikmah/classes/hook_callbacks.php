@@ -68,6 +68,10 @@ class hook_callbacks {
             "var o=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){" .
             "e.target.classList.add('is-in');o.unobserve(e.target);}});},{threshold:0.12,rootMargin:'0px 0px -6% 0px'});" .
             "d.querySelectorAll('[data-hk-reveal],.hk-journey').forEach(function(el){o.observe(el);});" .
+            // Pause the rosette animations while they are off screen.
+            "var p=new IntersectionObserver(function(es){es.forEach(function(e){" .
+            "e.target.classList.toggle('is-paused',!e.isIntersecting);});});" .
+            "d.querySelectorAll('.hk-motif,.hk-course').forEach(function(el){p.observe(el);});" .
             "w.hkRevealReady=true;});" .
             "setTimeout(function(){if(!w.hkRevealReady){h.classList.remove('hk-js');}},4000);" .
             "})(window,document);</script>\n" .

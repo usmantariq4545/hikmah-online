@@ -54,16 +54,16 @@
                 </a>
                 {{{ output.course_content_header }}}
                 {{{ output.main_content }}}
-                <p class="hk-auth__legal">
+                <nav class="hk-auth__legal" aria-label="{{#str}}footer_privacy, theme_hikmah{{/str}}">
                     <a href="{{output.hk_home_url}}">{{#str}}backtohome, theme_hikmah{{/str}}</a>
-                    &nbsp;·&nbsp;
                     <a href="{{output.hk_policies_url}}">{{#str}}footer_privacy, theme_hikmah{{/str}}</a>
-                </p>
+                    {{! Moodle's footer links: data retention summary and the mobile app. }}
+                    {{{ output.standard_footer_html }}}
+                </nav>
             </div>
         </main>
     </div>
     <div class="hk-auth__footer">
-        {{{ output.standard_footer_html }}}
         {{{ output.standard_end_of_body_html }}}
         <div class="footer-content-debugging footer-dark bg-dark text-light">
             <div class="container-fluid footer-dark-inner">{{{ output.debug_footer_html }}}</div>
