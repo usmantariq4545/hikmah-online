@@ -1,5 +1,33 @@
 # Changelog
 
+## 2026-11-17 — Hosting on Contabo
+
+Decision: the site is hosted on a Contabo Cloud VPS 20 (6 vCPU, 12 GB, 100 GB NVMe, Ubuntu 24.04,
+Singapore). This replaces the guide's 160 GB disk minimum for the pilot; recordings live with the
+BBB provider, so 100 GB is ample.
+
+### Added
+
+- `scripts/server/bootstrap.sh`: one-time preparation of a fresh Ubuntu 24.04 server (security
+  updates and automatic security updates, `hikmah` user, firewall for SSH/HTTP/HTTPS only,
+  fail2ban, Docker from Docker's repository with log rotation, 4 GB swap, rclone; password SSH
+  logins switched off only once a key is in place).
+- `scripts/server/new-env.sh`: creates `.env.staging` / `.env.prod` on the server with generated
+  database password, administrator password and upgrade key; never overwrites.
+- `docs/runbooks/contabo.md`: from purchase to live HTTPS site with nightly off-site backups.
+- `IMAGE_PULL_POLICY` (compose.server.yml, .env.example): `never` lets the images be built on the
+  server instead of pulled from GitHub's registry.
+
+### Verified
+
+- Both scripts pass `bash -n`; `new-env.sh` tested in a scratch folder (fills address and email,
+  generates secrets, refuses to overwrite, rejects `https://` in the host).
+
+### Not verified
+
+- Nothing has run on a real Contabo server yet; `bootstrap.sh` has not been executed anywhere.
+- `.github/workflows/build.yml` (registry images) has never run.
+
 ## 2026-11-14 — Smooth scrolling and login page polish
 
 ### Changed

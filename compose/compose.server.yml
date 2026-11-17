@@ -1,17 +1,18 @@
 # Hikmah Online — staging / production overrides. Caddy terminates TLS (automatic Let's Encrypt)
-# and proxies to Nginx. Images come from the registry (MOODLE_IMAGE / NGINX_IMAGE in the env file);
-# nothing is built or edited on the server.
+# and proxies to Nginx. Images normally come from the registry (MOODLE_IMAGE / NGINX_IMAGE in the env
+# file). Fallback: IMAGE_PULL_POLICY=never plus `scripts/dc.sh build` builds them on the server;
+# see docs/runbooks/contabo.md. Nothing is edited on the server.
 
 services:
   moodle:
-    pull_policy: always
+    pull_policy: ${IMAGE_PULL_POLICY:-always}
     deploy:
       resources:
         limits:
           memory: 3g
 
   cron:
-    pull_policy: always
+    pull_policy: ${IMAGE_PULL_POLICY:-always}
 
   adhoc:
     image: ${MOODLE_IMAGE:-hikmah-moodle:local}
@@ -44,7 +45,7 @@ services:
         condition: service_healthy
 
   nginx:
-    pull_policy: always
+    pull_policy: ${IMAGE_PULL_POLICY:-always}
 
   caddy:
     image: caddy:2
