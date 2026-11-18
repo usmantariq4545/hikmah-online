@@ -29,6 +29,7 @@
         "dashboardurl": "https://example.com/my/",
         "logourl": "https://example.com/theme/image.php/hikmah/theme_hikmah/1/logo-light",
         "frameurl": "https://example.com/mod/bigbluebuttonbn/bbb_view.php?action=join&id=3",
+        "frameallow": "camera 'self' https://bbb.example.com; microphone 'self' https://bbb.example.com",
         "isrecording": false,
         "motifclass": "hk-classroom__motif hk-motif--animate"
     }
@@ -67,7 +68,7 @@
         <iframe class="hk-classroom__frame"
                 data-src="{{frameurl}}"
                 title="{{classname}}"
-                allow="camera; microphone; display-capture; fullscreen; autoplay; clipboard-write; speaker-selection"
+                allow="{{frameallow}}"
                 allowfullscreen></iframe>
 
         <div class="hk-classroom__panel hk-classroom__panel--loading" role="status">

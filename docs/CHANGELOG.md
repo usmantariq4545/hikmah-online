@@ -1,5 +1,27 @@
 # Changelog
 
+## 2026-11-18 — Live classes on the live site
+
+- BiggerBlueButton (`hikmahonline1`) connected on https://online.hikmahinstitute.org.pk:
+  `BBB_SERVER_URL` / `BBB_SHARED_SECRET` copied from the laptop site into `.env.prod` on the server
+  (never through Git or chat), applied by `configure.sh`; the server accepted the secret.
+- The owner switched off BiggerBlueButton's "BlueTune" app/browser join screen. Verified: joins go
+  straight to the class page, which sends no frame-blocking headers.
+- Branding verified: BiggerBlueButton applies `bbbext_hikmah`'s stylesheet (class buttons render
+  in Hikmah blue `#0a6a9c`).
+- The owner tested a real class (teacher and student) in the in-portal classroom page: it stays
+  inside Hikmah with microphone and camera working.
+- Fixed (classroom page): microphone and camera were refused inside the class because the frame's
+  `allow` list only covered the frame's starting address (this site); it now names the
+  BigBlueButton server's origin as well. The owner confirmed audio and video work.
+- Fixed (classroom page): ending a meeting showed "The class could not be opened here". The page
+  now notices the class opening by checking every second (the class page can take long to fire
+  `load`), and any return to this site after that shows "You have left the class". Tested on the
+  laptop site headlessly and confirmed by the owner on the live site.
+- Fixed: `seed.php` passed `participants` to the test-data generator, which ignores it, so demo
+  classes had no moderator and could never start. It is now set after creation; the four demo
+  classes on the live site were corrected the same way.
+
 ## 2026-11-18 — Live on Contabo: https://online.hikmahinstitute.org.pk
 
 First production install, following `docs/runbooks/contabo.md` (runbook corrected as it ran).

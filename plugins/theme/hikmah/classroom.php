@@ -101,6 +101,20 @@ if ($isrecording) {
 
 $frameurl = new moodle_url('/mod/bigbluebuttonbn/bbb_view.php', $frameparams);
 
+// The frame starts on this site and is redirected to the BigBlueButton server. A bare
+// allow="microphone" only covers the frame's starting address, so the browser would refuse the
+// microphone and camera to the BigBlueButton page. Grant them to this site and to the server's
+// own address explicitly.
+$origins = ["'self'"];
+$bbburl = (string) \mod_bigbluebuttonbn\local\config::get('server_url');
+$bbbparts = parse_url($bbburl);
+if (!empty($bbbparts['scheme']) && !empty($bbbparts['host'])) {
+    $origins[] = $bbbparts['scheme'] . '://' . $bbbparts['host'] . (empty($bbbparts['port']) ? '' : ':' . $bbbparts['port']);
+}
+$allowlist = implode(' ', array_unique($origins));
+$features = ['camera', 'microphone', 'display-capture', 'fullscreen', 'autoplay', 'clipboard-write', 'speaker-selection'];
+$frameallow = implode('; ', array_map(fn($f) => $f . ' ' . $allowlist, $features));
+
 $data = [
     'classname' => format_string($instance->get_meeting_name()),
     'coursename' => format_string($course->fullname, true, ['context' => context_course::instance($course->id)]),
@@ -108,6 +122,7 @@ $data = [
     'dashboardurl' => (new moodle_url('/my/'))->out(false),
     'logourl' => $OUTPUT->image_url('logo-light', 'theme_hikmah')->out(false),
     'frameurl' => $frameurl->out(false),
+    'frameallow' => $frameallow,
     'isrecording' => $isrecording,
     'motifclass' => 'hk-classroom__motif hk-motif--animate',
 ];

@@ -87,6 +87,7 @@ export const init = () => {
     const setState = (state) => root.setAttribute('data-state', state);
     const state = () => root.getAttribute('data-state');
     const load = () => {
+        reachedClass = false;
         setState('loading');
         frame.src = src;
     };
@@ -95,19 +96,38 @@ export const init = () => {
     };
 
     // While the class runs on the BigBlueButton server the frame is on another site and cannot
-    // be read; once it can be read again it has come back to this site (class left, or an error).
+    // be read. Once it can be read again it has come back to this site: after the class was
+    // running, that means the class was left or ended (BigBlueButton sends people to Moodle's
+    // logout page, which may redirect on to the course or dashboard). Only a return before the
+    // class ever opened is an error.
+    let reachedClass = false;
+    // The class page can take a long time to fire 'load' (it streams media), so also check every
+    // second whether the frame has moved to the BigBlueButton server.
+    setInterval(() => {
+        if (reachedClass || state() !== 'loading' || !frame.getAttribute('src') || frame.getAttribute('src') === 'about:blank') {
+            return;
+        }
+        try {
+            // Reading works only while the frame is still on this site.
+            void frame.contentWindow.location.href;
+        } catch (error) {
+            reachedClass = true;
+            setState('live');
+        }
+    }, 1000);
     frame.addEventListener('load', () => {
         let href;
         try {
             href = frame.contentWindow.location.href;
         } catch (error) {
+            reachedClass = true;
             setState('live');
             return;
         }
         if (!href || href === 'about:blank') {
             return;
         }
-        if (href.indexOf('action=logout') !== -1) {
+        if (reachedClass || href.indexOf('action=logout') !== -1) {
             unload();
             setState('ended');
             return;
