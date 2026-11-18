@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-11-18 — Enrolment page: one simple flow, and approval courses work again
+
+- **Bug:** applying for an approval course always said "Enrolment is disabled or inactive". The
+  demo script created the enrol_apply instance without `customint6` (accept new applications);
+  fixed in `seed.php` and on both sites. The plugin's own default is on, so instances staff add
+  through Moodle were not affected.
+- **Bug:** the Hikmah course page never showed "Application sent": enrol_apply stores a new
+  application as status 1 (suspended), the page only checked 2 (wait list). Now checks both.
+- **Flow:** the theme now renders Moodle's enrolment page (`core_course_renderer::enrolment_options`
+  override; core untouched). When it has nothing the Hikmah course page does not already offer
+  (free, paid, or any course opened by someone not enrolled) it sends people to the course page.
+  Approval courses get a short "Apply to join this course" page: a compact course card with a
+  link to the full details, three plain steps, an optional note box and a "Send application"
+  button (the plugin labelled it "Enrol me"). After applying, the student lands on the course
+  page with "Your application has been sent" and an "Application sent" button.
+- Verified on the laptop site: a full application as a demo student (saved, redirected, button
+  state), page alignment at 390px and 1440px, no sideways scrolling.
+- Note: the messages say staff will email the student; email is not set up on the live site yet.
+
 ## 2026-11-18 — Payment page redesign; full-width pages and footer
 
 - **Width (site-wide):** Moodle capped standard pages, and their footer, at 830px. Set

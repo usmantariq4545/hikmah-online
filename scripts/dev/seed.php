@@ -371,7 +371,9 @@ foreach ($courses as $idnumber => $spec) {
             $fields += ['customint6' => 1, 'customint4' => 0, 'name' => ''];
         }
         if ($method === 'apply') {
-            $fields += ['customtext1' => 'Tell us briefly why you would like to join this course.'];
+            // customint6 = accept new applications (the plugin refuses every application without it).
+            $fields += ['customint6' => 1, 'customtext1' => '', 'customint7' => 1,
+                'customtext2' => 'Anything you would like us to know? (optional)'];
         }
         $created[$idnumber]['enrolid'] = $plugin->add_instance($course, $fields);
     } else {

@@ -1330,3 +1330,115 @@
 .pagelayout-mydashboard *:has(> #block-region-content) {
     padding-inline: 0 !important;
 }
+
+// ---- Apply to join (enrol/index.php for approval courses; the theme renders it) ------------------
+#page-enrol-index #region-main {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+}
+.hk-apply {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    gap: 1.5rem;
+    align-items: start;
+    &__mode {
+        display: inline-block;
+        font-size: .72rem;
+        font-weight: 600;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        color: $hk-muted;
+        margin-bottom: .6rem;
+    }
+    &__summary {
+        margin: 0 0 .8rem;
+    }
+    &__teachers {
+        margin: 0 0 1rem;
+        color: $hk-muted;
+        span {
+            font-weight: 600;
+            color: $hk-ink;
+        }
+    }
+    &__details {
+        font-weight: 600;
+    }
+    &__title {
+        font-size: 1.35rem;
+        font-weight: 500;
+        margin: 0 0 .8rem;
+    }
+    &__steps {
+        margin: 0 0 1.2rem;
+        padding-inline-start: 1.2rem;
+        color: $hk-muted;
+        li {
+            margin-bottom: .25rem;
+        }
+    }
+    // The plugin's form: drop its collapsible "Course enrol confirmation" header (the panel has
+    // its own title) and stack the fields.
+    &__widget {
+        .mform > fieldset > legend,
+        .mform .ftoggler,
+        .mform .collapsible-actions,
+        .mform p:empty {
+            display: none !important;
+        }
+        .mform fieldset {
+            border: 0;
+            padding: 0;
+            margin: 0;
+        }
+        form,
+        .mform,
+        .mform .fitem.row,
+        .mform .fcontainer {
+            margin-inline: 0 !important;
+            padding-inline: 0 !important;
+        }
+        .mform .fcontainer {
+            display: block !important;
+            padding: 0;
+        }
+        .mform .fitem.row {
+            display: block;
+            margin: 0 0 1rem;
+            > .col-md-3,
+            > .col-md-9 {
+                width: 100%;
+                max-width: 100%;
+                flex: none;
+                padding-inline: 0;
+            }
+        }
+        .mform .col-form-label {
+            padding: 0 0 .35rem;
+            font-weight: 600;
+        }
+        textarea {
+            width: 100%;
+            max-width: 100%;
+            min-height: 7rem;
+        }
+        #fgroup_id_buttonar,
+        .fitem_actionbuttons {
+            margin-top: .4rem;
+            .col-form-label {
+                display: none !important;
+            }
+        }
+        .alert {
+            margin: 0;
+        }
+    }
+}
+@media (max-width: 767.98px) {
+    .hk-apply {
+        grid-template-columns: minmax(0, 1fr);
+        padding-inline: .5rem;
+    }
+}

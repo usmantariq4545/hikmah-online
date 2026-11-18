@@ -266,11 +266,10 @@ class course_detail {
         }
 
         if ($enrol->type === 'approval') {
-            $waiting = $DB->record_exists('user_enrolments', [
-                'enrolid' => $enrol->instance->id,
-                'userid' => $userid,
-                'status' => 2, // ENROL_APPLY_USER_WAIT.
-            ]);
+            // enrol_apply records a new application as suspended (1) and a wait-listed one as 2.
+            $waiting = $DB->record_exists_select('user_enrolments',
+                'enrolid = :enrolid AND userid = :userid AND status IN (1, 2)',
+                ['enrolid' => $enrol->instance->id, 'userid' => $userid]);
             if ($waiting) {
                 return array_merge($action, [
                     'kind' => 'waiting',
