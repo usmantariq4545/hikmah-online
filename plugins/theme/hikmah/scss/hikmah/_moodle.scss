@@ -421,6 +421,22 @@ section.block {
     border: 0;
     margin-top: 2rem;
 }
+// Boost gives the footer the same reading-width cap and rounded corners as the content on
+// standard pages; the Hikmah footer always spans the window.
+#page.drawers #page-footer.hk-footer.footer-popover,
+#page #page-footer.hk-footer.footer-popover {
+    max-width: none;
+    width: auto;
+    margin-inline: 0;
+    border-radius: 0;
+}
+// Boost pads the drawers page 3rem on each side from the md breakpoint; pull the footer out to the
+// window edges.
+@include media-breakpoint-up(md) {
+    #page.drawers #page-footer.hk-footer.footer-popover {
+        margin-inline: -3rem;
+    }
+}
 .hk-footer {
     &__main {
         position: relative;
@@ -566,4 +582,29 @@ section.block {
 }
 .hk-home.editing .hk-frontpage-core {
     padding-block: 2rem;
+}
+
+// On phones Boost shows the footer pop-up's contents inline under the page. Its "Contact site
+// support" and "Policies" links repeat the Hikmah footer; keep the rest as one quiet dark row so
+// the footer reads as a single block.
+@include media-breakpoint-down(md) {
+    #page-footer.hk-footer .footer-content-popover {
+        background: $hk-ink;
+        color: rgba(255, 255, 255, .6);
+        margin: 0;
+        max-width: none;
+        padding: 0 clamp(1.1rem, 4vw, 2.5rem) 1.5rem;
+        font-size: .85rem;
+        a {
+            color: rgba(255, 255, 255, .78);
+        }
+        .footer-section {
+            padding: .35rem 0 !important;
+            border: 0 !important;
+        }
+        .footer-section:has(a[href*="contactsitesupport"]),
+        .policiesfooter {
+            display: none;
+        }
+    }
 }

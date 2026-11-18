@@ -36,6 +36,10 @@ $hk-ease: cubic-bezier(.22, .8, .24, 1);
 $hk-ease-out: cubic-bezier(.16, 1, .3, 1);
 
 // ---- Bootstrap / Boost variable overrides --------------------------------------------------
+// Moodle caps standard pages (and their footer) at 830px, much narrower than Hikmah's own pages
+// (1200px container, about 1120px of content). Use the same width everywhere; Boost derives its
+// drawer positions from this variable, so it stays consistent.
+$course-content-maxwidth: 1120px;
 $primary: $hk-ink;
 $secondary: #d9d5c7;
 $success: $hk-success;

@@ -32,11 +32,11 @@
         "form": "<form></form>"
     }
 }}
-<div class="hk-pay">
-    <div class="hk-pay__intro" data-hk-reveal>
-        <span class="hk-eyebrow">{{#str}}pay_eyebrow, paygw_hikmahtransfer{{/str}}</span>
-        <h2 class="hk-pay__title">{{{item}}}</h2>
-        <p class="text-muted mb-0">{{#str}}pay_lead, paygw_hikmahtransfer{{/str}}</p>
+<div class="hk-pay hk-pay--page">
+    {{! The page heading ("Pay by transfer") comes from the layout; this only names the course. }}
+    <div class="hk-pay__intro">
+        <p class="hk-pay__course">{{{item}}}</p>
+        <p class="hk-pay__lead">{{#str}}pay_lead, paygw_hikmahtransfer{{/str}}</p>
     </div>
 
     {{#resubmit}}
@@ -50,7 +50,7 @@
     {{/error}}
 
     <div class="hk-pay__grid">
-        <section class="hk-panel" data-hk-reveal aria-labelledby="hk-pay-step1">
+        <section class="hk-panel" aria-labelledby="hk-pay-step1">
             <div class="hk-step"><span class="hk-step__num">1</span><h3 id="hk-pay-step1">{{#str}}pay_step1, paygw_hikmahtransfer{{/str}}</h3></div>
             <div class="hk-pay__amount">
                 <div>
@@ -67,18 +67,19 @@
             </div>
             <p class="small text-muted">{{#str}}reference_hint, paygw_hikmahtransfer{{/str}}</p>
 
-            <div class="hk-accounts" data-hk-stagger>
+            <div class="hk-accounts">
                 {{#accounts}}
                     <div class="hk-account hk-account--{{key}}">
                         <div class="hk-account__name">{{name}}</div>
-                        <dl class="hk-account__lines">
+                        <dl class="hk-details">
                             {{#lines}}
-                                <div>
-                                    <dt>{{label}}</dt>
-                                    <dd>
-                                        <span>{{value}}</span>
-                                        <button type="button" class="hk-copy" data-hk-copy="{{value}}" data-hk-copied="{{#str}}copied, paygw_hikmahtransfer{{/str}}">{{#str}}copy, paygw_hikmahtransfer{{/str}}</button>
-                                    </dd>
+                                <div class="hk-details__row">
+                                    <div class="hk-details__text">
+                                        <dt>{{label}}</dt>
+                                        <dd>{{value}}</dd>
+                                    </div>
+                                    <button type="button" class="hk-copy" data-hk-copy="{{value}}" data-hk-copied="{{#str}}copied, paygw_hikmahtransfer{{/str}}"
+                                            aria-label="{{#str}}copy, paygw_hikmahtransfer{{/str}}: {{label}}">{{#str}}copy, paygw_hikmahtransfer{{/str}}</button>
                                 </div>
                             {{/lines}}
                         </dl>
@@ -88,9 +89,8 @@
             {{#instructions}}<p class="hk-pay__note">{{instructions}}</p>{{/instructions}}
         </section>
 
-        <section class="hk-panel" data-hk-reveal aria-labelledby="hk-pay-step2">
+        <section class="hk-panel" aria-labelledby="hk-pay-step2">
             <div class="hk-step"><span class="hk-step__num">2</span><h3 id="hk-pay-step2">{{#str}}pay_step2, paygw_hikmahtransfer{{/str}}</h3></div>
-            <p class="text-muted">{{#str}}pay_step2_text, paygw_hikmahtransfer{{/str}}</p>
             <div class="hk-pay__form">{{{form}}}</div>
         </section>
     </div>

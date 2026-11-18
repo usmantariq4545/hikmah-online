@@ -1128,3 +1128,205 @@
         position: relative;
     }
 }
+
+// ---- Payment page (2026-11-18 redesign: one heading, aligned details, a plain stacked form) ----
+.hk-pay--page {
+    max-width: none;
+    gap: 1.5rem;
+    .hk-pay__intro {
+        max-width: 44rem;
+    }
+    .hk-pay__course {
+        font-family: $hk-font-display;
+        font-size: 1.3rem;
+        font-weight: 500;
+        color: $hk-ink;
+        margin: 0 0 .3rem;
+    }
+    .hk-pay__lead {
+        color: $hk-muted;
+        margin: 0;
+    }
+    .hk-pay__grid {
+        grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+        gap: 1.5rem;
+    }
+    .hk-pay__amount {
+        margin-bottom: .6rem;
+    }
+    .hk-pay__note {
+        margin-top: .9rem;
+    }
+    .hk-account:hover {
+        transform: none;
+        box-shadow: none;
+        border-color: $hk-line-strong;
+    }
+}
+// Account details: label above value, value aligned with its label, copy button on the right.
+.hk-details {
+    margin: 0;
+    &__row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 1rem;
+        padding: .6rem 0;
+        border-top: 1px solid $hk-line;
+        &:first-child {
+            border-top: 0;
+            padding-top: .15rem;
+        }
+    }
+    &__text {
+        min-width: 0;
+        text-align: start;
+        dt {
+            font-size: .78rem;
+            font-weight: 400;
+            color: $hk-muted;
+            margin: 0 0 .1rem;
+        }
+        dd {
+            margin: 0;
+            font-weight: 600;
+            font-size: .98rem;
+            font-variant-numeric: tabular-nums;
+            overflow-wrap: anywhere;
+        }
+    }
+}
+// The receipt form: every field stacked, label on top with its marks right after the text.
+.hk-pay--page .hk-pay__form .mform {
+    > .fitem,
+    .fitem.row {
+        display: block;
+        margin: 0 0 1.15rem;
+        > .col-md-3,
+        > .col-md-9 {
+            width: 100%;
+            max-width: 100%;
+            flex: none;
+            padding-inline: 0;
+        }
+    }
+    .col-form-label {
+        display: flex !important;
+        align-items: center;
+        gap: .3rem;
+        padding: 0 0 .35rem;
+        label,
+        p {
+            font-weight: 600;
+            margin: 0;
+        }
+    }
+    .form-label-addon {
+        margin: 0 !important;
+        .icon {
+            font-size: .7rem;
+        }
+    }
+    .form-control,
+    .form-select {
+        width: 100%;
+        max-width: 100%;
+    }
+    #id_paidamount {
+        max-width: 14rem;
+    }
+    // Date of transfer: day, month, year and the calendar button on one line.
+    .fdate_selector {
+        flex-wrap: nowrap !important;
+        gap: .5rem;
+        .fitem {
+            margin: 0 !important;
+        }
+        .form-select {
+            width: auto;
+        }
+    }
+    // Receipt: one file, so no folders, views or path; the size and type limits are in the hint.
+    .fp-restrictions > span:first-child,
+    .fp-viewbar,
+    .fp-path-folder,
+    .fp-pathbar,
+    .filetypes-descriptions-intro,
+    .form-filetypes-descriptions {
+        display: none !important;
+    }
+    .filemanager-toolbar {
+        padding: 0 0 .4rem;
+    }
+    .filemanager-container {
+        border-radius: $hk-radius;
+    }
+    #fitem_id_receipthint {
+        margin-top: -.6rem;
+        .col-form-label {
+            display: none !important;
+        }
+        .form-control-static,
+        .felement {
+            font-size: .86rem;
+            color: $hk-muted;
+        }
+    }
+    #fgroup_id_buttonar {
+        margin: 1.4rem 0 0;
+        .col-form-label {
+            display: none !important;
+        }
+        .felement,
+        fieldset > div {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .6rem;
+        }
+        .fitem {
+            margin: 0 !important;
+        }
+    }
+    .fdescription.required {
+        margin-top: .6rem;
+        font-size: .82rem;
+        color: $hk-muted;
+    }
+}
+@media (max-width: 991.98px) {
+    .hk-pay--page .hk-pay__grid {
+        grid-template-columns: 1fr;
+    }
+}
+// Never let the payment panels grow wider than the screen (long account numbers, the date row).
+.hk-pay--page {
+    grid-template-columns: minmax(0, 1fr);
+    > *,
+    .hk-pay__grid > * {
+        min-width: 0;
+    }
+}
+@media (max-width: 991.98px) {
+    .hk-pay--page .hk-pay__grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+@media (max-width: 575.98px) {
+    .hk-pay--page .hk-pay__form .mform .fdate_selector {
+        flex-wrap: wrap !important;
+    }
+}
+@media (max-width: 767.98px) {
+    .hk-pay--page {
+        padding-inline: .5rem;
+    }
+    .hk-pay--page .hk-pay__form .dndupload-message {
+        font-size: .88rem;
+    }
+}
+
+// Dashboard: the block area's wrapper adds 15px each side, so "Course overview" and "Timeline" sat
+// inside the welcome banner's edges. Line them up with the banner.
+.pagelayout-mydashboard *:has(> #block-region-content) {
+    padding-inline: 0 !important;
+}

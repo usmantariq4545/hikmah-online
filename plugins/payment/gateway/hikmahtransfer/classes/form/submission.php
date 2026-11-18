@@ -46,8 +46,14 @@ class submission extends \moodleform {
         foreach ($custom['methods'] as $method) {
             $methods[$method] = get_string('method_' . $method, 'paygw_hikmahtransfer');
         }
-        $mform->addElement('select', 'method', get_string('field_method', 'paygw_hikmahtransfer'), $methods);
-        $mform->addRule('method', null, 'required', null, 'client');
+        if (count($methods) === 1) {
+            // Only one way to pay: nothing to choose, so no question to answer.
+            $mform->addElement('hidden', 'method', array_key_first($methods));
+            $mform->setType('method', PARAM_ALPHANUMEXT);
+        } else {
+            $mform->addElement('select', 'method', get_string('field_method', 'paygw_hikmahtransfer'), $methods);
+            $mform->addRule('method', null, 'required', null, 'client');
+        }
 
         $mform->addElement('text', 'txnid', get_string('field_txnid', 'paygw_hikmahtransfer'),
             ['size' => 40, 'maxlength' => 100, 'autocomplete' => 'off']);

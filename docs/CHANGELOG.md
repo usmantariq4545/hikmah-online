@@ -1,5 +1,37 @@
 # Changelog
 
+## 2026-11-18 — Payment page redesign; full-width pages and footer
+
+- **Width (site-wide):** Moodle capped standard pages, and their footer, at 830px. Set
+  `$course-content-maxwidth: 1120px` (matches Hikmah's own pages; Boost derives drawer positions
+  from it) and made the Hikmah footer span the window (it was capped and rounded like a card).
+  Checked on the payment page, dashboard, course enrolment page and payments list.
+- **Payment page:** one heading (was "Pay by transfer" twice), the course name and a shorter
+  intro; account details as rows with the label above an aligned value and the copy button on the
+  right; the receipt form stacked with required marks next to labels, the date on one line, the
+  file picker without folder/view/path controls, and no duplicate size/type lines (the hint says
+  it). "Paid by" is hidden when only one method exists. Removed the step-2 sentence that repeated
+  its title; the live note is now just the NTN (the reference instruction already appears once).
+- **Phones:** the payment panels no longer push the page wider than the screen (390px check:
+  page width 390); Moodle's footer pop-up contents, shown inline on phones, are styled into the
+  footer and lose the links the Hikmah footer already has.
+- **Dashboard:** "Course overview" and "Timeline" now line up with the welcome banner.
+- Verified on the laptop site with headless Chrome at 1440px and 390px; payment PHPUnit tests
+  pass (10); the single-method form hides the choice and validates.
+
+## 2026-11-18 — Bank transfer details live; Nginx survives Moodle restarts
+
+- Live site: transfer details set in `.env.prod` (account title, bank, account number, plus the
+  NTN in the payment-page note) and applied; the payment gateway is now enabled with the bank
+  method. JazzCash, Easypaisa and Raast are still empty, so only bank transfer is offered.
+- `HIKMAH_TRANSFER_NOTE` was read by `070-enrol.php` but never passed to the containers; it is now
+  in `compose.base.yml` and documented in `.env.example`.
+- Incident (about 2 minutes, live site): recreating only the moodle container left Nginx sending
+  requests to its old address, so every page returned 502 until Nginx was restarted. Nginx now
+  resolves the PHP-FPM host through Docker's DNS on each request (`resolver 127.0.0.11`,
+  `fastcgi_pass $hk_fpm`). Verified on the laptop by recreating only moodle (site stayed 200),
+  then deployed to the live site; smoke test passed.
+
 ## 2026-11-18 — Live classes on the live site
 
 - BiggerBlueButton (`hikmahonline1`) connected on https://online.hikmahinstitute.org.pk:

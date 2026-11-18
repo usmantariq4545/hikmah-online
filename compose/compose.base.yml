@@ -43,6 +43,7 @@ x-moodle-env: &moodle-env
   HIKMAH_JAZZCASH: ${HIKMAH_JAZZCASH:-}
   HIKMAH_EASYPAISA: ${HIKMAH_EASYPAISA:-}
   HIKMAH_RAAST: ${HIKMAH_RAAST:-}
+  HIKMAH_TRANSFER_NOTE: ${HIKMAH_TRANSFER_NOTE:-}
 
 x-moodle: &moodle
   image: ${MOODLE_IMAGE:-hikmah-moodle:local}

@@ -10,6 +10,12 @@ server {
     client_max_body_size 100M;
     server_tokens off;
 
+    # Look Moodle (PHP-FPM) up through Docker's DNS on every request instead of once at start-up, so
+    # restarting or recreating the moodle container (it gets a new address) never leaves Nginx
+    # pointing at the old one (seen on the live site 2026-11-18: 502 until Nginx was restarted).
+    resolver 127.0.0.11 valid=10s ipv6=off;
+    set $hk_fpm ${FPM_HOST}:9000;
+
     gzip on;
     gzip_comp_level 5;
     gzip_min_length 1024;
@@ -46,7 +52,7 @@ server {
         deny all;
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        fastcgi_pass ${FPM_HOST}:9000;
+        fastcgi_pass $hk_fpm;
     }
 
     location ~ [^/]\.php(/|$) {
@@ -67,7 +73,7 @@ server {
         fastcgi_read_timeout 300s;
         fastcgi_buffers 16 16k;
         fastcgi_buffer_size 32k;
-        fastcgi_pass ${FPM_HOST}:9000;
+        fastcgi_pass $hk_fpm;
     }
 }
 
