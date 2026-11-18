@@ -4,7 +4,8 @@
 // Creates fictional categories, courses, accounts, a payment waiting for review and a simulated
 // live class so every screen has something to show. Everything it creates carries the idnumber
 // prefix "demo-" (courses) or the username prefix "demo." (accounts). It refuses to run outside
-// SITE_ENV=dev and does nothing on a second run.
+// SITE_ENV=dev unless HIKMAH_DEMO_ON_LIVE=yes is set on purpose (the owner asked for demo content
+// on the live site on 2026-11-18), and does nothing on a second run.
 //
 // Run with: scripts/dev/seed.sh
 
@@ -18,8 +19,8 @@ require_once($CFG->dirroot . '/user/lib.php');
 require_once($CFG->dirroot . '/user/profile/lib.php');
 require_once($CFG->dirroot . '/mod/attendance/locallib.php');
 
-if (getenv('SITE_ENV') !== 'dev') {
-    cli_error('Demo data is only for SITE_ENV=dev.');
+if (getenv('SITE_ENV') !== 'dev' && getenv('HIKMAH_DEMO_ON_LIVE') !== 'yes') {
+    cli_error('Demo data is only for SITE_ENV=dev. Set HIKMAH_DEMO_ON_LIVE=yes to load it on a live site on purpose.');
 }
 $password = getenv('HIKMAH_DEMO_PASSWORD');
 if (!$password) {
