@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-11-18 — Live on Contabo: https://online.hikmahinstitute.org.pk
+
+First production install, following `docs/runbooks/contabo.md` (runbook corrected as it ran).
+
+- Server: Contabo, 157.173.114.25, Ubuntu 24.04.5, 4 vCPU / 7.8 GB / 96 GB, x86_64.
+- `bootstrap.sh` fixes found on the real server: Contabo puts the key on `ubuntu` and gives root a
+  "log in as ubuntu" redirect, so keys are now copied from the sudo user and stripped of forced
+  commands; the no-password rule moved to `01-hikmah.conf` because Contabo's `50-cloud-init.conf`
+  (read first, first value wins) turned password logins back on. Verified: password logins refused.
+- Code copied from the laptop (tracked files only); images built on the server
+  (`IMAGE_PULL_POLICY=never`); `SITE_ENV=prod`.
+- `install.sh` passed, including the smoke test over HTTPS; Let's Encrypt certificate issued
+  (valid to 16 Feb 2027); HTTP redirects to HTTPS; all containers healthy; `configure.sh` second
+  run 0 changes; 2.2 GB memory in use.
+- First backup taken (5 MB) and nightly backup scheduled at 02:15 UTC. Backups stay on the server
+  until `BACKUP_REMOTE` (Backblaze B2) is set.
+
+Still to do: off-site backups, SMTP sender, BBB server URL and secret, real bank/wallet details,
+approved privacy notice and terms.
+
 ## 2026-11-17 — Hosting on Contabo
 
 Decision: the site is hosted on a Contabo Cloud VPS 20 (6 vCPU, 12 GB, 100 GB NVMe, Ubuntu 24.04,

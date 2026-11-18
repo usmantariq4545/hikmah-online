@@ -61,17 +61,24 @@ if ! id "$APP_USER" >/dev/null 2>&1; then
     useradd -m -s /bin/bash "$APP_USER"
 fi
 
-if [ -s /root/.ssh/authorized_keys ]; then
-    install -d -m 700 -o "$APP_USER" -g "$APP_USER" "/home/$APP_USER/.ssh"
-    touch "/home/$APP_USER/.ssh/authorized_keys"
-    # Add root's keys that the user does not have yet.
-    while IFS= read -r key; do
-        [ -z "$key" ] && continue
-        grep -qxF "$key" "/home/$APP_USER/.ssh/authorized_keys" || echo "$key" >> "/home/$APP_USER/.ssh/authorized_keys"
-    done < /root/.ssh/authorized_keys
-    chown "$APP_USER:$APP_USER" "/home/$APP_USER/.ssh/authorized_keys"
-    chmod 600 "/home/$APP_USER/.ssh/authorized_keys"
+# Copy the admin's SSH keys to the app user: from root and from the user who ran sudo (Contabo and
+# other cloud images put the key on 'ubuntu' and give root a "please log in as ubuntu" entry).
+# Only the key itself is copied; any forced command or restriction in front of it is dropped.
+KEYSOURCES="/root/.ssh/authorized_keys"
+if [ -n "${SUDO_USER:-}" ] && [ "$SUDO_USER" != root ]; then
+    KEYSOURCES="$KEYSOURCES $(getent passwd "$SUDO_USER" | cut -d: -f6)/.ssh/authorized_keys"
 fi
+install -d -m 700 -o "$APP_USER" -g "$APP_USER" "/home/$APP_USER/.ssh"
+touch "/home/$APP_USER/.ssh/authorized_keys"
+for src in $KEYSOURCES; do
+    [ -s "$src" ] || continue
+    grep -oE '(ssh-(ed25519|rsa|dss)|ecdsa-sha2-nistp[0-9]+|sk-[a-z0-9@.-]+) [A-Za-z0-9+/=]+( .*)?$' "$src" |
+    while IFS= read -r key; do
+        grep -qxF "$key" "/home/$APP_USER/.ssh/authorized_keys" || echo "$key" >> "/home/$APP_USER/.ssh/authorized_keys"
+    done
+done
+chown "$APP_USER:$APP_USER" "/home/$APP_USER/.ssh/authorized_keys"
+chmod 600 "/home/$APP_USER/.ssh/authorized_keys"
 
 say "Firewall: SSH, HTTP and HTTPS only"
 ufw default deny incoming >/dev/null
@@ -130,16 +137,19 @@ echo 'vm.swappiness=10' > /etc/sysctl.d/90-hikmah.conf
 
 say "SSH hardening"
 if [ -s "/home/$APP_USER/.ssh/authorized_keys" ]; then
-    cat > /etc/ssh/sshd_config.d/90-hikmah.conf <<'EOF'
+    # sshd uses the FIRST value it reads, and drop-in files are read in name order, so this file
+    # must sort before cloud images' 50-cloud-init.conf (which often turns passwords on).
+    rm -f /etc/ssh/sshd_config.d/90-hikmah.conf
+    cat > /etc/ssh/sshd_config.d/01-hikmah.conf <<'EOF'
 PasswordAuthentication no
 KbdInteractiveAuthentication no
 PermitRootLogin prohibit-password
 EOF
     if sshd -t; then
         systemctl reload ssh || systemctl reload sshd || true
-        echo "Password logins are now off (keys only). Day-to-day: ssh $APP_USER@<server IP>. Admin: ssh root@<server IP> with the same key."
+        echo "Password logins are now off (keys only). Site: ssh $APP_USER@<server IP>. Admin: your sudo user (ubuntu on Contabo) or root, with the same key."
     else
-        rm -f /etc/ssh/sshd_config.d/90-hikmah.conf
+        rm -f /etc/ssh/sshd_config.d/01-hikmah.conf
         echo "SSH configuration test failed; left SSH as it was." >&2
     fi
 else

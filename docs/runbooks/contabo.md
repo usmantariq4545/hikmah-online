@@ -29,18 +29,29 @@ ssh-keygen -t ed25519 -C "hikmah-admin"
 Get-Content $env:USERPROFILE\.ssh\id_ed25519.pub
 ```
 
-Paste the printed line (starts with `ssh-ed25519`) into the **SSH key** field when ordering the
-Contabo server, or later into `/root/.ssh/authorized_keys` on the server.
+Give the server this key through Contabo's panel (learned on the first install, 2026-11-18):
+**Secrets Management → add SSH key** (paste the printed line, which starts with `ssh-ed25519`, into
+the *Public SSH key* box), then **VPS → Manage → Reinstall → Custom installation**: Ubuntu 24.04,
+default user **root**, select the saved key, set a root password you keep yourself, cloud-init
+empty. The *Standard* installation has no key option. Pasting a password into an SSH prompt in an
+embedded terminal is unreliable, so prefer the key route.
+
+Contabo's image then accepts the key as the **`ubuntu`** user (root answers "please log in as
+ubuntu"); `ubuntu` has passwordless sudo.
 
 ## 2. Prepare the server (once)
 
-Contabo emails the server's IP address. Copy the setup script over and run it (**laptop**):
+Copy the setup script over and run it (**laptop**):
 
 ```powershell
 cd C:\hikmah-online
-scp scripts/server/bootstrap.sh root@<server IP>:
-ssh root@<server IP> "bash bootstrap.sh"
+scp scripts/server/bootstrap.sh ubuntu@<server IP>:
+ssh ubuntu@<server IP> "sudo bash bootstrap.sh"
 ```
+
+It copies your key to the `hikmah` user (ignoring Contabo's "log in as ubuntu" redirect), and its
+no-password rule lives in `01-hikmah.conf` so it wins over Contabo's `50-cloud-init.conf`, which
+turns passwords on. Check with `sudo sshd -T | grep passwordauthentication` → `no`.
 
 `bootstrap.sh` installs security updates (and turns on automatic ones), a firewall that allows only
 SSH/HTTP/HTTPS, fail2ban, Docker, a 4 GB swap file and rclone, creates the `hikmah` user, and
@@ -57,9 +68,20 @@ ssh hikmah@<server IP>
 At your domain registrar or DNS provider add an **A record**: `learn` (or the name you chose)
 → `<server IP>`, TTL 300. Wait until `ping learn.<domain>` shows the server IP.
 
-## 4. Get the code onto the server (read-only deploy key)
+## 4. Get the code onto the server
 
-On the server, as `hikmah`:
+**Simplest (used for the first install): copy it from the laptop.** The server then needs no
+GitHub access at all. From Git Bash on the laptop, in the repository:
+
+```bash
+git ls-files -z | tar --null -T - -czf /tmp/code.tgz      # tracked files only: no .env.*, no backups
+scp /tmp/code.tgz hikmah@<server IP>:
+ssh hikmah@<server IP> 'mkdir -p ~/hikmah-online && tar -xzf ~/code.tgz -C ~/hikmah-online && rm ~/code.tgz'
+```
+
+Repeat the same three lines to update the code later.
+
+**Alternative: a read-only deploy key**, so the server can `git pull` itself. On the server, as `hikmah`:
 
 ```bash
 ssh-keygen -t ed25519 -f ~/.ssh/github_deploy -N "" -C "hikmah-server"
@@ -167,7 +189,7 @@ Keeps 7 daily, 4 weekly and 6 monthly sets on the server and copies each one to 
 
 ```bash
 cd ~/hikmah-online
-git pull
+git pull                       # or re-copy the code from the laptop (step 4)
 export HIKMAH_ENV=prod
 scripts/dc.sh build            # option A; for option B change the image tags in .env.prod instead
 scripts/upgrade.sh             # backup-safe: maintenance mode, upgrade, settings, smoke test
