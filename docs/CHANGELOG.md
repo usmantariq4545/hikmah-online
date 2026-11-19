@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-11-19 — Demo course "Foundations of Tajweed" built out
+
+- `scripts/dev/tajweed-course.php` (+ `tajweed-content.php`, `tajweed-gradebook.php`): eight live
+  classes on Saturdays and Sundays from 1 November 2026 (five held, three to come, notes released the
+  day before each class), lesson notes with Arabic examples, PDF slides, handbook, book, glossary,
+  links, handouts, poll, survey, three quizzes, three assignments, four announcements and Q&A.
+  Built as the instructor and assistant (attendance taken, work graded with feedback, questions
+  answered) and as each student (submissions, quiz attempts, progress). Gradebook weighted as the
+  handbook says. Run on the live site on 2026-11-19; `--dry-run` rolls everything back.
+- Theme: activity dates wrap on narrow screens; inline Arabic slightly larger; only column headings
+  in small capitals (grade report item names are readable).
+
 ## 2026-11-19 — Student side: no repeated titles or clutter
 
 - Theme: `theme_hikmah_page_init` adds body class `hk-learner` on course pages for people who

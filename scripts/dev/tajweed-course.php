@@ -522,6 +522,8 @@ try {
         }
     }
     \core\session\manager::set_user(get_admin());
+    require_once(__DIR__ . '/tajweed-gradebook.php');
+    hk_tajweed_gradebook((int) $course->id);
 
     foreach ($students as $username => $student) {
         $q1 = $DB->get_field('quiz_grades', 'grade', ['quiz' => $quiz1->id, 'userid' => $student->id]);
