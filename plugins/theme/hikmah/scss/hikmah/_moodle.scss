@@ -543,6 +543,7 @@ section.block {
         padding-top: 1.25rem;
         border-top: 1px solid rgba(255, 255, 255, .14);
         font-size: .84rem;
+        padding-inline-end: 3.5rem; // keeps the logo word clear of the fixed "?" help button
     }
     &__motto {
         font-family: $hk-font-brand-arabic;
