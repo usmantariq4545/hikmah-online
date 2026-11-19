@@ -34,6 +34,10 @@ $callbacks = [
         'callback' => [\theme_hikmah\hook_callbacks::class, 'before_top_of_body'],
     ],
     [
+        'hook' => \core\hook\output\before_footer_html_generation::class,
+        'callback' => [\theme_hikmah\hook_callbacks::class, 'before_footer'],
+    ],
+    [
         'hook' => \core\hook\navigation\primary_extend::class,
         'callback' => [\theme_hikmah\hook_callbacks::class, 'primary_extend'],
     ],

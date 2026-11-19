@@ -1651,3 +1651,50 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
         min-width: 16rem;
     }
 }
+
+// ---- Live class call to action on course pages (local/live_classes.php) ------------------------
+.hk-livecta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .6rem 1rem;
+    margin-top: .75rem;
+    padding-top: .75rem;
+    border-top: 1px dashed $hk-line;
+    &__chip {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        font-size: .72rem;
+        font-weight: 600;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        padding: .25rem .65rem;
+        border-radius: 999px;
+        background: $hk-paper-2;
+        color: $hk-muted;
+        &--upcoming {
+            background: rgba($hk-sky, .12);
+            color: $hk-sky-deep;
+        }
+        &--live {
+            background: $hk-ink;
+            color: #fff;
+            &::before {
+                content: "";
+                width: .5rem;
+                height: .5rem;
+                border-radius: 50%;
+                background: $hk-danger;
+                animation: hk-pulse 1.6s ease-in-out infinite;
+            }
+        }
+    }
+    &__note {
+        font-size: .88rem;
+        color: $hk-muted;
+    }
+    .hk-btn {
+        margin-inline-start: auto;
+    }
+}

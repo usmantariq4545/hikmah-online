@@ -94,12 +94,16 @@ class dashboard {
                 // A register session is a scheduled class: show it as one and link to the classroom.
                 if ($event->modulename === 'attendance') {
                     $name = get_string('dash_liveclass', 'theme_hikmah');
-                    foreach (get_fast_modinfo($event->courseid)->get_instances_of('bigbluebuttonbn') as $cm) {
-                        if ($cm->uservisible) {
-                            $url = new moodle_url('/mod/bigbluebuttonbn/view.php', ['id' => $cm->id]);
-                            $islive = true;
-                            break;
-                        }
+                    // The class's own live room (opening at the session time), else the course's room.
+                    $rooms = array_filter(get_fast_modinfo($event->courseid)->get_instances_of('bigbluebuttonbn'),
+                        static fn($cm) => $cm->uservisible);
+                    $opening = $rooms ? $DB->get_records_list('bigbluebuttonbn', 'id', array_keys($rooms), '', 'id, openingtime')
+                        : [];
+                    uksort($rooms, static fn($a, $b) => (int) (abs(($opening[$a]->openingtime ?: PHP_INT_MAX / 2) - $event->timestart)
+                        <=> abs(($opening[$b]->openingtime ?: PHP_INT_MAX / 2) - $event->timestart)));
+                    if ($cm = reset($rooms)) {
+                        $url = new moodle_url('/mod/bigbluebuttonbn/view.php', ['id' => $cm->id]);
+                        $islive = true;
                     }
                 }
                 $key = $event->courseid . '-' . $event->timestart;

@@ -101,6 +101,28 @@ class hook_callbacks {
     }
 
     /**
+     * Course pages: "Join class", "Join now" or "Watch recording" under each scheduled live class.
+     * Placed by a few lines of plain script so it does not wait for Moodle's script bundle.
+     *
+     * @param \core\hook\output\before_footer_html_generation $hook
+     */
+    public static function before_footer(\core\hook\output\before_footer_html_generation $hook): void {
+        global $PAGE;
+        if (!self::is_active() || !str_starts_with($PAGE->pagetype, 'course-view-') || !isloggedin()) {
+            return;
+        }
+        $live = \theme_hikmah\local\live_classes::for_course($PAGE->course);
+        if (!$live) {
+            return;
+        }
+        $hook->add_html('<script>(function(d,c){Object.keys(c).forEach(function(id){'
+            . 'var li=d.querySelector(\'li.activity[data-id="\'+id+\'"]\');if(!li||li.querySelector(".hk-livecta")){return;}'
+            . 'var b=d.createElement("div");b.className="hk-livecta hk-livecta--"+c[id].state;b.innerHTML=c[id].html;'
+            . '(li.querySelector(".activity-item")||li).appendChild(b);});})(document,'
+            . json_encode($live, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ');</script>');
+    }
+
+    /**
      * Staging banner and the motion module.
      *
      * @param before_standard_top_of_body_html_generation $hook
