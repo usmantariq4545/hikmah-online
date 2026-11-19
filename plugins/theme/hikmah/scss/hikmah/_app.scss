@@ -1442,3 +1442,107 @@
         padding-inline: .5rem;
     }
 }
+
+// ---- Live class recordings (mod_bigbluebuttonbn's YUI table) ----------------------------------
+// YUI fixes the table at the width it measured on load (often wider than the page). Make it fit,
+// scroll sideways only inside itself, and look like the rest of Hikmah.
+.mod_bigbluebuttonbn_recordings_table {
+    h4 {
+        font-weight: 500;
+    }
+    [id^="bigbluebuttonbn-recording-table"] {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+    .yui3-datatable,
+    .yui3-datatable-table {
+        width: 100% !important;
+    }
+    .yui3-datatable-table {
+        border: 1px solid $hk-line;
+        border-radius: $hk-radius;
+        border-collapse: separate;
+        border-spacing: 0;
+        overflow: hidden;
+        font-size: .92rem;
+    }
+    .yui3-datatable-header {
+        background: $hk-paper-2;
+        color: $hk-muted;
+        font-weight: 600;
+        font-size: .8rem;
+        letter-spacing: .02em;
+        border: 0;
+        border-bottom: 1px solid $hk-line;
+        padding: .7rem .9rem;
+    }
+    .yui3-datatable-cell {
+        border: 0;
+        border-top: 1px solid $hk-line;
+        padding: .7rem .9rem;
+        background: transparent;
+    }
+    .yui3-datatable-paginator {
+        background: transparent;
+        border: 0;
+        padding: .6rem 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: .5rem 1rem;
+        align-items: center;
+    }
+    .yui3-datatable-paginator-group {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+    }
+    .yui3-datatable-paginator button,
+    .yui3-datatable-paginator input,
+    .yui3-datatable-paginator select {
+        border: 1px solid $hk-line;
+        border-radius: 999px;
+        background: #fff;
+        color: $hk-ink;
+        padding: .25rem .8rem;
+        font-size: .85rem;
+    }
+    .yui3-datatable-paginator input {
+        width: 3.5rem;
+        text-align: center;
+    }
+    .yui3-datatable-paginator-control-disabled {
+        opacity: .45;
+    }
+    // No recordings yet: just the message, without headers and paging.
+    .yui3-datatable-message-visible {
+        .yui3-datatable-columns,
+        .yui3-datatable-paginator,
+        .yui3-datatable-paginator-wrapper {
+            display: none;
+        }
+        .yui3-datatable-table {
+            border: 0;
+        }
+        .yui3-datatable-message-content {
+            padding: 0;
+            border: 0;
+            background: transparent;
+            font-size: 0; // YUI's own "No data to display" cannot be changed through Moodle strings.
+            &::after {
+                content: "No recordings yet. Recorded classes will appear here.";
+                font-size: .95rem;
+                color: $hk-muted;
+            }
+        }
+    }
+}
+
+// Wide Moodle tables on phones scroll inside themselves instead of pushing the page sideways.
+@include media-breakpoint-down(md) {
+    #region-main table.generaltable,
+    #region-main table.flexible {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+    }
+}
