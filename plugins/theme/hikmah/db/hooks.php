@@ -33,4 +33,8 @@ $callbacks = [
         'hook' => \core\hook\output\before_standard_top_of_body_html_generation::class,
         'callback' => [\theme_hikmah\hook_callbacks::class, 'before_top_of_body'],
     ],
+    [
+        'hook' => \core\hook\navigation\primary_extend::class,
+        'callback' => [\theme_hikmah\hook_callbacks::class, 'primary_extend'],
+    ],
 ];

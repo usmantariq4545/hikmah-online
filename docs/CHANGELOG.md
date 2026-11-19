@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-11-19 — Role access tightened
+
+- `050-roles.php`: managers get the payments report and lose "log in as"; dashboard "Edit mode"
+  only for the super administrator; the classmates switch `HIKMAH_STUDENT_PEERS` (default off)
+  prevents students' `moodle/course:viewparticipants` and `moodle/user:viewdetails`, and restores
+  the student role's defaults when turned on.
+- New `local_hikmahaccess`: keeps every student's "who can message me" preference at "my contacts
+  only" while the switch is off (observer on role assignment + hourly sync), which blocks
+  student-to-student messages but not student↔teacher (teachers hold `moodle/site:messageanyuser`
+  in their courses). PHPUnit `peers_test` covers off/on/sync/staff.
+- Theme: "Payment reviews" in the top menu for users who can review payments (finance, managers,
+  administrator), via Moodle's `primary_extend` hook.
+- `scripts/server/role-audit.php`: read-only PASS/FAIL check of the agreed access table and the
+  three messaging rules, run on the live site after the deploy.
+- Laptop dev site deleted on 2026-11-19 to free disk space; work continues on the live site.
+
 ## 2026-11-18 — Enrolment page: one simple flow, and approval courses work again
 
 - **Bug:** applying for an approval course always said "Enrolment is disabled or inactive". The

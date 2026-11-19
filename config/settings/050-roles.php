@@ -91,6 +91,33 @@ foreach (['editingteacher', 'teacher'] as $shortname) {
 
 // Managers may assign the two new roles.
 $manager = (int) $DB->get_field('role', 'id', ['shortname' => 'manager'], MUST_EXIST);
+
+// Managers handle payments, so they see the payments report too; only the super administrator
+// may log in as another user (owner's decision, 2026-11-18).
+hk_role_cap($manager, 'moodle/payment:viewpayments', CAP_ALLOW);
+hk_role_cap($manager, 'moodle/user:loginas', CAP_PREVENT);
+
+// Dashboards are laid out centrally: nobody but the super administrator gets "Edit mode" there.
+$authenticated = (int) $DB->get_field('role', 'id', ['shortname' => 'user'], MUST_EXIST);
+hk_role_cap($authenticated, 'moodle/my:manageblocks', CAP_PREVENT);
+hk_role_cap($manager, 'moodle/my:manageblocks', CAP_PREVENT);
+
+// Classmates switch (HIKMAH_STUDENT_PEERS, off by default): whether students may see classmate
+// lists and profiles and message each other. Teachers stay reachable either way. The messaging
+// half lives in local_hikmahaccess (it sets each student's "who can message me" preference).
+$allowpeers = hk_env('HIKMAH_STUDENT_PEERS', '0') === '1' ? 1 : 0;
+hk_set('allowpeers', $allowpeers, 'local_hikmahaccess');
+$student = (int) $DB->get_field('role', 'id', ['shortname' => 'student'], MUST_EXIST);
+$studentdefaults = get_default_capabilities('student');
+foreach (['moodle/course:viewparticipants', 'moodle/user:viewdetails'] as $capability) {
+    hk_role_cap($student, $capability, $allowpeers ? (int) ($studentdefaults[$capability] ?? CAP_INHERIT) : CAP_PREVENT);
+}
+if (class_exists('\local_hikmahaccess\peers')) {
+    $changedpeers = \local_hikmahaccess\peers::sync_all();
+    if ($changedpeers) {
+        hk_changed("classmates messaging rule applied to $changedpeers student(s)");
+    }
+}
 foreach ([$finance, $support] as $target) {
     if (!$DB->record_exists('role_allow_assign', ['roleid' => $manager, 'allowassign' => $target])) {
         core_role_set_assign_allowed($manager, $target);

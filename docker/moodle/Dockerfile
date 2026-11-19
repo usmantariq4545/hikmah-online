@@ -63,6 +63,7 @@ RUN chmod 755 /usr/local/bin/hikmah-entrypoint
 # Hikmah code: plugins, theme, config and settings-as-code. Moodle core is never patched.
 COPY plugins/payment/gateway/hikmahtransfer/ /var/www/moodle/public/payment/gateway/hikmahtransfer/
 COPY plugins/local/hikmahattendance/ /var/www/moodle/public/local/hikmahattendance/
+COPY plugins/local/hikmahaccess/ /var/www/moodle/public/local/hikmahaccess/
 COPY plugins/theme/hikmah/ /var/www/moodle/public/theme/hikmah/
 COPY plugins/mod/bigbluebuttonbn/extension/hikmah/ /var/www/moodle/public/mod/bigbluebuttonbn/extension/hikmah/
 COPY config/config.php /var/www/moodle/config.php

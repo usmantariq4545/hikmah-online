@@ -76,6 +76,12 @@ Each role is a Moodle role built from capabilities; scoped roles (finance, suppo
 | Finance reviewer (optional) | Review payment evidence and approve or reject receipts, with no access to coursework or other learner data |
 | Support (optional) | Resolve account and course access issues with limited data visibility and an audit trail |
 
+Decided 2026-11-18: only the super administrator may log in as another user; dashboard "Edit mode"
+is for the super administrator only; students see their teachers but not classmate lists or
+profiles and cannot message other students — a switch (`HIKMAH_STUDENT_PEERS`, off) turns
+classmates back on. Students can always message their teachers and teachers their students.
+`scripts/server/role-audit.php` checks all of this on a live site.
+
 ### 4. Learner journey
 
 - Discover a course and view eligibility, schedule, fees and access policy.

@@ -200,6 +200,7 @@ $string['nav_faq'] = 'FAQ';
 $string['nav_home'] = 'Home';
 $string['nav_signup'] = 'Create account';
 $string['nav_verify'] = 'Verify certificate';
+$string['nav_paymentreviews'] = 'Payment reviews';
 $string['pluginname'] = 'Hikmah Online';
 $string['quote_arabic'] = 'يُؤْتِي الْحِكْمَةَ مَن يَشَاءُ ۚ وَمَن يُؤْتَ الْحِكْمَةَ فَقَدْ أُوتِيَ خَيْرًا كَثِيرًا';
 $string['quote_source'] = 'Qur\'an 2:269';

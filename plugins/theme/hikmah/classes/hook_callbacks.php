@@ -80,6 +80,27 @@ class hook_callbacks {
     }
 
     /**
+     * Role-aware top menu: staff get links to their own tools, and only staff who hold the
+     * capability see them (finance reviewers, managers and the administrator see "Payment reviews").
+     *
+     * @param \core\hook\navigation\primary_extend $hook
+     */
+    public static function primary_extend(\core\hook\navigation\primary_extend $hook): void {
+        if (!self::is_active() || !isloggedin() || isguestuser()) {
+            return;
+        }
+        if (has_capability('paygw/hikmahtransfer:review', \context_system::instance())) {
+            $hook->get_primaryview()->add(
+                get_string('nav_paymentreviews', 'theme_hikmah'),
+                new \moodle_url('/payment/gateway/hikmahtransfer/review.php'),
+                \navigation_node::TYPE_CUSTOM,
+                null,
+                'hkpaymentreviews'
+            );
+        }
+    }
+
+    /**
      * Staging banner and the motion module.
      *
      * @param before_standard_top_of_body_html_generation $hook

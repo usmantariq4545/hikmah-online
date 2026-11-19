@@ -4,6 +4,7 @@
 x-dev-code: &dev-code
   - ../plugins/payment/gateway/hikmahtransfer:/var/www/moodle/public/payment/gateway/hikmahtransfer
   - ../plugins/local/hikmahattendance:/var/www/moodle/public/local/hikmahattendance
+  - ../plugins/local/hikmahaccess:/var/www/moodle/public/local/hikmahaccess
   - ../plugins/theme/hikmah:/var/www/moodle/public/theme/hikmah
   - ../plugins/mod/bigbluebuttonbn/extension/hikmah:/var/www/moodle/public/mod/bigbluebuttonbn/extension/hikmah
 
@@ -22,6 +23,7 @@ services:
       - phpunitdata:/var/phpunitdata
       - ../plugins/payment/gateway/hikmahtransfer:/var/www/moodle/public/payment/gateway/hikmahtransfer
       - ../plugins/local/hikmahattendance:/var/www/moodle/public/local/hikmahattendance
+      - ../plugins/local/hikmahaccess:/var/www/moodle/public/local/hikmahaccess
       - ../plugins/theme/hikmah:/var/www/moodle/public/theme/hikmah
       - ../plugins/mod/bigbluebuttonbn/extension/hikmah:/var/www/moodle/public/mod/bigbluebuttonbn/extension/hikmah
       - ../config/config.php:/var/www/moodle/config.php:ro
@@ -41,6 +43,7 @@ services:
       - cronlocalcache:/var/localcache
       - ../plugins/payment/gateway/hikmahtransfer:/var/www/moodle/public/payment/gateway/hikmahtransfer
       - ../plugins/local/hikmahattendance:/var/www/moodle/public/local/hikmahattendance
+      - ../plugins/local/hikmahaccess:/var/www/moodle/public/local/hikmahaccess
       - ../plugins/theme/hikmah:/var/www/moodle/public/theme/hikmah
       - ../plugins/mod/bigbluebuttonbn/extension/hikmah:/var/www/moodle/public/mod/bigbluebuttonbn/extension/hikmah
       - ../config/config.php:/var/www/moodle/config.php:ro
@@ -52,6 +55,7 @@ services:
       - moodledata:/var/moodledata:ro
       - ../plugins/payment/gateway/hikmahtransfer:/var/www/moodle/public/payment/gateway/hikmahtransfer:ro
       - ../plugins/local/hikmahattendance:/var/www/moodle/public/local/hikmahattendance:ro
+      - ../plugins/local/hikmahaccess:/var/www/moodle/public/local/hikmahaccess:ro
       - ../plugins/theme/hikmah:/var/www/moodle/public/theme/hikmah:ro
       - ../plugins/mod/bigbluebuttonbn/extension/hikmah:/var/www/moodle/public/mod/bigbluebuttonbn/extension/hikmah:ro
 
