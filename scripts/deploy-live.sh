@@ -7,7 +7,10 @@
 # The server records the commit it runs in ~/hikmah-online/DEPLOYED_COMMIT.
 set -euo pipefail
 HOST="${HIKMAH_DEPLOY_HOST:-hikmah@157.173.114.25}"
-SSH="ssh -o BatchMode=yes -o ConnectTimeout=20"
+# Keep-alive: on a flaky connection a dropped SSH session fails within a minute (and the wait loop
+# below retries) instead of hanging forever.
+SSHOPTS="-o BatchMode=yes -o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=4"
+SSH="ssh $SSHOPTS"
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 [ -z "$(git status --porcelain)" ] || { echo "Uncommitted changes: commit and push first." >&2; exit 1; }
@@ -26,7 +29,7 @@ TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 git archive --format=tar.gz -o "$TMP/code.tgz" HEAD
 for attempt in 1 2 3 4 5; do
-    scp -q -o BatchMode=yes -o ConnectTimeout=20 "$TMP/code.tgz" "$HOST:code.tgz" && $SSH "$HOST" 'gzip -t code.tgz' && break
+    scp -q $SSHOPTS "$TMP/code.tgz" "$HOST:code.tgz" && $SSH "$HOST" 'gzip -t code.tgz' && break
     [ "$attempt" = 5 ] && { echo "Upload failed." >&2; exit 1; }
     sleep 10
 done
