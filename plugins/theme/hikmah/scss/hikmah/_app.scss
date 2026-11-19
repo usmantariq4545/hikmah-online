@@ -1590,3 +1590,39 @@
         overflow-x: auto;
     }
 }
+
+// ---- Student side: no repeated titles or teacher-only clutter ----------------------------------
+// The breadcrumb's last item (the current page, not a link) repeats the page title right below it.
+#page-header .breadcrumb .breadcrumb-item:last-child:not(:has(a)) {
+    display: none;
+}
+// Live class page: the room name repeats the page title; an empty sub-heading follows it.
+#page-mod-bigbluebuttonbn-view [role="main"] > h3:first-child,
+#page-mod-bigbluebuttonbn-view [role="main"] > h5:empty {
+    display: none;
+}
+// Recordings: students do not need the always-identical name and stored description.
+.hk-learner .mod_bigbluebuttonbn_recordings_table {
+    .yui3-datatable-col-name,
+    .yui3-datatable-col-description {
+        display: none;
+    }
+}
+.mod_bigbluebuttonbn_recordings_table .yui3-datatable-cell.yui3-datatable-col-duration::after {
+    content: " min";
+}
+// Paging controls only when there is more than one page.
+.yui3-datatable-paginator:has(.yui3-datatable-paginator-control-first:disabled):has(.yui3-datatable-paginator-control-last:disabled) {
+    display: none;
+}
+// Attendance: students see their list of sessions only (the default view is "All", 090-attendance.php).
+.hk-learner#page-mod-attendance-view [role="main"] {
+    > .nav-tabs,
+    > .attfiltercontrols {
+        display: none;
+    }
+}
+// "Verify certificate" is for employers; signed-in people find it in the footer.
+body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme/hikmah/verify.php"] {
+    display: none;
+}

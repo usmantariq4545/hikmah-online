@@ -24,18 +24,20 @@ hk_set('customusermenuitems', implode("\n", [
 // separate window. Set HIKMAH_EMBED_CLASSROOM=0 if the BigBlueButton host refuses to be framed.
 hk_set('embedclassroom', hk_env('HIKMAH_EMBED_CLASSROOM', '1') === '0' ? 0 : 1, 'theme_hikmah');
 
-// Dashboard: the Hikmah summary already lists the learner's courses, so drop core's "Course
-// overview" there (default page and every user's copy). It stays on My courses.
+// Dashboard: the Hikmah summary already has "Continue learning" and "Coming up", so drop core
+// blocks that repeat them (default page and every user's copy): Course overview (stays on My
+// courses), Timeline, Recently accessed items and the month calendar.
 global $DB;
 $dashboards = $DB->get_fieldset_select('my_pages', 'id', "name = '__default'");
 if ($dashboards) {
-    [$insql, $params] = $DB->get_in_or_equal(array_map('strval', $dashboards), SQL_PARAMS_NAMED);
-    $params['blockname'] = 'myoverview';
-    $overviews = $DB->get_records_select('block_instances',
-        "blockname = :blockname AND pagetypepattern = 'my-index' AND subpagepattern $insql", $params);
-    foreach ($overviews as $instance) {
+    [$pagesql, $params] = $DB->get_in_or_equal(array_map('strval', $dashboards), SQL_PARAMS_NAMED, 'p');
+    [$blocksql, $blockparams] = $DB->get_in_or_equal(['myoverview', 'timeline', 'recentlyaccesseditems', 'calendar_month'],
+        SQL_PARAMS_NAMED, 'b');
+    $repeats = $DB->get_records_select('block_instances',
+        "blockname $blocksql AND pagetypepattern = 'my-index' AND subpagepattern $pagesql", $params + $blockparams);
+    foreach ($repeats as $instance) {
         blocks_delete_instance($instance);
-        hk_changed('dashboard: removed course overview block ' . $instance->id);
+        hk_changed("dashboard: removed $instance->blockname block $instance->id");
     }
 }
 

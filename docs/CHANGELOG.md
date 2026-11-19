@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-11-19 — Student side: no repeated titles or clutter
+
+- Theme: `theme_hikmah_page_init` adds body class `hk-learner` on course pages for people who
+  cannot edit the course. Breadcrumb's current-page item hidden (it repeats the title); live class
+  room heading hidden; students' recordings table without the Name/Description columns, durations
+  in minutes, paging only with more than one page; attendance period filters hidden for students;
+  "Verify certificate" only in the top menu for visitors who are not signed in (footer for all).
+- `120-theme.php`: Timeline, Recently accessed items and Calendar removed from dashboards (they
+  repeat "Coming up" and "Continue learning"). `010-site.php`: competencies off.
+  `090-attendance.php`: attendance default view "All".
+
 ## 2026-11-19 — Recordings table; session locks after deploys
 
 - Theme: mod_bigbluebuttonbn's YUI recordings table is fitted to the page (YUI fixes it at its

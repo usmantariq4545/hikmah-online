@@ -63,3 +63,18 @@ function theme_hikmah_get_main_scss_content($theme): string {
 function theme_hikmah_get_extra_scss($theme): string {
     return !empty($theme->settings->scss) ? $theme->settings->scss : '';
 }
+
+/**
+ * Marks course pages seen by students (anyone who cannot edit the course) with the body class
+ * hk-learner, so the theme can hide teacher-only clutter such as recording names or register filters.
+ *
+ * @param moodle_page $page
+ */
+function theme_hikmah_page_init(moodle_page $page): void {
+    if (!isloggedin() || isguestuser() || empty($page->course->id) || $page->course->id == SITEID) {
+        return;
+    }
+    if (!has_capability('moodle/course:update', context_course::instance($page->course->id))) {
+        $page->add_body_class('hk-learner');
+    }
+}

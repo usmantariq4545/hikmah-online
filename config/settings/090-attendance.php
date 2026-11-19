@@ -39,6 +39,8 @@ foreach ($wanted as $acronym => [$description, $grade]) {
 
 // Reconciliation: Present at 75% of the class window; below that is written as Late.
 // Automatic writing is not a site setting: it is switched per course and ships off.
+// Students see all their sessions in one list (the theme hides the period filters for them).
+hk_set('defaultview', 5, 'attendance'); // ATT_VIEW_ALL
 hk_set('threshold', 75, 'local_hikmahattendance');
 hk_set('acronym_present', 'P', 'local_hikmahattendance');
 hk_set('acronym_partial', 'L', 'local_hikmahattendance');

@@ -74,6 +74,7 @@ hk_set('custommenuitems', implode("\n", [
 hk_set('enablecompletion', 1);
 hk_set('enableavailability', 1);
 hk_set('enablebadges', 0);
+hk_set('enabled', 0, 'core_competency'); // Competencies and learning plans are not used.
 hk_set('usetags', 0);
 hk_set('enableblogs', 0);
 hk_set('messaging', 0);
