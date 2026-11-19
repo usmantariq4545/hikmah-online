@@ -26,9 +26,14 @@ say "Dumping database"
 dc exec -T postgres sh -c 'pg_dump -U "$POSTGRES_USER" -d "$POSTGRES_DB" -Fc' > "$DEST/database.dump"
 
 say "Archiving moodledata"
-dc exec -T -u www-data moodle tar -czf - -C /var/moodledata \
+# The site stays up during nightly and deploy backups, so files can change while tar reads them.
+# GNU tar then exits 1 ("some files differ") but the archive is complete; only 2+ is a failure.
+status=0
+dc exec -T -u www-data moodle tar -czf - -C /var/moodledata --warning=no-file-changed \
     --exclude=./cache --exclude=./localcache --exclude=./sessions --exclude=./temp \
-    --exclude=./trashdir --exclude=./lock --exclude=./muc . > "$DEST/moodledata.tgz"
+    --exclude=./trashdir --exclude=./lock --exclude=./muc . > "$DEST/moodledata.tgz" || status=$?
+[ "$status" -le 1 ] || { echo "moodledata archive failed (tar exit $status)" >&2; exit "$status"; }
+gzip -t "$DEST/moodledata.tgz"
 
 # The MUC configuration is small and needed to keep the Redis mapping after a restore.
 dc exec -T -u www-data moodle sh -c 'cat /var/moodledata/muc/config.php 2>/dev/null || true' > "$DEST/muc-config.php"
