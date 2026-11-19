@@ -207,9 +207,10 @@ try {
         \mod_quiz\quiz_settings::create($quiz->id)->get_grade_calculator()->recompute_quiz_sumgrades();
         return $quiz;
     };
-    $assignment = static function (int $section, string $name, string $intro, int $due) use ($add) {
+    $assignment = static function (int $section, string $name, string $intro, int $open, int $due) use ($add) {
+        // Opens after its class; late work is accepted for three days, then the assignment locks.
         return $add('assign', $section, ['name' => $name, 'intro' => $intro, 'introformat' => FORMAT_HTML,
-            'allowsubmissionsfromdate' => $due - 7 * DAYSECS, 'duedate' => $due, 'gradingduedate' => $due + 3 * DAYSECS,
+            'allowsubmissionsfromdate' => $open, 'duedate' => $due, 'cutoffdate' => $due + 3 * DAYSECS, 'gradingduedate' => $due + 3 * DAYSECS,
             'grade' => 100, 'submissiondrafts' => 0, 'requiresubmissionstatement' => 0, 'sendstudentnotifications' => 1,
             'assignsubmission_onlinetext_enabled' => 1, 'assignsubmission_file_enabled' => 1,
             'assignsubmission_file_maxfiles' => 2, 'assignsubmission_file_maxsizebytes' => 20 * 1024 * 1024,
@@ -246,7 +247,7 @@ try {
     // Class 2: recitation assignment and a handout folder.
     $a1 = $assignment(2, 'Assignment 1: recite the throat letters',
         '<p>Record yourself saying each throat letter with sukun after a hamzah (' . "أَءْ أَهْ أَعْ أَحْ أَغْ أَخْ" . ') and upload '
-        . 'the recording, or describe in the text box any letter you found difficult.</p>', $at('2026-11-10', '23:59'));
+        . 'the recording, or describe in the text box any letter you found difficult.</p>', $at('2026-11-07', '19:00'), $at('2026-11-10', '23:59'));
     $add('folder', 2, ['name' => 'Handouts: articulation charts', 'intro' => 'Printable charts for the five areas of articulation.',
         'files' => $draft(['makharij-overview.pdf' => $slides('Handout', [['The five areas of articulation',
             ['Al-jawf: ا و ي (madd letters)', 'Al-halq: ء هـ ع ح غ خ', 'Al-lisan: 18 letters', 'Ash-shafatan: ف ب م و',
@@ -275,7 +276,7 @@ try {
         '<p>For each phrase, name the rule of noon sakinah or tanween and explain why in one line:</p><ol>'
         . '<li><span lang="ar" dir="rtl">مَنْ آمَنَ</span></li><li><span lang="ar" dir="rtl">فَمَن يَعْمَلْ</span></li>'
         . '<li><span lang="ar" dir="rtl">مِن لَّدُنْهُ</span></li><li><span lang="ar" dir="rtl">مِنْ عِلْمٍ</span></li></ol>',
-        $at('2026-11-20', '23:59'));
+        $at('2026-11-15', '19:00'), $at('2026-11-20', '23:59'));
     // Class 6: quiz 2.
     $quiz2 = $quiz(6, 'Quiz 2: noon and meem sakinah', 'Opens after class 6. Two attempts, your highest mark counts.',
         $at('2026-11-21', '19:00'), $at('2026-11-26', '23:59'), [
@@ -297,7 +298,7 @@ try {
     $DB->set_field('quiz', 'attempts', 1, ['id' => $final->id]);
     $a3 = $assignment(9, 'Final recitation: Surah Al-Ikhlas',
         '<p>Record your recitation of Surah Al-Ikhlas, applying every rule from the course, and upload it here.</p>',
-        $at('2026-11-30', '23:59'));
+        $at('2026-11-28', '19:00'), $at('2026-11-30', '23:59'));
     $survey = $add('feedback', 9, ['name' => 'Course survey', 'intro' => 'Two minutes: tell us how the course went.',
         'anonymous' => 1, 'timeopen' => $at('2026-11-28', '19:00')]);
     $fbgen = $gen->get_plugin_generator('mod_feedback');

@@ -1626,3 +1626,18 @@
 body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme/hikmah/verify.php"] {
     display: none;
 }
+
+// Activity dates ("Opened / Due") wrap instead of running off narrow screens.
+.activity-dates {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .2rem 1.5rem;
+    .date-item {
+        white-space: normal;
+    }
+}
+// Arabic words inside English text: a little larger so the letters and vowel marks are readable.
+.hk-arabic {
+    font-size: 1.3em;
+    line-height: 1.4;
+}
