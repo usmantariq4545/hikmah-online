@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-11-19 — Recordings table; session locks after deploys
+
+- Theme: mod_bigbluebuttonbn's YUI recordings table is fitted to the page (YUI fixes it at its
+  load-time width), restyled, and shows "No recordings yet." when empty; Moodle's standard wide
+  tables scroll inside themselves on phones.
+- Deploy restarts cut off in-flight requests, leaving Redis session locks that blocked those users
+  with a 500 for up to two hours. `upgrade.sh` now clears them after the restart and
+  `session_redis_lock_expire` is 360 s.
+
 ## 2026-11-19 — Account pages per role
 
 - `050-roles.php`: personal access tokens (`moodle/api:createtoken`) prevented for every role but
