@@ -1641,3 +1641,13 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
     font-size: 1.3em;
     line-height: 1.4;
 }
+// Grade report: item names get room; the table scrolls inside its box when it is wider.
+#page-grade-report-user-index .user-grade {
+    th.column-itemname {
+        min-width: 14rem;
+        font-weight: 500;
+    }
+    .column-feedback {
+        min-width: 16rem;
+    }
+}

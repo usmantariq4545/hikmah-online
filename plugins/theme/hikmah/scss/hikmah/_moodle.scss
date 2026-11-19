@@ -491,7 +491,8 @@ section.block {
 // Tables.
 .generaltable,
 .table {
-    th {
+    // Column headings only: row headings in the body (grade item names, report labels) stay as text.
+    thead th {
         font-size: .76rem;
         text-transform: uppercase;
         letter-spacing: .1em;
