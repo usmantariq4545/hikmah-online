@@ -8,6 +8,12 @@ say "Recreating containers with the current images"
 dc up -d
 wait_healthy moodle
 
+# The Caddyfile is mounted, not built in: reload it so changes take effect (no downtime).
+if dc ps --services --status running | grep -qx caddy; then
+    say "Reloading Caddy"
+    dc exec -T caddy caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
+fi
+
 say "Maintenance mode on"
 moodle_cli maintenance.php --enable
 
