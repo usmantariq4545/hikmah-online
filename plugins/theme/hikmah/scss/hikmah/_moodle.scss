@@ -148,6 +148,13 @@
             font-size: .78rem;
             color: $hk-muted;
         }
+        .view-more {
+            position: static;
+            display: inline-block;
+            margin-top: .2rem;
+            font-size: .78rem;
+            font-weight: 600;
+        }
     }
     .empty-message {
         color: $hk-muted;
@@ -175,6 +182,15 @@
         bottom: auto;
         width: auto;
         max-height: 75vh;
+        height: auto;
+        // Header and "See all" stay visible; only the list scrolls.
+        display: flex;
+        flex-direction: column;
+        .popover-region-content-container {
+            flex: 1 1 auto;
+            min-height: 0;
+            height: auto;
+        }
         &::before,
         &::after {
             display: none;
