@@ -88,6 +88,134 @@
     }
 }
 
+// Phone menu button: a little room before the logo.
+.navbar.fixed-top .navbar-toggler {
+    margin-inline-end: .5rem;
+    border-radius: 999px;
+}
+
+// Notifications panel (bell): a Hikmah card instead of Moodle's square popover.
+.popover-region .count-container {
+    background: $hk-danger;
+    border: 2px solid $hk-paper;
+    border-radius: 999px;
+    font-weight: 700;
+    line-height: 1;
+    padding: 2px 5px;
+}
+.popover-region-container {
+    border: 1px solid $hk-line;
+    border-radius: $hk-radius;
+    box-shadow: $hk-shadow-3;
+    overflow: hidden;
+    background: #fff;
+}
+.popover-region-header-container {
+    height: auto;
+    padding: .85rem 1rem;
+    border-bottom: 1px solid $hk-line;
+    .popover-region-header-text {
+        font-family: $hk-font-display;
+        font-size: 1.05rem;
+        font-weight: 500;
+        margin: 0;
+    }
+    .popover-region-header-actions a,
+    .popover-region-header-actions .btn {
+        color: $hk-muted;
+        &:hover,
+        &:focus {
+            color: $hk-ink;
+        }
+    }
+}
+.popover-region-content-container {
+    .content-item-container {
+        padding: .8rem 1rem;
+        border-bottom: 1px solid $hk-line;
+        &.unread {
+            background: rgba($hk-sun, .14);
+        }
+        &:hover,
+        &:focus {
+            background: $hk-paper-2;
+        }
+        .content-item-body {
+            font-size: .9rem;
+            color: $hk-ink;
+        }
+        .content-item-footer .timestamp {
+            font-size: .78rem;
+            color: $hk-muted;
+        }
+    }
+    .empty-message {
+        color: $hk-muted;
+        padding: 2.5rem 1rem;
+    }
+}
+.popover-region-footer-container {
+    height: auto;
+    border-top: 1px solid $hk-line;
+    background: $hk-paper;
+    .see-all-link {
+        display: block;
+        padding: .7rem 1rem;
+        font-weight: 600;
+        color: $hk-ink;
+        text-align: center;
+    }
+}
+// Phones: a floating card under the navbar, not a full-screen sheet.
+@include media-breakpoint-down(sm) {
+    .popover-region-container {
+        top: calc(#{$navbar-height} + .5rem);
+        left: .75rem;
+        right: .75rem;
+        bottom: auto;
+        width: auto;
+        max-height: 75vh;
+        &::before,
+        &::after {
+            display: none;
+        }
+    }
+}
+
+// Phone navigation drawer (☰): Hikmah list instead of Bootstrap's list-group.
+.drawer.drawer-primary {
+    background: $hk-paper;
+    .drawerheader {
+        border-bottom: 1px solid $hk-line;
+        .sitename {
+            font-family: $hk-font-display;
+            font-size: 1.15rem;
+            font-weight: 500;
+        }
+    }
+    .list-group {
+        padding: .6rem;
+        gap: .15rem;
+    }
+    .list-group-item {
+        border: 0;
+        border-radius: 10px;
+        padding: .75rem 1rem;
+        background: transparent;
+        color: $hk-ink;
+        font-family: $hk-font-display;
+        font-size: 1.05rem;
+        &:hover,
+        &:focus {
+            background: $hk-paper-2;
+        }
+        &.active {
+            background: $hk-ink;
+            color: #fff;
+        }
+    }
+}
+
 // Buttons.
 .btn {
     transition: transform .2s $hk-ease, box-shadow .2s $hk-ease, background-color .15s ease, border-color .15s ease,
