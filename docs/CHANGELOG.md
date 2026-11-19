@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-11-19 — Account pages per role
+
+- `050-roles.php`: personal access tokens (`moodle/api:createtoken`) prevented for every role but
+  the super administrator; the Moodle app's own sign-in permission (`createmobiletoken`) unchanged.
+- `120-theme.php`: user menu no longer lists Preferences twice (Moodle adds it itself).
+- `local_hikmahaccess`: Preferences page hides Preferred language and Editor preferences for
+  everyone but the administrator, and Content bank preferences for people without content-bank
+  access. PHPUnit `preferences_test` added (not yet run: no PHPUnit setup on the live server).
+- `role-audit.php`: two new rows (tokens: admin only; app sign-in: everyone).
+
 ## 2026-11-19 — English interface only; lighter fonts; MathJax off
 
 - `010-site.php`: language menu off, Urdu and Arabic language packs uninstalled, users/courses

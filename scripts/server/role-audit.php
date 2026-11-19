@@ -40,6 +40,8 @@ $expect = [
     ['Attendance review', $cctx, 'local/hikmahattendance:review', [...$staff, 'teacher', 'assistant']],
     ['Attendance reports', $cctx, 'local/hikmahattendance:viewreports', $staff],
     ['Join live class', $cctx, 'mod/bigbluebuttonbn:join', [...$staff, 'teacher', 'assistant', 'student']],
+    ['Personal access tokens', $sys, 'moodle/api:createtoken', ['admin']],
+    ['Moodle app sign-in', $sys, 'moodle/webservice:createmobiletoken', array_keys($u)],
     ['See participant list', $cctx, 'moodle/course:viewparticipants',
         [...$staff, 'support', 'teacher', 'assistant', ...($peers ? ['student'] : [])]],
 ];

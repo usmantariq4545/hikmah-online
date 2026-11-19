@@ -18,8 +18,7 @@ hk_set('customusermenuitems', implode("\n", [
     'profile,moodle|/user/profile.php',
     'grades,grades|/grade/report/mygrades.php',
     'My payments|/payment/gateway/hikmahtransfer/status.php',
-    'preferences,moodle|/user/preferences.php',
-]));
+]));  // Moodle adds Preferences to the user menu itself.
 
 // Live classes and recordings open inside a Hikmah page (theme/hikmah/classroom.php) instead of a
 // separate window. Set HIKMAH_EMBED_CLASSROOM=0 if the BigBlueButton host refuses to be framed.

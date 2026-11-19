@@ -102,6 +102,11 @@ $authenticated = (int) $DB->get_field('role', 'id', ['shortname' => 'user'], MUS
 hk_role_cap($authenticated, 'moodle/my:manageblocks', CAP_PREVENT);
 hk_role_cap($manager, 'moodle/my:manageblocks', CAP_PREVENT);
 
+// Personal access tokens (outside programs acting as the user): super administrator only. The
+// Moodle app signs in with moodle/webservice:createmobiletoken, which stays allowed.
+hk_role_cap($authenticated, 'moodle/api:createtoken', CAP_PREVENT);
+hk_role_cap($manager, 'moodle/api:createtoken', CAP_PREVENT);
+
 // Classmates switch (HIKMAH_STUDENT_PEERS, off by default): whether students may see classmate
 // lists and profiles and message each other. Teachers stay reachable either way. The messaging
 // half lives in local_hikmahaccess (it sets each student's "who can message me" preference).
