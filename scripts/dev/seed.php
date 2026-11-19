@@ -436,6 +436,11 @@ if (!empty($created['demo-tajweed']['enrolid'])) {
         ['demo.student2', 'demo-tajweed', 'bank', 4500, 'TXN-884120', null],
         ['demo.student3', 'demo-tajweed', 'jazzcash', 4500, 'JC-55310927', 'resubmit'],
         ['demo.student6', 'demo-fiqh', 'easypaisa', 5500, 'EP-10477213', null],
+        // demo.student1 sees one payment in each state under "My payments".
+        ['demo.student1', 'demo-tajweed', 'bank', 4500, 'TXN-771045', 'approve'],
+        ['demo.student1', 'demo-tafsir', 'easypaisa', 3000, 'EP-20391184', 'reject'],
+        ['demo.student1', 'demo-tafsir', 'easypaisa', 3500, 'EP-20391877', null],
+        ['demo.student1', 'demo-fiqh', 'jazzcash', 6000, 'JC-60218834', 'resubmit'],
     ];
     foreach ($payers as [$username, $idnumber, $method, $paid, $txn, $then]) {
         if (empty($created[$idnumber]['enrolid'])) {
@@ -449,16 +454,24 @@ if (!empty($created['demo-tajweed']['enrolid'])) {
             \paygw_hikmahtransfer\request::submit((int) $request->id, (object) [
                 'method' => $method, 'txnid' => $txn, 'paidamount' => $paid, 'paiddate' => $now - DAYSECS,
             ], $draft, (int) $user->id);
-            if ($then === 'resubmit') {
+            $finance = (int) $users['demo.finance']->id;
+            if ($then) {
                 \core\session\manager::set_user($users['demo.finance']);
-                \paygw_hikmahtransfer\request::request_resubmission((int) $request->id, (int) $users['demo.finance']->id,
+            }
+            if ($then === 'resubmit') {
+                \paygw_hikmahtransfer\request::request_resubmission((int) $request->id, $finance,
                     'The screenshot is cut off. Please upload the full confirmation showing the transaction ID.');
+            } else if ($then === 'approve') {
+                \paygw_hikmahtransfer\request::approve((int) $request->id, $finance, 'Payment received. Welcome to the course.');
+            } else if ($then === 'reject') {
+                \paygw_hikmahtransfer\request::reject((int) $request->id, $finance,
+                    'The amount paid (PKR 3,000) is less than the course fee (PKR 3,500). Please pay the full fee.');
             }
         } catch (\Throwable $e) {
             cli_writeln('  note: demo payment for ' . $username . ' not created: ' . $e->getMessage());
         }
     }
-    cli_writeln('Payments: 2 pending, 1 returned for resubmission');
+    cli_writeln('Payments: demo.student1 has one in each state; 3 pending, 2 returned for resubmission in all');
 }
 \core\session\manager::set_user(get_admin());
 

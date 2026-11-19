@@ -30,7 +30,7 @@
     {{#hasrows}}
         <div class="hk-panel hk-panel--flush" data-hk-reveal>
             <div class="table-responsive">
-                <table class="hk-table">
+                <table class="hk-table hk-table--stack">
                     <thead>
                         <tr>
                             <th scope="col">{{#str}}col_item, paygw_hikmahtransfer{{/str}}</th>
@@ -44,9 +44,9 @@
                         {{#rows}}
                             <tr>
                                 <td><a href="{{url}}">{{{item}}}</a></td>
-                                <td><code>{{reference}}</code></td>
-                                <td>{{amount}}</td>
-                                <td>{{submitted}}</td>
+                                <td data-label="{{#str}}reference, paygw_hikmahtransfer{{/str}}"><code>{{reference}}</code></td>
+                                <td data-label="{{#str}}amountdue, paygw_hikmahtransfer{{/str}}">{{amount}}</td>
+                                <td data-label="{{#str}}col_submitted, paygw_hikmahtransfer{{/str}}">{{submitted}}</td>
                                 <td><span class="hk-chip {{status.class}}">{{status.label}}</span></td>
                             </tr>
                         {{/rows}}

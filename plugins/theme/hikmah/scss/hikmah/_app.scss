@@ -335,6 +335,49 @@
     &__flag td:first-child {
         box-shadow: inset 4px 0 0 $hk-sun-deep;
     }
+    // Below desktop width each row becomes a card: item, status, then the details with labels.
+    &--stack {
+        @include media-breakpoint-down(lg) {
+            thead {
+                display: none;
+            }
+            tbody tr {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+                gap: .6rem 1rem;
+                padding: 1rem;
+                border-bottom: 1px solid $hk-line;
+            }
+            tbody tr:last-child {
+                border-bottom: 0;
+            }
+            td {
+                display: block;
+                padding: 0;
+                border: 0;
+            }
+            td:first-child,
+            td:last-child {
+                grid-column: 1 / -1;
+            }
+            td:first-child {
+                font-weight: 600;
+            }
+            td:last-child {
+                grid-row: 2;
+            }
+            td[data-label]::before {
+                content: attr(data-label);
+                display: block;
+                font-size: .68rem;
+                font-weight: 600;
+                letter-spacing: .1em;
+                text-transform: uppercase;
+                color: $hk-muted;
+                margin-bottom: .15rem;
+            }
+        }
+    }
     code {
         color: $hk-ink;
         background: $hk-paper-2;
