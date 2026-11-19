@@ -2,7 +2,7 @@
 // 010 — Site identity, timezone, languages, public pages, navigation.
 require(__DIR__ . '/lib.php');
 
-global $DB, $SITE;
+global $CFG, $DB, $SITE;
 
 // Site name.
 $fullname = hk_env('HIKMAH_SITE_NAME', 'Hikmah Online');
@@ -19,19 +19,35 @@ hk_set('timezone', 'Asia/Karachi');
 hk_set('forcetimezone', '99'); // 99 = users may choose their own timezone.
 hk_set('country', 'PK');
 
-// Languages: English by default, Urdu and Arabic packs installed when the download site is reachable.
+// Language: English only (owner decision 2026-11-19; Urdu/Arabic interfaces dropped). Arabic text
+// inside lessons still displays with the theme's Arabic font.
 hk_set('lang', 'en');
-hk_set('langmenu', 1);
+hk_set('langmenu', 0);
 $installed = get_string_manager()->get_list_of_translations(true);
-$wanted = array_diff(['ur', 'ar'], array_keys($installed));
-if ($wanted) {
-    try {
-        $controller = new \tool_langimport\controller();
-        $controller->install_languagepacks(array_values($wanted));
-        hk_changed('language packs installed: ' . implode(', ', $wanted));
-    } catch (\Throwable $e) {
-        cli_writeln('  note: language packs not installed (' . $e->getMessage() . '); will retry on the next run');
+$unwanted = array_intersect(['ur', 'ar'], array_keys($installed));
+if ($unwanted) {
+    $controller = new \tool_langimport\controller();
+    foreach ($unwanted as $lang) {
+        $controller->uninstall_language($lang);
     }
+    hk_changed('language packs removed: ' . implode(', ', $unwanted));
+}
+[$insql, $params] = $DB->get_in_or_equal(['ur', 'ar', 'ur_utf8', 'ar_utf8'], SQL_PARAMS_NAMED);
+if ($DB->record_exists_select('user', "lang $insql", $params)) {
+    $DB->set_field_select('user', 'lang', 'en', "lang $insql", $params);
+    hk_changed('users on Urdu/Arabic moved to English');
+}
+if ($DB->record_exists_select('course', "lang $insql", $params)) {
+    $DB->set_field_select('course', 'lang', '', "lang $insql", $params);
+    hk_changed('courses forced to Urdu/Arabic now follow the site language');
+}
+
+// Maths rendering is not needed and MathJax loads from an outside CDN (build guide: no CDNs).
+require_once($CFG->libdir . '/filterlib.php');
+$filterstates = filter_get_global_states();
+if (isset($filterstates['mathjaxloader']) && (int) $filterstates['mathjaxloader']->active !== TEXTFILTER_DISABLED) {
+    filter_set_global_state('mathjaxloader', TEXTFILTER_DISABLED);
+    hk_changed('filter mathjaxloader disabled');
 }
 
 // Public: home, catalog, course detail, FAQ, certificate verification. Course content always needs

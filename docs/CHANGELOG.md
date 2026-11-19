@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-11-19 — English interface only; lighter fonts; MathJax off
+
+- `010-site.php`: language menu off, Urdu and Arabic language packs uninstalled, users/courses
+  on those languages moved to English; MathJax filter disabled (it loaded from a CDN).
+- Theme: RTL page-layout partial removed. Arabic/Urdu fonts kept for course text (they download
+  only when a page contains Arabic script). New 5.8 KB "Hikmah Brand Arabic" font for the logo
+  word in the footer and hero, so pages no longer load the 124 KB Kufi font for four letters.
+- PRD section on accessibility updated with the owner's decision.
+
 ## 2026-11-19 — Student pages: UI/UX fixes
 
 - Phones: 16px side margin, padding inside the white content card, drawer buttons parked in the

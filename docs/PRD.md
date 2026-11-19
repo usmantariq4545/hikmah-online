@@ -325,7 +325,7 @@ Certificate caution: a reported issue showed that changing the course category s
 - Recording playback must require Moodle authorization; confirm BBB protected recordings (or an equivalent) before launch.
 - TLS everywhere, secure cookies, session expiry, login rate limiting, CSRF protection (core), patched dependencies.
 - Retention and deletion policies for receipts, recordings and attendance events; Moodle privacy API for data requests.
-- WCAG 2.1 AA practices: semantic headings, keyboard access, labels, contrast, mobile usability, RTL layout for Arabic/Urdu.
+- WCAG 2.1 AA practices: semantic headings, keyboard access, labels, contrast, mobile usability, English interface only (owner decision 2026-11-19: Urdu/Arabic interface languages and RTL page layout dropped); Arabic and Urdu text in course titles, descriptions and lessons displays with the theme's Arabic fonts.
 - Daily automated backups (database + moodledata) stored off-host; an evidenced full restore drill before launch; agreed RPO/RTO.
 - Monitoring covers uptime, database storage, cron, adhoc task failures, email delivery and BBB callback arrival.
 - Legal/privacy terms and consent suited to Pakistan (and other learners' jurisdictions); final compliance review pending.
@@ -340,7 +340,7 @@ Certificate caution: a reported issue showed that changing the course category s
 | Data integrity | No unapproved paid unlock; no duplicate auto-attendance writes; audit trail for every reviewer action |
 | Recovery | Automated off-host backups and an evidenced full restore before launch |
 | Security | No exposed secrets, test accounts or public receipts; vulnerability review before launch |
-| Accessibility | Keyboard and mobile flows verified for registration, enrollment, live class and assessments, in English and an RTL language |
+| Accessibility | Keyboard and mobile flows verified for registration, enrollment, live class and assessments, in English, including pages with Arabic or Urdu course text |
 
 ### 13. Delivery phases
 
