@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-11-19 — One live class per class
+
+- Theme: under every scheduled live class (opening and closing time) the course page shows
+  Upcoming + "Join class", Live now + "Join now", or Held + "Watch recording" (in-portal player),
+  "Recording is being prepared" or "No recording". Dashboard sessions link to their own room.
+- Demo Tajweed course (`scripts/dev/tajweed-liveclasses.php`, run on live): a "Live class" at the top
+  of each class section; recordings, attendance links and evidence moved from the general room,
+  which is hidden; upcoming classes' materials restricted per activity so their room stays visible.
+
 ## 2026-11-19 — Demo course "Foundations of Tajweed" built out
 
 - `scripts/dev/tajweed-course.php` (+ `tajweed-content.php`, `tajweed-gradebook.php`): eight live
