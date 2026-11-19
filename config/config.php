@@ -40,7 +40,9 @@ $CFG->session_redis_port = (int) $hikmahenv('REDIS_PORT', 6379);
 $CFG->session_redis_database = 0;
 $CFG->session_redis_prefix = 'hikmah_' . $siteenv . '_sess_';
 $CFG->session_redis_acquire_lock_timeout = 120;
-$CFG->session_redis_lock_expire = 7200;
+// A lock outlives its request only if PHP died mid-request (e.g. a deploy restart); just over
+// max_execution_time (300 s) so such a session recovers in minutes, not two hours.
+$CFG->session_redis_lock_expire = 360;
 
 // Files are handed to Nginx after Moodle's access check.
 $CFG->xsendfile = 'X-Accel-Redirect';

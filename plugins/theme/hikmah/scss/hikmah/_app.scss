@@ -1529,8 +1529,9 @@
             background: transparent;
             font-size: 0; // YUI's own "No data to display" cannot be changed through Moodle strings.
             &::after {
-                content: "No recordings yet. Recorded classes will appear here.";
+                content: "No recordings yet.";
                 font-size: .95rem;
+                white-space: normal;
                 color: $hk-muted;
             }
         }

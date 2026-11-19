@@ -8,6 +8,10 @@ say "Recreating containers with the current images"
 dc up -d
 wait_healthy moodle
 
+# Requests cut off by the restart leave their session locks behind; clear them so nobody's
+# session hangs ("Cannot obtain session lock").
+dc exec -T redis sh -c 'redis-cli --scan --pattern "hikmah_*_sess_*.lock" | xargs -r redis-cli del' >/dev/null
+
 # The Caddyfile is mounted, not built in: reload it so changes take effect (no downtime).
 if dc ps --services --status running | grep -qx caddy; then
     say "Reloading Caddy"
