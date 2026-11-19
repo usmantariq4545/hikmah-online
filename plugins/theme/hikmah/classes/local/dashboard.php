@@ -74,6 +74,7 @@ class dashboard {
 
         // Upcoming classes and deadlines for the next two weeks.
         $events = [];
+        $seenlive = [];
         if ($courses) {
             $now = time();
             $raw = calendar_get_legacy_events($now - HOURSECS, $now + 14 * DAYSECS, true, true, array_keys($courses), true, true);
@@ -89,8 +90,25 @@ class dashboard {
                 $url = $event->modulename && $event->instance
                     ? self::module_url($event->modulename, (int) $event->instance, (int) $event->courseid)
                     : new moodle_url('/calendar/view.php', ['view' => 'day', 'time' => $event->timestart]);
+                $name = format_string($event->name);
+                // A register session is a scheduled class: show it as one and link to the classroom.
+                if ($event->modulename === 'attendance') {
+                    $name = get_string('dash_liveclass', 'theme_hikmah');
+                    foreach (get_fast_modinfo($event->courseid)->get_instances_of('bigbluebuttonbn') as $cm) {
+                        if ($cm->uservisible) {
+                            $url = new moodle_url('/mod/bigbluebuttonbn/view.php', ['id' => $cm->id]);
+                            $islive = true;
+                            break;
+                        }
+                    }
+                }
+                $key = $event->courseid . '-' . $event->timestart;
+                if ($islive && isset($seenlive[$key])) {
+                    continue; // The same class from both the classroom and the register.
+                }
+                $seenlive[$key] = true;
                 $events[] = [
-                    'name' => format_string($event->name),
+                    'name' => $name,
                     'course' => isset($courses[$event->courseid]) ? format_string($courses[$event->courseid]->fullname) : '',
                     'day' => userdate($event->timestart, '%d'),
                     'month' => userdate($event->timestart, '%b'),

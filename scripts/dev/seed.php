@@ -332,7 +332,7 @@ foreach ($courses as $idnumber => $spec) {
     if ($spec['live']) {
         $created[$idnumber]['bbb'] = $generator->create_module('bigbluebuttonbn', [
             'course' => $course->id, 'name' => 'Live classroom', 'section' => 0, 'type' => 0,
-            'wait' => 1, 'record' => 1,
+            'wait' => 1, 'record' => 1, 'intro' => '<p>Join your live class here when it starts.</p>',
         ]);
         // Everyone joins as a viewer; teachers and assistant teachers run the class. Set after
         // creation: the test-data generator ignores a 'participants' value passed to it.
@@ -345,6 +345,7 @@ foreach ($courses as $idnumber => $spec) {
         ]), ['id' => $created[$idnumber]['bbb']->id]);
         $created[$idnumber]['attendance'] = $generator->create_module('attendance', [
             'course' => $course->id, 'name' => 'Attendance register', 'section' => 0, 'grade' => 100,
+            'intro' => '<p>Your attendance for each live class.</p>',
         ]);
     }
     $templateid = (int) $DB->get_field('tool_certificate_templates', 'id', ['name' => 'Hikmah certificate of completion']);

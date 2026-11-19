@@ -25,6 +25,21 @@ hk_set('customusermenuitems', implode("\n", [
 // separate window. Set HIKMAH_EMBED_CLASSROOM=0 if the BigBlueButton host refuses to be framed.
 hk_set('embedclassroom', hk_env('HIKMAH_EMBED_CLASSROOM', '1') === '0' ? 0 : 1, 'theme_hikmah');
 
+// Dashboard: the Hikmah summary already lists the learner's courses, so drop core's "Course
+// overview" there (default page and every user's copy). It stays on My courses.
+global $DB;
+$dashboards = $DB->get_fieldset_select('my_pages', 'id', "name = '__default'");
+if ($dashboards) {
+    [$insql, $params] = $DB->get_in_or_equal(array_map('strval', $dashboards), SQL_PARAMS_NAMED);
+    $params['blockname'] = 'myoverview';
+    $overviews = $DB->get_records_select('block_instances',
+        "blockname = :blockname AND pagetypepattern = 'my-index' AND subpagepattern $insql", $params);
+    foreach ($overviews as $instance) {
+        blocks_delete_instance($instance);
+        hk_changed('dashboard: removed course overview block ' . $instance->id);
+    }
+}
+
 if ($GLOBALS['hkchanges'] > $before) {
     theme_reset_all_caches();
 }

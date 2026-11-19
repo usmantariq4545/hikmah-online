@@ -152,6 +152,45 @@ body {
     border: 1px solid $hk-line;
     background: #fff;
     box-shadow: $hk-shadow-1;
+    padding: 1rem;
+    @include media-breakpoint-up(md) {
+        padding: 1.5rem 2rem;
+    }
+}
+// Course pages: the sections are cards already, so no white card around them.
+body[id^="page-course-view"] #region-main {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+}
+@include media-breakpoint-down(md) {
+    // 16px side margin on phones (Boost uses 8px).
+    #page.drawers .main-inner {
+        padding-inline: 1rem;
+    }
+    // Boost hides the floating drawer buttons while #page scrolls, but Hikmah scrolls the window,
+    // so they never hide. Park them in the bottom corners, clear of the text.
+    .drawer-toggles .drawer-left-toggle,
+    .drawer-toggles .drawer-right-toggle {
+        top: auto;
+        bottom: 1rem;
+    }
+    .drawer-toggles .drawer-right-toggle {
+        bottom: 4.75rem; // above the help button
+    }
+}
+// Short pages: the footer reaches the bottom of the window instead of leaving a blank band.
+#page.drawers {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - #{$navbar-height});
+    > .main-inner {
+        width: 100%;
+    }
+    > #page-footer {
+        margin-top: auto;
+    }
 }
 .secondary-navigation {
     .navigation {

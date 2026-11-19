@@ -14,6 +14,13 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 git fetch -q origin
 [ "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)" ] || { echo "This commit is not on GitHub (origin/main): push first." >&2; exit 1; }
 COMMIT="$(git rev-parse --short HEAD)"
+# Keep browsers' cached script bundle unless JavaScript (or Moodle itself) changed since the last deploy.
+PREV="$($SSH "$HOST" 'cat hikmah-online/DEPLOYED_COMMIT 2>/dev/null' || true)"
+PURGEJS=1
+if [ -n "$PREV" ] && git cat-file -e "$PREV^{commit}" 2>/dev/null \
+    && git diff --quiet "$PREV" HEAD -- '*/amd/*' docker/ versions.lock; then
+    PURGEJS=0
+fi
 
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
@@ -25,7 +32,7 @@ for attempt in 1 2 3 4 5; do
 done
 
 $SSH "$HOST" "rm -f deploy.log; nohup sh -c 'cd hikmah-online && tar -xzf ~/code.tgz && rm ~/code.tgz \
-  && export HIKMAH_ENV=prod && scripts/backup.sh && scripts/dc.sh build moodle nginx && scripts/upgrade.sh \
+  && export HIKMAH_ENV=prod HIKMAH_PURGE_JS=$PURGEJS && scripts/backup.sh && scripts/dc.sh build moodle nginx && scripts/upgrade.sh \
   && echo $COMMIT > DEPLOYED_COMMIT && echo DEPLOY-OK $COMMIT || echo DEPLOY-FAILED $COMMIT' > deploy.log 2>&1 < /dev/null &"
 echo "Deploying $COMMIT to $HOST (server log: ~/deploy.log)..."
 

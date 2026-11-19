@@ -89,6 +89,7 @@ $string['cta_viewpayment'] = 'View payment status';
 $string['dash_afternoon'] = 'Good afternoon';
 $string['dash_allcourses'] = 'All my courses';
 $string['dash_certificates'] = 'Certificates';
+$string['dash_liveclass'] = 'Live class';
 $string['dash_completed'] = 'Completed';
 $string['dash_continue'] = 'Continue learning';
 $string['dash_courses'] = 'Courses';

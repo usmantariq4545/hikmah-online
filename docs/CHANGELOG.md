@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-11-19 — Student pages: UI/UX fixes
+
+- Phones: 16px side margin, padding inside the white content card, drawer buttons parked in the
+  bottom corners (Boost's hide-on-scroll never fires because Hikmah scrolls the window), footer
+  reaches the bottom of short pages. Course pages drop the outer white card.
+- Dashboard: "Coming up" shows register sessions as "Live class" linked to the classroom; core
+  "Course overview" removed from dashboards (`120-theme.php`), still on My courses.
+- New `135-strings.php` (en_local language pack): "Live class" instead of "BigBlueButton",
+  "Your teacher hasn't started the class yet.", plain attendance wording. Theme icon for live
+  classes. Demo generator writes real descriptions instead of "Test …".
+- Deploys keep browsers' cached script bundle unless JavaScript changed (`HIKMAH_PURGE_JS`).
+- Not changed: the "?" for upcoming sessions on the attendance page is hard-coded in mod_attendance.
+
 ## 2026-11-19 — Role access tightened
 
 - `050-roles.php`: managers get the payments report and lose "log in as"; dashboard "Edit mode"

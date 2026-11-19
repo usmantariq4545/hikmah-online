@@ -13,6 +13,12 @@ for file in "$ROOT_DIR"/config/settings/[0-9][0-9][0-9]-*.php; do
     fi
 done
 
-moodle_cli purge_caches.php >/dev/null
-echo "Caches purged."
+# Purging the JavaScript cache makes every browser download Moodle's whole script bundle again
+# (about 750 KB), so deploy-live.sh passes HIKMAH_PURGE_JS=0 when no JavaScript changed.
+purgejs=true
+[ "${HIKMAH_PURGE_JS:-1}" = "0" ] && purgejs=false
+moodle_exec php -r "define('CLI_SCRIPT', true); require '/var/www/moodle/config.php';
+    purge_caches(['muc' => true, 'courses' => true, 'theme' => true, 'lang' => true, 'js' => $purgejs,
+        'template' => true, 'filter' => true, 'other' => true]);" >/dev/null
+echo "Caches purged (JavaScript: $purgejs)."
 exit "$failed"
