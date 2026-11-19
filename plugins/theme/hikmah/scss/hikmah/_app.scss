@@ -354,7 +354,7 @@
             td {
                 display: block;
                 padding: 0;
-                border: 0;
+                border: 0 !important; // Moodle's rule for tables without .table outranks ours
             }
             td:first-child,
             td:last-child {
