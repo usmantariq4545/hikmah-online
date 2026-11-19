@@ -185,15 +185,19 @@ rclone ls b2:hikmah-backups | head      # it should be listed there
 
 Keeps 7 daily, 4 weekly and 6 monthly sets on the server and copies each one to B2.
 
-## 9. Updating the site later
+## 9. Updating the site later (commit first, then deploy)
+
+Every change is committed and pushed to GitHub first; the live site only ever runs a pushed
+commit. From the laptop, in the repository (Git Bash):
 
 ```bash
-cd ~/hikmah-online
-git pull                       # or re-copy the code from the laptop (step 4)
-export HIKMAH_ENV=prod
-scripts/dc.sh build            # option A; for option B change the image tags in .env.prod instead
-scripts/upgrade.sh             # backup-safe: maintenance mode, upgrade, settings, smoke test
+scripts/deploy-live.sh
 ```
+
+It refuses uncommitted or unpushed work, ships exactly that commit (`git archive`), and on the
+server runs: backup, image rebuild, `upgrade.sh` (maintenance mode, upgrade, settings, smoke test).
+The work runs on the server, so a dropped connection cannot stop it halfway. The deployed commit is
+recorded in `~/hikmah-online/DEPLOYED_COMMIT`; the full log is `~/deploy.log` on the server.
 
 ## 10. If something goes wrong
 
