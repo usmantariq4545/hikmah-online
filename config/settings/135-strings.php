@@ -25,7 +25,9 @@ foreach ($overrides as $component => $strings) {
     foreach ($strings as $id => $text) {
         $php .= '$string[' . var_export($id, true) . '] = ' . var_export($text, true) . ";\n";
     }
-    $file = "$dir/$component.php";
+    // Activity modules' language files drop the "mod_" prefix (mod_attendance → attendance.php).
+    $file = $dir . '/' . preg_replace('/^mod_/', '', $component) . '.php';
+    @unlink("$dir/$component.php"); // shortcut: cleans up the first, misnamed version; drop after one deploy.
     if (is_readable($file) && file_get_contents($file) === $php) {
         continue;
     }
