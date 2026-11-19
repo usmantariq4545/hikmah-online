@@ -125,9 +125,9 @@
                                     <strong>{{{name}}}</strong>
                                     <small>{{time}} · {{{course}}}</small>
                                 </span>
-                                {{#islive}}
-                                    <span class="hk-chip hk-chip--ink hk-chip--live"><span class="hk-chip__dot"></span>{{#isnow}}{{#str}}dash_livenow, theme_hikmah{{/str}}{{/isnow}}{{^isnow}}{{#str}}mode_live, theme_hikmah{{/str}}{{/isnow}}</span>
-                                {{/islive}}
+                                {{#islive}}{{#isnow}}
+                                    <span class="hk-chip hk-chip--ink hk-chip--live"><span class="hk-chip__dot"></span>{{#str}}dash_livenow, theme_hikmah{{/str}}</span>
+                                {{/isnow}}{{/islive}}
                             </a>
                         </li>
                     {{/events}}
