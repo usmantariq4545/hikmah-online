@@ -83,7 +83,11 @@ function theme_hikmah_page_init(moodle_page $page): void {
         global $DB;
         $room = $DB->get_record('bigbluebuttonbn', ['id' => $page->cm->instance], 'openingtime, closingtime');
         if ($room && $room->openingtime > 0 && $room->closingtime > 0 && time() > $room->closingtime) {
-            $page->activityheader->set_title(get_string('live_recordingtitle', 'theme_hikmah'));
+            $title = get_string('live_recordingtitle', 'theme_hikmah');
+            $page->activityheader->set_title($title);
+            if ($page->heading === format_string($page->cm->name)) {
+                $page->set_heading($title);
+            }
         }
     }
 }
