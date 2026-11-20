@@ -80,7 +80,7 @@
     <div class="hk-dash__grid">
         <div class="hk-dash__panel" data-hk-reveal>
             <div class="hk-dash__panel-head">
-                <h3>{{#str}}dash_continue, theme_hikmah{{/str}}</h3>
+                <h3>{{#isteacher}}{{#str}}dash_teaching, theme_hikmah{{/str}}{{/isteacher}}{{^isteacher}}{{#str}}dash_continue, theme_hikmah{{/str}}{{/isteacher}}</h3>
                 <a href="{{mycoursesurl}}">{{#str}}dash_allcourses, theme_hikmah{{/str}}</a>
             </div>
             {{#hascourses}}
@@ -88,6 +88,7 @@
                     {{#courses}}
                         <li>
                             <a href="{{url}}">
+                                {{^teaching}}
                                 <span class="hk-ring" style="--hk-hue: {{hue}}" aria-hidden="true">
                                     <svg viewBox="0 0 36 36">
                                         <circle class="hk-ring__track" cx="18" cy="18" r="15.915"/>
@@ -95,7 +96,8 @@
                                     </svg>
                                     <span>{{#hasprogress}}{{percent}}<small>%</small>{{/hasprogress}}{{^hasprogress}}–{{/hasprogress}}</span>
                                 </span>
-                                <span class="hk-dash__course-name">{{{name}}}{{#hasattendance}}<small class="hk-dash__course-att">{{#str}}dash_attendance, theme_hikmah{{/str}} {{attendance}}%</small>{{/hasattendance}}</span>
+                                {{/teaching}}
+                                <span class="hk-dash__course-name">{{{name}}}{{#hasattendance}}<small class="hk-dash__course-att">{{#str}}dash_attendance, theme_hikmah{{/str}} {{attendance}}%</small>{{/hasattendance}}{{#meta}}<small class="hk-dash__course-att">{{meta}}</small>{{/meta}}</span>
                                 <span class="hk-dash__go" aria-hidden="true">→</span>
                                 {{#hasprogress}}<span class="visually-hidden">{{percent}}%</span>{{/hasprogress}}
                             </a>

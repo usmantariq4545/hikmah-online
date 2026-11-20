@@ -170,6 +170,13 @@ class dashboard {
                 'label' => get_string('dash_attendance', 'theme_hikmah')]]);
         }
 
+        // Someone who only teaches sees their teaching, not learner progress.
+        $isteacher = $courses && !array_filter($courses,
+            static fn($c): bool => !has_capability('moodle/grade:viewall', \context_course::instance($c->id)));
+        if ($isteacher) {
+            [$stats, $rows] = self::teaching($courses);
+        }
+
         $hour = (int) userdate(time(), '%H');
         return [
             'motif' => ['motifclass' => 'hk-dash__motif hk-motif--animate'],
@@ -178,6 +185,7 @@ class dashboard {
             'greeting' => get_string($hour < 12 ? 'dash_morning' : ($hour < 17 ? 'dash_afternoon' : 'dash_evening'),
                 'theme_hikmah'),
             'stats' => $stats,
+            'isteacher' => $isteacher,
             'courses' => $rows,
             'hascourses' => !empty($rows),
             'morecourses' => count($courses) > self::MAX_COURSES,
@@ -191,6 +199,62 @@ class dashboard {
             'certificatesurl' => $certificates ? (new moodle_url('/admin/tool/certificate/my.php'))->out(false) : '',
             'work' => self::staff_work(),
         ];
+    }
+
+    /**
+     * Stats and course rows for someone who teaches every course they are in: courses, students,
+     * live classes in the next seven days and class attendance (average of the students' register %).
+     *
+     * @param \stdClass[] $courses
+     * @return array [stats, rows]
+     */
+    private static function teaching(array $courses): array {
+        global $CFG, $DB;
+        require_once($CFG->dirroot . '/mod/attendance/locallib.php');
+        $now = time();
+        [$insql, $params] = $DB->get_in_or_equal(array_keys($courses));
+        $classes = $DB->count_records_select('bigbluebuttonbn', "course $insql AND openingtime >= ? AND openingtime < ?",
+            array_merge($params, [$now, $now + 7 * DAYSECS]));
+        $registers = [];
+        foreach ($DB->get_records_select('attendance', "course $insql", $params, 'id DESC', 'id, course') as $att) {
+            $registers[$att->course] = $att->id; // Oldest activity wins.
+        }
+
+        $rows = [];
+        $students = 0;
+        $averages = [];
+        foreach ($courses as $course) {
+            $context = \context_course::instance($course->id);
+            $count = count_enrolled_users($context, 'mod/assign:submit', 0, true);
+            $students += $count;
+            $average = null;
+            if (isset($registers[$course->id])) {
+                $percentages = (new \mod_attendance_summary($registers[$course->id]))->get_user_taken_sessions_percentages();
+                if ($percentages) {
+                    $average = (int) floor(array_sum($percentages) / count($percentages) * 100);
+                    $averages[] = $average;
+                }
+            }
+            if (count($rows) < self::MAX_COURSES) {
+                $rows[] = [
+                    'name' => format_string($course->fullname, true, ['context' => $context]),
+                    'url' => (new moodle_url('/course/view.php', ['id' => $course->id]))->out(false),
+                    'teaching' => true,
+                    'meta' => $average === null ? get_string('dash_coursestudents', 'theme_hikmah', $count)
+                        : get_string('dash_coursemeta', 'theme_hikmah', ['students' => $count, 'attendance' => $average]),
+                ];
+            }
+        }
+        $stats = [
+            ['value' => count($courses), 'suffix' => '', 'label' => get_string('dash_courses', 'theme_hikmah')],
+            ['value' => $students, 'suffix' => '', 'label' => get_string('dash_students', 'theme_hikmah')],
+            ['value' => $classes, 'suffix' => '', 'label' => get_string('dash_classesweek', 'theme_hikmah')],
+        ];
+        if ($averages) {
+            $stats[] = ['value' => (int) round(array_sum($averages) / count($averages)), 'suffix' => '%',
+                'label' => get_string('dash_classattendance', 'theme_hikmah')];
+        }
+        return [$stats, $rows];
     }
 
     /**

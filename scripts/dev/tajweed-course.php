@@ -128,9 +128,9 @@ try {
     $schedule = '';
     foreach ($classes as $n => $class) {
         $start = $at($class['date']);
-        $when = userdate($start, '%A %d %B', 'Asia/Karachi', false) . ', 6:00 to 7:00 PM';
         $schedule .= "<tr><td>$n</td><td>" . userdate($start, '%a %d %b', 'Asia/Karachi', false) . "</td><td>{$class['title']}</td></tr>";
-        $summary = '<p><strong>' . $when . '</strong> · Live class</p><p>In this class you will:</p><ul><li>'
+        // The class time is on the class's live class ("Starts: … · Duration: …"), not repeated here.
+        $summary = '<p>In this class you will:</p><ul><li>'
             . implode('</li><li>', $class['objectives']) . '</li></ul>';
         $sectiondata = ['name' => "Class $n · {$class['title']}", 'summary' => $summary, 'summaryformat' => FORMAT_HTML];
         if ($start > $now) {

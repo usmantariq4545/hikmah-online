@@ -40,7 +40,7 @@
         <div>
             <span class="hk-eyebrow">{{#str}}index_eyebrow, local_hikmahattendance{{/str}}</span>
             <h2 class="hk-pay__title">{{#str}}navtitle, local_hikmahattendance{{/str}}</h2>
-            <p class="text-muted mb-0">{{#str}}index_lead, local_hikmahattendance, {{threshold}}{{/str}}</p>
+            <p class="text-muted mb-0">{{#autowrite}}{{#str}}index_lead_auto, local_hikmahattendance, {{threshold}}{{/str}}{{/autowrite}}{{^autowrite}}{{#str}}index_lead, local_hikmahattendance, {{threshold}}{{/str}}{{/autowrite}}</p>
         </div>
         <div class="hk-queuehead__actions">
             {{#reporturl}}<a class="hk-btn hk-btn--ghost hk-btn--sm" href="{{reporturl}}">{{#str}}reporttitle, local_hikmahattendance{{/str}}</a>{{/reporturl}}

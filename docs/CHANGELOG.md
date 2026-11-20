@@ -16,6 +16,12 @@
 - Demo Tajweed course: rooms close at class end (one hour) instead of 30 minutes after.
 - Decision change (owner, 2026-11-20): autowrite no longer ships off for scheduled classes; PRD
   ATT-05, open decisions and CLAUDE.md updated.
+- Instructor view: dashboard for people who only teach shows Courses, Students, Classes this week
+  and Class attendance, and "Your courses" with students and attendance per course (no learner
+  progress rings). Attendance review page explains automatic marking when autowrite is on, names
+  each live class by its class section, and uses 12-hour times throughout.
+- Demo Tajweed course: class time no longer repeated in the section summaries; the emptied general
+  "Live classroom" removed.
 
 ## 2026-11-19 — One live class per class
 

@@ -64,11 +64,15 @@ if ($action !== '' && data_submitted()) {
     redirect($pageurl);
 }
 
-$dateformat = get_string('strftimedatetimeshort', 'langconfig');
+$dateformat = get_string('index_dateformat', 'local_hikmahattendance');
 $timeformat = get_string('strftimetime', 'langconfig');
 $links = $DB->get_records(manager::TABLE_LINK, ['courseid' => $course->id], 'windowstart DESC');
 
-$bbbnames = $DB->get_records_menu('bigbluebuttonbn', ['course' => $course->id], '', 'id, name');
+// Each live class by the class it belongs to ("Class 6 · Noon sakinah"); a room in General by its own name.
+$bbbnames = [];
+foreach (get_fast_modinfo($course)->get_instances_of('bigbluebuttonbn') as $bbbid => $cm) {
+    $bbbnames[$bbbid] = $cm->sectionnum ? get_section_name($course, $cm->sectionnum) : $cm->name;
+}
 $rows = [];
 $exceptions = 0;
 foreach ($links as $link) {

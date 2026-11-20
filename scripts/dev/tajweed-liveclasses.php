@@ -1,9 +1,8 @@
 <?php
 // One live class per class in the demo course "Foundations of Tajweed": a "Live class" room at the top
-// of each class section, open from the class start to 30 minutes after it ends, created by the
-// instructor. The general room's recordings, attendance links and live-class evidence move to the
-// class they belong to, and the general room is hidden (not deleted: deleting a room also talks to
-// the BigBlueButton server). Upcoming classes keep their room visible; only their notes and slides
+// of each class section, open from the class start to its end, created by the instructor. The
+// general room's recordings, attendance links and live-class evidence move to the class they belong
+// to, and the emptied general room is removed. Upcoming classes keep their room visible; only their notes and slides
 // wait until the day before the class.
 // Used by tajweed-course.php; can also be run on its own inside the moodle container (idempotent):
 //   php tajweed-liveclasses.php
@@ -44,6 +43,11 @@ function hk_tajweed_liveclasses(stdClass $course): int {
     $held = [];
     foreach ($DB->get_records_select('course_sections', 'course = ? AND section BETWEEN 1 AND 8', [$course->id], 'section') as $section) {
         $n = (int) $section->section;
+        // The class time is shown on the live class itself; drop the older copy in the summary.
+        $summary = preg_replace('~^<p><strong>[^<]*</strong> · Live class</p>~', '', (string) $section->summary);
+        if ($summary !== $section->summary) {
+            course_update_section($course, $section, ['summary' => $summary]);
+        }
         $session = $DB->get_record_select('attendance_sessions', 'attendanceid = ? AND ' . $DB->sql_like('description', '?'),
             [$attendance->id, "Class $n:%"]);
         if (!$session) {
@@ -110,7 +114,11 @@ function hk_tajweed_liveclasses(stdClass $course): int {
             $DB->set_field('bigbluebuttonbn_recordings', 'bigbluebuttonbnid', $room->id, ['id' => $recording->id]);
         }
     }
-    if ($general && $general->visible) {
+    // With its recordings moved the general room is empty: removed (the BBB server only gets an
+    // "end meeting" call, and the room's evidence logs stay for the classes they were moved to).
+    if ($general && !$DB->record_exists('bigbluebuttonbn_recordings', ['bigbluebuttonbnid' => $general->instance])) {
+        course_delete_module($general->id);
+    } else if ($general && $general->visible) {
         set_coursemodule_visible($general->id, 0);
     }
     rebuild_course_cache($course->id, true);
