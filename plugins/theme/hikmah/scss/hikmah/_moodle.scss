@@ -22,20 +22,27 @@
     }
     // Top menu (owner's choice, 2026-11-20): exactly the look of Moodle 5.3's own menu (the design
     // system's nav pills, through its own variables), on the server-rendered menu so it shows at once.
+    // The list fills the bar's height so the pills sit on the same centre line as the logo and the
+    // avatar. min-height, not height: core/moremenu spots overflow by the list growing taller.
     .primary-navigation .navigation .more-nav {
+        min-height: 100%;
         align-items: center;
         gap: var(--mds-spacing-xxs);
+    }
+    .primary-navigation .navigation .nav-item {
+        display: flex;
+        align-items: center;
     }
     .primary-navigation .navigation .nav-link {
         height: auto;
         display: inline-flex;
         align-items: center;
-        gap: var(--mds-spacing-xxs);
-        padding: var(--mds-spacing-xs) var(--mds-spacing-sm);
+        gap: .4rem;
+        padding: .5rem .85rem;
         font-family: var(--mds-font-family-base);
-        font-size: var(--mds-font-size-paragraph-small);
+        font-size: .9375rem; // 15px, a little larger than Moodle's 14px (owner's review).
         font-weight: var(--mds-font-weight-medium);
-        line-height: var(--mds-line-height-paragraph-xs);
+        line-height: 1.25;
         white-space: nowrap;
         color: var(--mds-text-subtle);
         background: transparent;

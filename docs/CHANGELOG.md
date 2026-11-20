@@ -91,7 +91,8 @@
   no longer get "Edit mode" and "Reset page to default" there.
 - Top menu look (owner's choice): exactly Moodle 5.3's own menu look (design-system nav pills through
   its --mds-* variables: Noto Sans 0.875rem, grey selected pill with a 4px blue dot, no underline or
-  click box) on the fast server-rendered menu. Profile, grades, payments and preferences highlight
+  click box) on the fast server-rendered menu, centred on the bar like the logo and avatar, text 15px.
+  Profile, grades, payments and preferences highlight
   Dashboard instead of Home.
 - Catalogue cards: the start date reads "Starts 1 Nov" or "Started 1 Nov" (year added when it is not
   this year) instead of "1/11/26".
