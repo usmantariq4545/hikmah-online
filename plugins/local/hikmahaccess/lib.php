@@ -68,8 +68,9 @@ function local_hikmahaccess_extend_signup_form(MoodleQuickForm $mform): void {
                 'local_hikmahaccess'), ['target' => '_blank', 'rel' => 'noopener']);
         }
     }
+    // Checked on submit (validate_extend_signup_form below); no "*" marker, which would sit on a line of its own.
+    // Checked on submit (validate function below), without a "*" that would sit on a line of its own.
     $mform->addElement('checkbox', 'hkagree', '', get_string('signupagree', 'local_hikmahaccess', (object) $links));
-    $mform->addRule('hkagree', get_string('signupagree_required', 'local_hikmahaccess'), 'required', null, 'client');
 }
 
 /**
