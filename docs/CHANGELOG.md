@@ -36,6 +36,10 @@
   the course with the work. Payment queue, attendance pages, course management and the progress
   report no longer widen the page on phones (shrinkable grid column, wrapping action bars and selects,
   hidden table labels kept inside the table's scroll box).
+- Finance reviewer pass: on narrow screens the receipt sits above the decision buttons; payment dates
+  read "19 November 2026, 8:28 PM"; "Payment reviews" is highlighted in the menu on its pages; "My
+  courses" is hidden for finance reviewers with no courses. (A typo in that last change broke pages for
+  finance reviewers for about 3 minutes; fixed in 2d874b8.)
 
 ## 2026-11-19 — One live class per class
 
