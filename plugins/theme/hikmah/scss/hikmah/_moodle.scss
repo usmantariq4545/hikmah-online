@@ -20,51 +20,55 @@
     .hk-navbar__brand:hover .hk-navbar__logo {
         transform: scale(1.04);
     }
-    // Top menu (owner's review, 2026-11-20): soft pills, not an underline. The current page is a filled
-    // pill with a dot; hover is a lighter pill; a mouse click leaves no box (keyboard focus keeps a ring).
+    // Top menu (owner's choice, 2026-11-20): exactly the look of Moodle 5.3's own menu (the design
+    // system's nav pills, through its own variables), on the server-rendered menu so it shows at once.
     .primary-navigation .navigation .more-nav {
         align-items: center;
-        gap: .15rem;
+        gap: var(--mds-spacing-xxs);
     }
     .primary-navigation .navigation .nav-link {
-        position: relative;
         height: auto;
         display: inline-flex;
         align-items: center;
-        gap: .45rem;
-        padding: .45rem .95rem;
-        font-family: $hk-font-display;
-        font-size: .98rem;
-        font-weight: 500;
-        color: $hk-ink;
-        border: 0 !important;
-        border-radius: 999px;
+        gap: var(--mds-spacing-xxs);
+        padding: var(--mds-spacing-xs) var(--mds-spacing-sm);
+        font-family: var(--mds-font-family-base);
+        font-size: var(--mds-font-size-paragraph-small);
+        font-weight: var(--mds-font-weight-medium);
+        line-height: var(--mds-line-height-paragraph-xs);
+        white-space: nowrap;
+        color: var(--mds-text-subtle);
         background: transparent;
+        border: 0 !important;
+        border-radius: var(--mds-border-radius-md);
         box-shadow: none !important;
-        transition: background-color .2s ease, color .2s ease;
-        &:hover {
-            background: rgba(26, 26, 26, .05);
+        &:hover:not(.active) {
+            background-color: var(--mds-bg-nav-pill-hover);
+        }
+        &:active:not(.active) {
+            background-color: var(--mds-bg-nav-pill-pressed);
         }
         &:focus {
-            outline: 0;
+            outline: none;
         }
         &:focus:not(:hover):not(.active) {
             background: transparent;
         }
         &:focus-visible {
-            outline: 2px solid $hk-ink;
-            outline-offset: 2px;
+            outline: var(--mds-stroke-weight-md) solid var(--mds-focus-default);
+            outline-offset: var(--mds-spacing-offset);
         }
-        &.active,
-        &[aria-current="true"] {
-            font-weight: 600;
-            background: rgba(26, 26, 26, .07);
+        &.active {
+            color: var(--mds-text-default);
+            background-color: var(--mds-bg-nav-pill-selected);
             &::before {
                 content: "";
-                width: 6px;
-                height: 6px;
-                border-radius: 50%;
-                background: $hk-ink;
+                display: block;
+                width: 4px;
+                height: 4px;
+                flex-shrink: 0;
+                border-radius: var(--mds-border-radius-pill);
+                background-color: var(--mds-bg-interactive-primary-default);
             }
         }
     }
