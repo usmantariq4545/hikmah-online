@@ -165,6 +165,22 @@ class core_renderer extends \theme_boost\output\core_renderer {
     }
 
     /**
+     * Boost always heads an activity page with the activity's name; a held live class says "Class recording".
+     *
+     * @param array|null $headerinfo
+     * @param int $headinglevel
+     * @return string HTML
+     */
+    public function context_header($headerinfo = null, $headinglevel = 1): string {
+        $title = \theme_hikmah\local\live_classes::held_title($this->page);
+        if ($title && !isset($headerinfo['heading'])) {
+            $name = $this->page->cm->get_formatted_name();
+            return str_replace('>' . $name . '</h', '>' . s($title) . '</h', parent::context_header($headerinfo, $headinglevel));
+        }
+        return parent::context_header($headerinfo, $headinglevel);
+    }
+
+    /**
      * Adds the Hikmah summary above the dashboard blocks.
      *
      * @param bool $onlyifnotcalledbefore

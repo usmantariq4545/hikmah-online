@@ -120,4 +120,20 @@ class live_classes {
     private static function button(moodle_url $url, string $label, string $modifier): string {
         return '<a class="hk-btn hk-btn--sm ' . $modifier . '" href="' . $url->out() . '">' . s($label) . '</a>';
     }
+
+    /**
+     * "Class recording" on a held live class's own page (editors keep the real name), else null.
+     *
+     * @param \moodle_page $page
+     * @return string|null
+     */
+    public static function held_title(\moodle_page $page): ?string {
+        global $DB;
+        if ($page->pagetype !== 'mod-bigbluebuttonbn-view' || !$page->cm || $page->user_is_editing()) {
+            return null;
+        }
+        $room = $DB->get_record('bigbluebuttonbn', ['id' => $page->cm->instance], 'openingtime, closingtime');
+        $held = $room && $room->openingtime > 0 && $room->closingtime > 0 && time() > $room->closingtime;
+        return $held ? get_string('live_recordingtitle', 'theme_hikmah') : null;
+    }
 }

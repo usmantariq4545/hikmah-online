@@ -79,15 +79,8 @@ function theme_hikmah_page_init(moodle_page $page): void {
         $page->add_body_class('hk-learner');
     }
     // A held live class is headed "Class recording", as on the course page (editors keep the real name).
-    if ($page->pagetype === 'mod-bigbluebuttonbn-view' && $page->cm && !$page->user_is_editing()) {
-        global $DB;
-        $room = $DB->get_record('bigbluebuttonbn', ['id' => $page->cm->instance], 'openingtime, closingtime');
-        if ($room && $room->openingtime > 0 && $room->closingtime > 0 && time() > $room->closingtime) {
-            $title = get_string('live_recordingtitle', 'theme_hikmah');
-            $page->activityheader->set_title($title);
-            if ($page->heading === format_string($page->cm->name)) {
-                $page->set_heading($title);
-            }
-        }
+    // The page's top heading is replaced in core_renderer::context_header().
+    if ($title = \theme_hikmah\local\live_classes::held_title($page)) {
+        $page->activityheader->set_title($title);
     }
 }
