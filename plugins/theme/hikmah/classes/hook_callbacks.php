@@ -93,8 +93,7 @@ class hook_callbacks {
         if (has_capability('paygw/hikmahtransfer:review', $system)) {
             // Finance reviewers with no courses of their own would only find an empty "My courses".
             if (!has_capability('moodle/course:view', $system) && !enrol_get_my_courses('id', null, 1)
-                    && ($mycourses = $hook->get_primaryview()->find('mycourses', 
-avigation_node::TYPE_ROOTNODE))) {
+                    && ($mycourses = $hook->get_primaryview()->find('mycourses', \navigation_node::TYPE_ROOTNODE))) {
                 $mycourses->remove();
             }
             $hook->get_primaryview()->add(
