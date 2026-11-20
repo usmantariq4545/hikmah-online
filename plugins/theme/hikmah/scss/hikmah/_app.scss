@@ -1853,7 +1853,7 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
 #page-user-preferences {
     #page-header .page-context-header,
     #page-header .page-header-headings {
-        display: none;
+        display: none !important; // Bootstrap's d-flex on it is !important too.
     }
 }
 // Content under the banner: the same white rounded panels as the dashboard.
@@ -1873,4 +1873,9 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
 #page-grade-report-overview-index #region-main .generaltable {
     overflow: hidden;
     background: #fff;
+}
+// The server-rendered top menu: until Moodle's script has moved the items that do not fit into "More",
+// the wrapped second line is clipped (core/primarymoremenu override removes hk-pending afterwards).
+.primary-navigation .moremenu.hk-pending {
+    overflow: hidden;
 }

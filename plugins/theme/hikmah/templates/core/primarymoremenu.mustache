@@ -37,7 +37,7 @@
         ]
     }
 }}
-<nav class="moremenu observed navigation">
+<nav class="moremenu observed navigation hk-pending">
     <ul id="moremenu-{{moremenuid}}-{{navbarstyle}}" role="{{#istablist}}tablist{{/istablist}}{{^istablist}}menubar{{/istablist}}" class="nav more-nav {{navbarstyle}}">
         {{#nodecollection}}
             {{#children}}
@@ -58,6 +58,8 @@
 </nav>
 {{#js}}
     require(['core/moremenu'], function(moremenu) {
-        moremenu(document.querySelector('#moremenu-{{moremenuid}}-{{navbarstyle}}'));
+        var menu = document.querySelector('#moremenu-{{moremenuid}}-{{navbarstyle}}');
+        moremenu(menu);
+        menu.parentNode.classList.remove('hk-pending');
     });
 {{/js}}

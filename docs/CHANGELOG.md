@@ -82,6 +82,13 @@
 - Profile, grades, My payments and preferences open with the dashboard's banner (eyebrow, title, lead
   and numbers: courses/completed/certificates; graded courses/average; waiting/needs action/approved);
   Moodle's repeated page heading is hidden there and the content sits in the dashboard's white panels.
+- Follow-up: the logo resize was reverted (GD's palette conversion dropped the transparency, and the
+  header logo showed on a black box for about 4 minutes); the originals stay, with preload and high
+  priority. The grades banner read the course id as the user id (showed 0 courses); fixed. The
+  repeated avatar heading is hidden (Bootstrap's d-flex is !important). Until core/moremenu has moved
+  overflowing items into "More", the menu's second line is clipped (hk-pending) instead of wrapping.
+  050-roles: no block editing on one's own profile (moodle/user:manageownblocks prevented), so learners
+  no longer get "Edit mode" and "Reset page to default" there.
 
 ## 2026-11-19 — One live class per class
 

@@ -112,6 +112,9 @@ hk_role_cap($manager, 'moodle/user:loginas', CAP_PREVENT);
 $authenticated = (int) $DB->get_field('role', 'id', ['shortname' => 'user'], MUST_EXIST);
 hk_role_cap($authenticated, 'moodle/my:manageblocks', CAP_PREVENT);
 hk_role_cap($manager, 'moodle/my:manageblocks', CAP_PREVENT);
+// Profile pages too: no "Edit mode" switch or "Reset page to default" on a learner's own profile.
+hk_role_cap($authenticated, 'moodle/user:manageownblocks', CAP_PREVENT);
+hk_role_cap($manager, 'moodle/user:manageownblocks', CAP_PREVENT);
 
 // Personal access tokens (outside programs acting as the user): super administrator only. The
 // Moodle app signs in with moodle/webservice:createmobiletoken, which stays allowed.

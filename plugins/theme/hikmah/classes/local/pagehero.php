@@ -49,7 +49,8 @@ class pagehero {
         if (!isset(self::PAGES[$page->pagetype]) || !isloggedin() || isguestuser()) {
             return null;
         }
-        $userid = (int) ($page->url->get_param('id') ?: $USER->id);
+        // Only the profile page's id is a user (on the grades page it is the course).
+        $userid = (int) ($page->pagetype === 'user-profile' && $page->url->get_param('id') ? $page->url->get_param('id') : $USER->id);
         $own = $userid === (int) $USER->id;
         $stats = [];
         $title = get_string(self::PAGES[$page->pagetype] . '_title', 'theme_hikmah');
