@@ -688,7 +688,7 @@ section.block {
         padding-top: 1.25rem;
         border-top: 1px solid rgba(255, 255, 255, .14);
         font-size: .84rem;
-        padding-inline-end: 5rem; // keeps footer text clear of the fixed "?" help button
+
     }
     &__motto {
         font-family: $hk-font-brand-arabic;
@@ -782,4 +782,9 @@ section.block {
             display: none;
         }
     }
+}
+
+// Footer text stays clear of the fixed "?" help button in the bottom corner.
+#page-footer .hk-footer__main > .hk-container {
+    padding-inline-end: max(clamp(1.1rem, 4vw, 2.5rem), 4.5rem);
 }
