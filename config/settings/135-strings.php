@@ -31,7 +31,9 @@ foreach ($overrides as $component => $strings) {
     }
     // Activity modules' language files drop the "mod_" prefix (mod_attendance → attendance.php).
     $file = $dir . '/' . preg_replace('/^mod_/', '', $component) . '.php';
-    @unlink("$dir/$component.php"); // shortcut: cleans up the first, misnamed version; drop after one deploy.
+    if ("$dir/$component.php" !== $file) {
+        @unlink("$dir/$component.php"); // shortcut: cleans up the first, misnamed version; drop after one deploy.
+    }
     if (is_readable($file) && file_get_contents($file) === $php) {
         continue;
     }

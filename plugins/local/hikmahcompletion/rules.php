@@ -66,14 +66,18 @@ $form->display();
 echo html_writer::tag('h3', get_string('weights_title', 'local_hikmahcompletion'), ['class' => 'mt-4']);
 $coursecategory = grade_category::fetch_course_category($course->id);
 $items = grade_item::fetch_all(['courseid' => $course->id]) ?: [];
+$top = array_filter($items, static fn($item) => !$item->is_course_item() && !$item->is_category_item()
+    && (int) $item->categoryid === (int) $coursecategory->id);
+// Natural keeps each share in aggregationcoef2; Weighted mean keeps a weight in aggregationcoef.
+$weightsum = array_sum(array_map(static fn($item) => (float) $item->aggregationcoef, $top));
 $rows = [];
-foreach ($items as $item) {
-    if ($item->is_course_item() || $item->is_category_item() || (int) $item->categoryid !== (int) $coursecategory->id) {
-        continue;
-    }
-    $weight = (int) $coursecategory->aggregation === GRADE_AGGREGATE_SUM
-        ? format_float($item->aggregationcoef2 * 100, 1) . '%' : '—';
-    $rows[] = [format_string($item->get_name()), $weight];
+foreach ($top as $item) {
+    $share = match ((int) $coursecategory->aggregation) {
+        GRADE_AGGREGATE_SUM => $item->aggregationcoef2 * 100,
+        GRADE_AGGREGATE_WEIGHTED_MEAN => $weightsum > 0 ? $item->aggregationcoef / $weightsum * 100 : null,
+        default => null,
+    };
+    $rows[] = [format_string($item->get_name()), $share === null ? '—' : format_float($share, 1) . '%'];
 }
 if ($rows) {
     $table = new html_table();
