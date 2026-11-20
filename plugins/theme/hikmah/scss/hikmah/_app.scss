@@ -1812,3 +1812,30 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
         }
     }
 }
+
+// ---- Course pages in the reference style (owner's decision, 2026-11-20) ------------------------
+// What each item is ("Quiz • 20 min") under its name, and a class's summary under its title.
+.hk-cmmeta {
+    font-size: .8rem;
+    color: $hk-muted;
+    margin-top: .15rem;
+}
+.hk-classsummary {
+    margin: .35rem 0 0;
+    font-size: .9rem;
+    color: $hk-muted;
+}
+// With the class list open beside the page, the footer still spans the whole window and sits over the
+// list's lower end instead of being cut by it.
+@media (min-width: 992px) {
+    #page.drawers #page-footer.hk-footer.footer-popover {
+        position: relative;
+        z-index: 1025;
+    }
+    #page.drawers.show-drawer-left #page-footer.hk-footer.footer-popover {
+        margin-inline-start: calc(-3rem - 285px);
+    }
+    #page.drawers.show-drawer-right #page-footer.hk-footer.footer-popover {
+        margin-inline-end: calc(-3rem - 315px);
+    }
+}

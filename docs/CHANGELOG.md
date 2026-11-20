@@ -55,6 +55,12 @@
   the first sign-in. Password rules sit under the password box. Required fields are marked "*"
   (theme icon system maps core:req to fa-asterisk). Sign-in/up pages no longer overflow on phones and
   have more room around the form. The live class page shows "Starts … · Duration …" too.
+- Course pages in the owner's reference style: the course home opens on the learner's current class
+  (next or ongoing live class, else first class with something left to complete) on Moodle's own
+  section page, with the class list (course index) on the left; edit mode keeps the full page. Each
+  item says what it is and how long ("Quiz • 20 min", "Assignment • Due Sat 21 Nov"); each class page
+  has a summary line ("1 live class · 2 readings · 1 quiz"). "General" reads "Course info"
+  (135-strings). The footer spans the window over the class list instead of being cut by it.
 
 ## 2026-11-19 — One live class per class
 

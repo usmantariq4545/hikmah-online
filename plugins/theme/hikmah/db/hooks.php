@@ -45,4 +45,8 @@ $callbacks = [
         'hook' => \core\hook\navigation\secondary_extend::class,
         'callback' => [\theme_hikmah\hook_callbacks::class, 'secondary_extend'],
     ],
+    [
+        'hook' => \core_course\hook\before_course_viewed::class,
+        'callback' => [\theme_hikmah\hook_callbacks::class, 'before_course_viewed'],
+    ],
 ];

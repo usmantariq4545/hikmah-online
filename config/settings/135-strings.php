@@ -13,6 +13,10 @@ $overrides = [
         'waitformoderator' => 'Your teacher hasn\'t started the class yet.',
         'view_message_conference_wait_for_moderator' => 'Your teacher hasn\'t started the class yet.',
     ],
+    // The course's first section (course info, announcements, the register) in the class list.
+    'format_topics' => [
+        'section0name' => 'Course info',
+    ],
     'mod_attendance' => [
         'enrolmentstart' => 'Before you enrolled',
         'enrolmentend' => 'After your enrolment ended',

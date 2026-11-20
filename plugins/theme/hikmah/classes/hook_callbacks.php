@@ -80,6 +80,31 @@ class hook_callbacks {
     }
 
     /**
+     * The course home opens on the learner's current class, one class per page with the class list on the
+     * left (owner's decision, 2026-11-20). Edit mode, and any course page link with more than the course
+     * id (a section, an action), keep Moodle's full course page.
+     *
+     * @param \core_course\hook\before_course_viewed $hook
+     */
+    public static function before_course_viewed(\core_course\hook\before_course_viewed $hook): void {
+        global $USER;
+        $course = $hook->course;
+        if (!self::is_active() || !isloggedin() || isguestuser() || !empty($USER->editing)
+                || array_diff(array_keys($_GET + $_POST), ['id']) || !course_format_uses_sections($course->format)) {
+            return;
+        }
+        try {
+            $section = \theme_hikmah\local\course_items::current_section($course);
+        } catch (\Throwable $e) {
+            debugging('Hikmah course landing: ' . $e->getMessage(), DEBUG_DEVELOPER);
+            return;
+        }
+        if ($section) {
+            redirect(new \moodle_url('/course/section.php', ['id' => $section->id]));
+        }
+    }
+
+    /**
      * Course tabs: no Grades tab for staff who are not on the course and cannot see its grades.
      *
      * @param \core\hook\navigation\secondary_extend $hook
@@ -159,6 +184,23 @@ class hook_callbacks {
         }
         if (!self::is_active() || !str_starts_with($PAGE->pagetype, 'course-view-') || !isloggedin()) {
             return;
+        }
+        if (!$PAGE->user_is_editing()) {
+            // What each item is and how long it takes; on a class's own page, a one-line summary under its title.
+            $items = \theme_hikmah\local\course_items::export($PAGE->course);
+            $summary = '';
+            if (str_starts_with($PAGE->pagetype, 'course-view-section-') && ($sectionid = (int) $PAGE->url->get_param('id'))) {
+                $section = get_fast_modinfo($PAGE->course)->get_section_info_by_id($sectionid, IGNORE_MISSING);
+                $summary = $section ? ($items['sections'][$section->section] ?? '') : '';
+            }
+            $hook->add_html('<script>(function(d,m,s){Object.keys(m).forEach(function(id){'
+                . 'var a=d.querySelector(\'li.activity[data-id="\'+id+\'"] .activity-name-area\');'
+                . 'if(!a||a.querySelector(".hk-cmmeta")){return;}var e=d.createElement("div");e.className="hk-cmmeta";'
+                . 'e.textContent=m[id];a.appendChild(e);});var h=s&&d.querySelector("#page-header .page-header-headings");'
+                . 'if(h&&!d.querySelector(".hk-classsummary")){var p=d.createElement("p");p.className="hk-classsummary";'
+                . 'p.textContent=s;h.appendChild(p);}})(document,'
+                . json_encode((object) $items['items'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ','
+                . json_encode($summary, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ');</script>');
         }
         $live = \theme_hikmah\local\live_classes::for_course($PAGE->course);
         if (!$live) {
