@@ -31,6 +31,11 @@
   attention".
 - Held live class page headed "Class recording" (as on the course page); recording dates reordered to
   "Wednesday 18 November 2026"; forum discussion list shows topic, replies and actions only on phones.
+- Staff dashboards: managers and support (no enrolments) see site numbers, the site's courses and its
+  upcoming live classes; finance reviewers see payment numbers only. Grading and attendance tiles open
+  the course with the work. Payment queue, attendance pages, course management and the progress
+  report no longer widen the page on phones (shrinkable grid column, wrapping action bars and selects,
+  hidden table labels kept inside the table's scroll box).
 
 ## 2026-11-19 — One live class per class
 
