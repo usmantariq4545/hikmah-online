@@ -40,6 +40,11 @@
   read "19 November 2026, 8:28 PM"; "Payment reviews" is highlighted in the menu on its pages; "My
   courses" is hidden for finance reviewers with no courses. (A typo in that last change broke pages for
   finance reviewers for about 3 minutes; fixed in 2d874b8.)
+- Support pass: support may view student and teacher roles (050-roles), so participants pages show
+  roles instead of "No roles"; the course Grades tab is hidden from staff who are not on the course and
+  cannot see grades (it led to "Cannot view grades."); "My courses" hidden for staff with no courses
+  who cannot create one; new "People" menu item opens the site participant list, headed "People",
+  without the site-level Roles and Groups columns.
 
 ## 2026-11-19 — One live class per class
 
