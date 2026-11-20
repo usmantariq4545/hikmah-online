@@ -333,9 +333,11 @@ class manager {
                     LEFT JOIN {' . self::TABLE_LINK . '} l ON l.sessionid = s.id
                     WHERE s.attendanceid = ? AND s.sessdate = ? AND l.id IS NULL', [$attendance->id, $start], IGNORE_MULTIPLE);
             if (!$sessionid) {
+                // From the database: the course cache may not know the new room yet inside its creation event.
                 $cm = get_coursemodule_from_instance('bigbluebuttonbn', $room->id, $courseid, false, MUST_EXIST);
+                $sectionnum = (int) $DB->get_field('course_sections', 'section', ['id' => $cm->section]);
                 $sessionid = self::create_session($attendance, $start, $end - $start,
-                    get_string('sessiondescription', 'local_hikmahattendance', get_section_name($courseid, $cm->sectionnum)));
+                    get_string('sessiondescription', 'local_hikmahattendance', get_section_name($courseid, $sectionnum)));
             }
             self::save_link((object) [
                 'courseid' => $courseid,
