@@ -108,6 +108,14 @@ class hook_callbacks {
      */
     public static function before_footer(\core\hook\output\before_footer_html_generation $hook): void {
         global $PAGE;
+        if (self::is_active() && str_starts_with($PAGE->pagetype, 'mod-bigbluebuttonbn-')) {
+            // The recordings table dates its rows with the browser's "en" (US) order; reorder to "Wednesday 18 November 2026".
+            $hook->add_html('<script>(function(d){var re=/^(\w+), (\w+) (\d{1,2}), (\d{4})$/;function f(){'
+                . 'd.querySelectorAll(".mod_bigbluebuttonbn_recordings_table td").forEach(function(td){'
+                . 'var m=re.exec(td.textContent.trim());if(m){td.textContent=m[1]+" "+m[3]+" "+m[2]+" "+m[4];}});}'
+                . 'new MutationObserver(f).observe(d.body,{childList:true,subtree:true});f();})(document);</script>');
+            return;
+        }
         if (!self::is_active() || !str_starts_with($PAGE->pagetype, 'course-view-') || !isloggedin()) {
             return;
         }

@@ -78,4 +78,12 @@ function theme_hikmah_page_init(moodle_page $page): void {
     if (!has_capability('moodle/grade:viewall', context_course::instance($page->course->id))) {
         $page->add_body_class('hk-learner');
     }
+    // A held live class is headed "Class recording", as on the course page (editors keep the real name).
+    if ($page->pagetype === 'mod-bigbluebuttonbn-view' && $page->cm && !$page->user_is_editing()) {
+        global $DB;
+        $room = $DB->get_record('bigbluebuttonbn', ['id' => $page->cm->instance], 'openingtime, closingtime');
+        if ($room && $room->openingtime > 0 && $room->closingtime > 0 && time() > $room->closingtime) {
+            $page->activityheader->set_title(get_string('live_recordingtitle', 'theme_hikmah'));
+        }
+    }
 }

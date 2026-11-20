@@ -29,6 +29,8 @@
   permissions, LTI tools, AI usage, course reset, attendance status set, temporary users and import.
   "Attendance reconciliation" renamed "Live class attendance"; dashboard tile "Classes needing
   attention".
+- Held live class page headed "Class recording" (as on the course page); recording dates reordered to
+  "Wednesday 18 November 2026"; forum discussion list shows topic, replies and actions only on phones.
 
 ## 2026-11-19 — One live class per class
 

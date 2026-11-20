@@ -1711,3 +1711,13 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
         margin-inline-start: auto;
     }
 }
+
+// Forum discussion list on phones: topic, replies and actions only (the discussion shows the rest).
+@media (max-width: 767.98px) {
+    table.discussion-list {
+        th.group, td.group, th.author, td.author, td.author + td, th.lastpost,
+        tr > :nth-last-child(2) {
+            display: none;
+        }
+    }
+}
