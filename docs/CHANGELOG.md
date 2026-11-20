@@ -69,6 +69,8 @@
   (every tracked activity + course grade) and the certificate's restriction; it re-runs when activities
   or course settings change, and once for every course from 100-certificates. scripts/dev/
   revoke-unearned.php revokes unearned certificates of demo accounts only. PHPUnit written, not run.
+  The certificate shows to learners as locked with every requirement listed (a hidden failing
+  condition had hidden it entirely).
 
 ## 2026-11-19 — One live class per class
 
