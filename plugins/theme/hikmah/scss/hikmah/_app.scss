@@ -1745,3 +1745,7 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
         }
     }
 }
+// Screen-reader-only labels in Hikmah tables stay inside the table's scroll box (else they widen the page).
+.hk-panel--flush .table-responsive {
+    position: relative;
+}

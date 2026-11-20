@@ -86,8 +86,26 @@ class dashboard {
         // Upcoming classes and deadlines for the next two weeks.
         $events = [];
         $seenlive = [];
-        if ($eventcourses) {
-            $now = time();
+        $now = time();
+        if ($siteview && $eventcourses) {
+            // Site staff: the site's live classes (the calendar hides course events from people not enrolled).
+            [$insql, $params] = $DB->get_in_or_equal(array_keys($eventcourses));
+            $rooms = $DB->get_records_select('bigbluebuttonbn',
+                "course $insql AND openingtime > 0 AND openingtime < ? AND closingtime > ?",
+                array_merge($params, [$now + 14 * DAYSECS, $now]), 'openingtime', 'id, course, openingtime', 0, self::MAX_EVENTS);
+            foreach ($rooms as $room) {
+                $events[] = [
+                    'name' => get_string('dash_liveclass', 'theme_hikmah'),
+                    'course' => format_string($eventcourses[$room->course]->fullname),
+                    'day' => userdate($room->openingtime, '%d'),
+                    'month' => userdate($room->openingtime, '%b'),
+                    'time' => userdate($room->openingtime, get_string('strftimetime', 'langconfig')),
+                    'islive' => true,
+                    'isnow' => $room->openingtime <= $now,
+                    'url' => self::module_url('bigbluebuttonbn', (int) $room->id, (int) $room->course)->out(false),
+                ];
+            }
+        } else if ($eventcourses) {
             $raw = calendar_get_legacy_events($now - HOURSECS, $now + 14 * DAYSECS, true, true, array_keys($eventcourses), true, true);
             usort($raw, static fn($a, $b): int => $a->timestart <=> $b->timestart);
             foreach ($raw as $event) {
@@ -198,8 +216,8 @@ class dashboard {
                     'label' => get_string('dash_payreturned', 'theme_hikmah')],
             ];
         }
-        $allcourses = $siteview ? new moodle_url(has_capability('moodle/category:manage', $system)
-            ? '/course/management.php' : '/course/index.php') : new moodle_url('/my/courses.php');
+        $canmanage = $siteview && has_capability('moodle/category:manage', $system);
+        $allcourses = new moodle_url($canmanage ? '/course/management.php' : ($siteview ? '/course/index.php' : '/my/courses.php'));
 
         $hour = (int) userdate(time(), '%H');
         return [
@@ -211,7 +229,8 @@ class dashboard {
             'stats' => $stats,
             'coursestitle' => get_string($siteview ? 'dash_sitecourses' : ($isteacher ? 'dash_teaching' : 'dash_continue'),
                 'theme_hikmah'),
-            'courseslink' => get_string($siteview ? 'dash_managecourses' : 'dash_allcourses', 'theme_hikmah'),
+            'courseslink' => get_string($canmanage ? 'dash_managecourses' : ($siteview ? 'dash_sitecourseslink' : 'dash_allcourses'),
+                'theme_hikmah'),
             'showgrid' => !$finance,
             'courses' => $rows,
             'hascourses' => !empty($rows),
