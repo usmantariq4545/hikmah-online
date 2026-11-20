@@ -45,6 +45,8 @@
   cannot see grades (it led to "Cannot view grades."); "My courses" hidden for staff with no courses
   who cannot create one; new "People" menu item opens the site participant list, headed "People",
   without the site-level Roles and Groups columns.
+- 060-courses removes Moodle's empty install-time "Category 1" once real categories exist (owner's
+  decision); course requests default to the first remaining category. Skipped if it holds anything.
 
 ## 2026-11-19 — One live class per class
 

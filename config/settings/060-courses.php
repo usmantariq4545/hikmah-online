@@ -66,4 +66,21 @@ hk_set('showactivitydates', 1, 'moodlecourse');
 hk_set('visible', 0, 'moodlecourse'); // New courses stay hidden until an administrator publishes them.
 hk_set('coursecontact', implode(',', $DB->get_fieldset_select('role', 'id', "shortname IN ('editingteacher', 'teacher')")));
 
+// Moodle's install-time "Category 1" goes once real categories exist, but only while it is empty
+// (no courses, sub-categories or anything else in its context: owner's decision, 2026-11-20).
+$default = $DB->get_record('course_categories', ['name' => 'Category 1', 'parent' => 0]);
+if ($default && $DB->count_records('course_categories') > 1 && !$DB->record_exists('course', ['category' => $default->id])
+        && !$DB->record_exists('course_categories', ['parent' => $default->id])) {
+    $context = context_coursecat::instance($default->id);
+    if (!$DB->record_exists_select('context', 'path LIKE ?', [$context->path . '/%'])) {
+        $next = (int) $DB->get_field_sql('SELECT id FROM {course_categories} WHERE id <> ? AND parent = 0 ORDER BY sortorder',
+            [$default->id], IGNORE_MULTIPLE);
+        if ((int) get_config('core', 'defaultrequestcategory') === (int) $default->id) {
+            hk_set('defaultrequestcategory', $next);
+        }
+        core_course_category::get($default->id, MUST_EXIST, true)->delete_full(false);
+        hk_changed('empty default "Category 1" removed');
+    }
+}
+
 hk_done(__FILE__);
