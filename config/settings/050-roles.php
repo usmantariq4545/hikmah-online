@@ -84,6 +84,17 @@ foreach (['editingteacher', 'teacher'] as $shortname) {
         'enrol/apply:config',
         'enrol/apply:manageapplications',
         'enrol/cohort:config',
+        'moodle/course:reset',
+        // Site-wide tools teachers do not use: kept out of their course and activity menus.
+        'moodle/filter:manage',
+        'moodle/contentbank:access',
+        'moodle/role:review',
+        'mod/lti:addpreconfiguredinstance',
+        'report/aiusage:view',
+        // Attendance statuses are set site-wide and classes are created from live classes.
+        'mod/attendance:changepreferences',
+        'mod/attendance:managetemporaryusers',
+        'mod/attendance:import',
     ] as $capability) {
         hk_role_cap($roleid, $capability, CAP_PREVENT);
     }

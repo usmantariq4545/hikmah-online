@@ -22,6 +22,13 @@
   each live class by its class section, and uses 12-hour times throughout.
 - Demo Tajweed course: class time no longer repeated in the section summaries; the emptied general
   "Live classroom" removed.
+- Instructor UI pass: teachers were tagged `hk-learner` (they lack `moodle/course:update` by design),
+  so the learner check now uses `moodle/grade:viewall`. Activity-header dates wrap instead of running
+  off the page. Footer text kept clear of the "?" button. Recordings table hides the repeated name
+  and description columns for everyone. Teacher menus trimmed (050-roles): filters, content bank,
+  permissions, LTI tools, AI usage, course reset, attendance status set, temporary users and import.
+  "Attendance reconciliation" renamed "Live class attendance"; dashboard tile "Classes needing
+  attention".
 
 ## 2026-11-19 — One live class per class
 

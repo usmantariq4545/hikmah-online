@@ -74,7 +74,8 @@ function theme_hikmah_page_init(moodle_page $page): void {
     if (!isloggedin() || isguestuser() || empty($page->course->id) || $page->course->id == SITEID) {
         return;
     }
-    if (!has_capability('moodle/course:update', context_course::instance($page->course->id))) {
+    // Teachers cannot edit course settings here (050-roles.php), so "staff" is who sees all grades.
+    if (!has_capability('moodle/grade:viewall', context_course::instance($page->course->id))) {
         $page->add_body_class('hk-learner');
     }
 }

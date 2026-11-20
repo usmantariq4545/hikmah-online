@@ -1607,8 +1607,8 @@
 #page-mod-bigbluebuttonbn-view [role="main"] > h5:empty {
     display: none;
 }
-// Recordings: students do not need the always-identical name and stored description.
-.hk-learner .mod_bigbluebuttonbn_recordings_table {
+// Recordings: one room per class, so the name is always the same and the description is unused.
+.mod_bigbluebuttonbn_recordings_table {
     .yui3-datatable-col-recording,
     .yui3-datatable-col-description {
         display: none;
@@ -1633,13 +1633,15 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
     display: none;
 }
 
-// Activity dates ("Opened / Due") wrap instead of running off narrow screens.
-.activity-dates {
+// Activity dates ("Opened / Due") wrap instead of running off narrow screens, on course pages and
+// in the activity page header (where Boost lays them out as a no-wrap grid).
+#page .activity-dates {
     display: flex;
     flex-wrap: wrap;
     gap: .2rem 1.5rem;
     .date-item {
         white-space: normal;
+        min-width: 0;
     }
 }
 // Live classes: "Starts: … · Duration: …" (local/live_classes.php).
