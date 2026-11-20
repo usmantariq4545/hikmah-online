@@ -1766,3 +1766,49 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
         display: none;
     }
 }
+
+// ---- Sign-in and sign-up pages (owner's review, 2026-11-20) ------------------------------------
+// One column on phones and tablets that may shrink: the form no longer runs off a 360-400px screen.
+@media (max-width: 991.98px) {
+    .hk-auth,
+    .hk-authpage #page-wrapper #page.hk-auth {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+// Room above the heading and between the form and the links below it.
+.hk-auth__panel {
+    padding-block: clamp(3rem, 8vw, 5rem);
+    padding-inline: clamp(1.25rem, 5vw, 4rem);
+}
+.hk-auth__legal {
+    margin-top: clamp(2.5rem, 6vw, 3.5rem);
+    padding-top: 1.5rem;
+    border-top: 1px solid $hk-line;
+}
+// Help text under its field (moved there on the sign-up form): small and grey, close to the box above.
+.hk-authpage #fitem_id_passwordpolicyinfo {
+    margin-top: -.6rem;
+    .col-md-3 {
+        display: none;
+    }
+    .form-control-static,
+    [data-fieldtype="static"] {
+        font-size: .82rem;
+        line-height: 1.45;
+        color: $hk-muted;
+    }
+}
+// The agreement checkbox: its text wraps beside the box; links stand out.
+.hk-authpage #fitem_id_hkagree {
+    .col-md-3 {
+        display: none;
+    }
+    .form-check-label {
+        font-size: .92rem;
+        line-height: 1.45;
+        a {
+            font-weight: 600;
+            text-decoration: underline;
+        }
+    }
+}

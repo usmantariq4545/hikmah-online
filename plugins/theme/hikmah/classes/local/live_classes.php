@@ -65,10 +65,7 @@ class live_classes {
             $cm = $cms[$room->id];
             $joinurl = $embed ? new moodle_url('/theme/hikmah/classroom.php', ['id' => $cm->id])
                 : new moodle_url('/mod/bigbluebuttonbn/view.php', ['id' => $cm->id]);
-            // "Starts: Sat 21 Nov, 6:00 PM · Duration: 1 hour" in place of Moodle's Opens/Closes.
-            $dates = '<span>' . get_string($now > $room->closingtime ? 'live_started' : 'live_starts', 'theme_hikmah',
-                    userdate($room->openingtime, get_string('live_dateformat', 'theme_hikmah'))) . '</span> · <span>'
-                . get_string('live_duration', 'theme_hikmah', format_time($room->closingtime - $room->openingtime)) . '</span>';
+            $dates = self::dates($room, $now);
             if ($now < $room->openingtime) {
                 $out[$cm->id] = ['state' => 'upcoming', 'dates' => $dates,
                     'html' => self::chip('upcoming', get_string('live_upcoming', 'theme_hikmah'))
@@ -96,6 +93,20 @@ class live_classes {
                 'title' => get_string('live_recordingtitle', 'theme_hikmah'), 'html' => self::chip('done', get_string('live_held', 'theme_hikmah')) . $html];
         }
         return $out;
+    }
+
+    /**
+     * "Starts: Sat 21 Nov, 6:00 PM · Duration: 1 hour" (or "Started: …") in place of Moodle's Opens/Closes.
+     *
+     * @param stdClass $room with openingtime and closingtime
+     * @param int|null $now for tests
+     * @return string HTML
+     */
+    public static function dates(stdClass $room, ?int $now = null): string {
+        $now = $now ?? time();
+        return '<span>' . get_string($now > $room->closingtime ? 'live_started' : 'live_starts', 'theme_hikmah',
+                userdate($room->openingtime, get_string('live_dateformat', 'theme_hikmah'))) . '</span> · <span>'
+            . get_string('live_duration', 'theme_hikmah', format_time($room->closingtime - $room->openingtime)) . '</span>';
     }
 
     /**

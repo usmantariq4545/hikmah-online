@@ -47,6 +47,14 @@
   without the site-level Roles and Groups columns.
 - 060-courses removes Moodle's empty install-time "Category 1" once real categories exist (owner's
   decision); course requests default to the first remaining category. Skipped if it holds anything.
+- Sign-up is one short form (owner's review): local_hikmahaccess skips the policy tool's reading and
+  consent pages (after_config hook sets its pre-signup flag on /login/signup.php) and adds one required
+  "I agree to the Terms of Use and Privacy Policy" checkbox with links; the policy tool still records a
+  versioned acceptance of each compulsory policy when the account is created. City, country and the
+  Hikmah profile fields are off the form (040-profile: signup = 0); the required ones are asked after
+  the first sign-in. Password rules sit under the password box. Required fields are marked "*"
+  (theme icon system maps core:req to fa-asterisk). Sign-in/up pages no longer overflow on phones and
+  have more room around the form. The live class page shows "Starts … · Duration …" too.
 
 ## 2026-11-19 — One live class per class
 

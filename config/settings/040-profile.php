@@ -18,20 +18,25 @@ if (!$category) {
     $categoryid = $category->id;
 }
 
-// Shortname => [name, datatype, required, on sign-up form, extra].
+// Shortname => [name, datatype, required, on sign-up form, extra]. None is on the sign-up form: sign-up asks only
+// the basics and Moodle asks the required ones after the first sign-in (owner's decision, 2026-11-20).
 $fields = [
-    'hkgender' => ['Gender', 'menu', 1, 1, ['param1' => "Male\nFemale", 'defaultdata' => '']],
-    'hkdob' => ['Date of birth', 'datetime', 1, 1, ['param1' => 1930, 'param2' => (int) date('Y'), 'param3' => 0]],
-    'hkphone' => ['Mobile / WhatsApp number', 'text', 1, 1, ['param1' => 30, 'param2' => 30, 'param3' => 0]],
-    'hkguardian' => ['Guardian contact (for learners under 18)', 'text', 0, 1, ['param1' => 40, 'param2' => 100,
+    'hkgender' => ['Gender', 'menu', 1, 0, ['param1' => "Male\nFemale", 'defaultdata' => '']],
+    'hkdob' => ['Date of birth', 'datetime', 1, 0, ['param1' => 1930, 'param2' => (int) date('Y'), 'param3' => 0]],
+    'hkphone' => ['Mobile / WhatsApp number', 'text', 1, 0, ['param1' => 30, 'param2' => 30, 'param3' => 0]],
+    'hkguardian' => ['Guardian contact (for learners under 18)', 'text', 0, 0, ['param1' => 40, 'param2' => 100,
         'param3' => 0]],
-    'hkconsentcomms' => ['I agree to receive course announcements by email', 'checkbox', 0, 1, ['defaultdata' => 0]],
+    'hkconsentcomms' => ['I agree to receive course announcements by email', 'checkbox', 0, 0, ['defaultdata' => 0]],
 ];
 
 $sort = 0;
 foreach ($fields as $shortname => [$name, $datatype, $required, $signup, $extra]) {
     $sort++;
-    if ($DB->record_exists('user_info_field', ['shortname' => $shortname])) {
+    if ($existing = $DB->get_record('user_info_field', ['shortname' => $shortname], 'id, signup')) {
+        if ((int) $existing->signup !== $signup) {
+            $DB->set_field('user_info_field', 'signup', $signup, ['id' => $existing->id]);
+            hk_changed("profile field $shortname " . ($signup ? 'on' : 'off') . ' the sign-up form');
+        }
         continue;
     }
     require_once($CFG->dirroot . '/user/profile/field/' . $datatype . '/define.class.php');

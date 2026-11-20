@@ -139,13 +139,22 @@ class hook_callbacks {
      * @param \core\hook\output\before_footer_html_generation $hook
      */
     public static function before_footer(\core\hook\output\before_footer_html_generation $hook): void {
-        global $PAGE;
+        global $PAGE, $DB;
         if (self::is_active() && str_starts_with($PAGE->pagetype, 'mod-bigbluebuttonbn-')) {
             // The recordings table dates its rows with the browser's "en" (US) order; reorder to "Wednesday 18 November 2026".
             $hook->add_html('<script>(function(d){var re=/^(\w+), (\w+) (\d{1,2}), (\d{4})$/;function f(){'
                 . 'd.querySelectorAll(".mod_bigbluebuttonbn_recordings_table td").forEach(function(td){'
                 . 'var m=re.exec(td.textContent.trim());if(m){td.textContent=m[1]+" "+m[3]+" "+m[2]+" "+m[4];}});}'
                 . 'new MutationObserver(f).observe(d.body,{childList:true,subtree:true});f();})(document);</script>');
+            // The class's own page says "Starts … · Duration …" like the course page, not "Opened / Closed".
+            $room = $PAGE->cm ? $DB->get_record('bigbluebuttonbn', ['id' => $PAGE->cm->instance], 'id, openingtime, closingtime')
+                : null;
+            if ($room && $room->openingtime > 0 && $room->closingtime > $room->openingtime) {
+                $hook->add_html('<script>(function(d,h){var r=d.querySelector(\'#page-header [data-region="activity-dates"],'
+                    . ' .activity-header [data-region="activity-dates"]\');if(r){r.innerHTML=\'<div class="hk-livedates">\'+h+"</div>";}})'
+                    . '(document,' . json_encode(\theme_hikmah\local\live_classes::dates($room),
+                        JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ');</script>');
+            }
             return;
         }
         if (!self::is_active() || !str_starts_with($PAGE->pagetype, 'course-view-') || !isloggedin()) {
