@@ -37,7 +37,7 @@ class live_classes {
      *
      * @param stdClass $course
      * @param int|null $now for tests
-     * @return array<int, array{state: string, html: string}>
+     * @return array<int, array{state: string, dates: string, html: string, title?: string}>
      */
     public static function for_course(stdClass $course, ?int $now = null): array {
         global $DB;
@@ -65,14 +65,18 @@ class live_classes {
             $cm = $cms[$room->id];
             $joinurl = $embed ? new moodle_url('/theme/hikmah/classroom.php', ['id' => $cm->id])
                 : new moodle_url('/mod/bigbluebuttonbn/view.php', ['id' => $cm->id]);
+            // "Starts: Sat 21 Nov, 6:00 PM · Duration: 1 hour" in place of Moodle's Opens/Closes.
+            $dates = '<span>' . get_string($now > $room->closingtime ? 'live_started' : 'live_starts', 'theme_hikmah',
+                    userdate($room->openingtime, get_string('live_dateformat', 'theme_hikmah'))) . '</span> · <span>'
+                . get_string('live_duration', 'theme_hikmah', format_time($room->closingtime - $room->openingtime)) . '</span>';
             if ($now < $room->openingtime) {
-                $out[$cm->id] = ['state' => 'upcoming',
+                $out[$cm->id] = ['state' => 'upcoming', 'dates' => $dates,
                     'html' => self::chip('upcoming', get_string('live_upcoming', 'theme_hikmah'))
                         . self::button($joinurl, get_string('live_join', 'theme_hikmah'), 'hk-btn--ghost')];
                 continue;
             }
             if ($now <= $room->closingtime) {
-                $out[$cm->id] = ['state' => 'live',
+                $out[$cm->id] = ['state' => 'live', 'dates' => $dates,
                     'html' => self::chip('live', get_string('dash_livenow', 'theme_hikmah'))
                         . self::button($joinurl, get_string('live_joinnow', 'theme_hikmah'), 'hk-btn--sun')];
                 continue;
@@ -88,7 +92,8 @@ class live_classes {
                 $html = '<span class="hk-livecta__note">' . get_string(empty($recordings[$room->id])
                     ? 'live_norecording' : 'live_processing', 'theme_hikmah') . '</span>';
             }
-            $out[$cm->id] = ['state' => 'done', 'html' => self::chip('done', get_string('live_held', 'theme_hikmah')) . $html];
+            $out[$cm->id] = ['state' => 'done', 'dates' => $dates,
+                'title' => get_string('live_recordingtitle', 'theme_hikmah'), 'html' => self::chip('done', get_string('live_held', 'theme_hikmah')) . $html];
         }
         return $out;
     }

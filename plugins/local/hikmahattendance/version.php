@@ -26,11 +26,11 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_hikmahattendance';
-$plugin->version = 2026111300;
+$plugin->version = 2026112000;
 $plugin->requires = 2026100500; // Moodle 5.3.
 $plugin->supported = [503, 503];
 $plugin->maturity = MATURITY_BETA;
-$plugin->release = '0.1.0';
+$plugin->release = '0.2.0';
 $plugin->dependencies = [
     'mod_attendance' => 2026110900,
     'mod_bigbluebuttonbn' => ANY_VERSION,

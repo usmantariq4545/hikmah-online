@@ -115,9 +115,20 @@ class hook_callbacks {
         if (!$live) {
             return;
         }
+        if ($PAGE->user_is_editing()) {
+            // Editors keep the activity's real name so they can edit it in place.
+            $live = array_map(static fn(array $l): array => array_diff_key($l, ['title' => 1]), $live);
+        }
+        // Per class: the status and button, "Starts … · Duration …" over Moodle's dates, and the held-class title.
         $hook->add_html('<script>(function(d,c){Object.keys(c).forEach(function(id){'
             . 'var li=d.querySelector(\'li.activity[data-id="\'+id+\'"]\');if(!li||li.querySelector(".hk-livecta")){return;}'
-            . 'var b=d.createElement("div");b.className="hk-livecta hk-livecta--"+c[id].state;b.innerHTML=c[id].html;'
+            . 'var l=c[id],b=d.createElement("div");b.className="hk-livecta hk-livecta--"+l.state;b.innerHTML=l.html;'
+            . 'var dt=li.querySelector(\'[data-region="activity-dates"]\');'
+            . 'if(!dt){dt=d.createElement("div");dt.className="activity-dates";'
+            . '(li.querySelector(".activity-item")||li).appendChild(dt);}'
+            . 'dt.innerHTML=\'<div class="hk-livedates">\'+l.dates+"</div>";'
+            . 'var n=l.title&&li.querySelector(".instancename");if(n){for(var i=0;i<n.childNodes.length;i++){'
+            . 'if(n.childNodes[i].nodeType===3&&n.childNodes[i].nodeValue.trim()){n.childNodes[i].nodeValue=l.title+" ";break;}}}'
             . '(li.querySelector(".activity-item")||li).appendChild(b);});})(document,'
             . json_encode($live, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ');</script>');
     }

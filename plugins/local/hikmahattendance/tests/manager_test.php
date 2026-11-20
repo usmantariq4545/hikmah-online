@@ -402,4 +402,53 @@ final class manager_test extends \advanced_testcase {
         $this->assertFalse(has_capability('local/hikmahattendance:configure', $context, $this->teacher));
         $this->assertFalse(has_capability('local/hikmahattendance:viewreports', $context, $this->teacher));
     }
+
+    /**
+     * Automatic course with no BBB report: joined learners Present, the rest Absent; a late report replaces them.
+     */
+    public function test_missing_callback_marks_from_joins(): void {
+        global $DB;
+        manager::set_autowrite((int) $this->course->id, true, (int) $this->teacher->id);
+        $this->log('Join', (int) $this->users['fullstay']->id, [], self::START + 60);
+
+        $link = manager::process_link((int) $this->link->id, self::END + 3 * HOURSECS);
+        $this->assertSame(manager::LINK_APPLIED, $link->state);
+        $decisions = manager::current_decisions((int) $link->id);
+        $this->assertSame(calculator::STATUS_PRESENT, $decisions[$this->users['fullstay']->id]->computedstatus);
+        $this->assertSame(calculator::STATUS_ABSENT, $decisions[$this->users['latejoin']->id]->computedstatus);
+        $remark = $DB->get_field('attendance_log', 'remarks',
+            ['sessionid' => $link->sessionid, 'studentid' => $this->users['fullstay']->id]);
+        $this->assertSame(get_string('logremark_joins', 'local_hikmahattendance'), $remark);
+
+        $this->store_fixture();
+        manager::process_link((int) $link->id, self::END + 4 * HOURSECS);
+        $remark = $DB->get_field('attendance_log', 'remarks',
+            ['sessionid' => $link->sessionid, 'studentid' => $this->users['latejoin']->id]);
+        $this->assertNotSame(get_string('logremark_joins', 'local_hikmahattendance'), $remark);
+    }
+
+    /**
+     * Adding a live class with times creates its session and link and turns autowrite on; moving it moves them.
+     */
+    public function test_room_with_times_is_set_up(): void {
+        global $DB;
+        $this->setAdminUser();
+        $course = $this->getDataGenerator()->create_course();
+        $room = $this->getDataGenerator()->create_module('bigbluebuttonbn', ['course' => $course->id, 'section' => 1,
+            'openingtime' => self::START, 'closingtime' => self::END]);
+
+        $link = $DB->get_record(manager::TABLE_LINK, ['bbbid' => $room->id], '*', MUST_EXIST);
+        $this->assertSame(self::START, (int) $link->windowstart);
+        $session = $DB->get_record('attendance_sessions', ['id' => $link->sessionid], '*', MUST_EXIST);
+        $this->assertSame(HOURSECS, (int) $session->duration);
+        $this->assertTrue(manager::autowrite_enabled((int) $course->id));
+
+        $DB->set_field('bigbluebuttonbn', 'openingtime', self::START + HOURSECS, ['id' => $room->id]);
+        $DB->set_field('bigbluebuttonbn', 'closingtime', self::END + HOURSECS, ['id' => $room->id]);
+        $this->assertSame('moved', manager::ensure_for_room((int) $room->id, (int) get_admin()->id));
+        $this->assertSame(self::START + HOURSECS,
+            (int) $DB->get_field('attendance_sessions', 'sessdate', ['id' => $link->sessionid]));
+        $this->assertNull(manager::ensure_for_room((int) $room->id, (int) get_admin()->id));
+        $this->assertSame(1, $DB->count_records('attendance', ['course' => $course->id]));
+    }
 }

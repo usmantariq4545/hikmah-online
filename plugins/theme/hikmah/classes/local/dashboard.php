@@ -52,6 +52,7 @@ class dashboard {
         $progresssum = 0;
         $progresscount = 0;
         $completed = 0;
+        $attendance = self::attendance(array_keys($courses), (int) $USER->id);
         foreach ($courses as $course) {
             $percent = \core_completion\progress::get_course_progress_percentage($course, $USER->id);
             if ($percent !== null) {
@@ -68,6 +69,8 @@ class dashboard {
                     // Ring circumference is 100 so the dash offset is simply the remainder.
                     'offset' => $percent !== null ? 100 - (int) floor($percent) : 100,
                     'hue' => ($course->id * 67) % 360,
+                    'hasattendance' => isset($attendance[$course->id]),
+                    'attendance' => $attendance[$course->id] ?? 0,
                 ];
             }
         }
@@ -162,6 +165,10 @@ class dashboard {
             ['value' => $completed, 'suffix' => '', 'label' => get_string('dash_completed', 'theme_hikmah')],
             ['value' => $certificates, 'suffix' => '', 'label' => get_string('dash_certificates', 'theme_hikmah')],
         ];
+        if ($attendance) {
+            array_splice($stats, 2, 0, [['value' => (int) round(array_sum($attendance) / count($attendance)), 'suffix' => '%',
+                'label' => get_string('dash_attendance', 'theme_hikmah')]]);
+        }
 
         $hour = (int) userdate(time(), '%H');
         return [
@@ -184,6 +191,30 @@ class dashboard {
             'certificatesurl' => $certificates ? (new moodle_url('/admin/tool/certificate/my.php'))->out(false) : '',
             'work' => self::staff_work(),
         ];
+    }
+
+    /**
+     * The user's attendance per course, as mod_attendance's register shows it (marked classes only).
+     *
+     * @param int[] $courseids
+     * @param int $userid
+     * @return array<int, int> course id => whole percent, only courses with marked classes
+     */
+    private static function attendance(array $courseids, int $userid): array {
+        global $CFG, $DB;
+        if (!$courseids || !$DB->get_manager()->table_exists('attendance')) {
+            return [];
+        }
+        require_once($CFG->dirroot . '/mod/attendance/locallib.php');
+        [$insql, $params] = $DB->get_in_or_equal($courseids);
+        $out = [];
+        foreach ($DB->get_records_select('attendance', "course $insql", $params, 'id DESC', 'id, course') as $att) {
+            $summary = (new \mod_attendance_summary($att->id, [$userid]))->get_taken_sessions_summary_for($userid);
+            if ($summary->numtakensessions > 0) {
+                $out[$att->course] = (int) floor($summary->takensessionspercentage * 100); // Oldest activity wins.
+            }
+        }
+        return $out;
     }
 
     /**

@@ -12,7 +12,7 @@ Never
 - Configure the site by clicking in the admin UI as the only record. Every setting goes into config/settings/*.php or a CLI script so a fresh server comes out identical.
 - Commit secrets. .env.* files are git-ignored; only .env.example is committed.
 - Use the PHP built-in server, Alpine images, or a document root other than moodle/public.
-- Write real attendance marks automatically unless local_hikmahattendance | autowrite is enabled for that course (it ships disabled).
+- Write real attendance marks automatically unless local_hikmahattendance | autowrite is enabled for that course. (Owner decision 2026-11-20: autowrite comes on by itself for a course when a live class with start and end times is added; a course can switch it off.)
 - Use deprecated Moodle APIs; check lib/upgrade.txt and the 5.3 developer docs.
 
 Always
@@ -250,7 +250,7 @@ Applying
 - Default: preview only. Instructor opens the reconciliation page, compares computed status with the register, edits any row with a reason, then clicks Apply.
 - Apply writes to mod_attendance through its API only for students with no existing manual mark; never overwrites a manual mark.
 - Idempotent: an evidence hash per (session, user) means re-running with the same data does nothing; new data creates a new preview, never a silent change.
-- autowrite (per course, default off) may apply automatically only after the course owner enables it.
+- autowrite (per course) applies automatically. Decided 2026-11-20 by the owner: it comes on when a scheduled live class is added (manager::ensure_for_room); the course can switch it off. With autowrite on and no BBB report 2 h after class, joined learners are marked Present and the rest Absent, replaced if the report arrives later.
 
 Audit: every override, approve and apply fires an event and writes local_hikmahatt_audit (who, when, from, to, reason). Reconciliation report shows evidence vs final mark, exportable to CSV.
 

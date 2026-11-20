@@ -51,4 +51,16 @@ hk_set('retentiondays', 365, 'local_hikmahattendance');
 // Learners never mark themselves.
 hk_set('studentscanmark', 0, 'attendance');
 
+// Every scheduled live class (start and end time) has its register session and link, and its course
+// marks attendance automatically (local_hikmahattendance manager::ensure_for_room; new rooms get this
+// from the plugin's event observer).
+if (class_exists('\local_hikmahattendance\manager')) {
+    \core\session\manager::set_user(get_admin());
+    foreach ($DB->get_records_select('bigbluebuttonbn', 'openingtime > 0 AND closingtime > openingtime', [], 'id', 'id') as $room) {
+        if ($done = \local_hikmahattendance\manager::ensure_for_room((int) $room->id, (int) get_admin()->id)) {
+            hk_changed("live class $room->id: $done");
+        }
+    }
+}
+
 hk_done(__FILE__);

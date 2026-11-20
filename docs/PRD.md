@@ -152,7 +152,7 @@ Source of truth: BBB's post-meeting analytics callback (meta_analytics-callback-
 | ATT-02 | Enable BBB "Register meeting events"; map callback data to course, BBB activity and attendance session | P0 | Core config + Custom (local_hikmahattendance) |
 | ATT-03 | Attended time from the callback's per-user durations, clipped to the class window; if the payload lacks detail, fall back to join/leave logs | P0 | Custom |
 | ATT-04 | Configurable threshold (start 75%) and status mapping; handle instructors, cancellations, late arrival, missing callback, early end | P0 | Custom |
-| ATT-05 | Preview before write; automatic marking only after approval; idempotent; never overwrite manual marks | P0 | Custom |
+| ATT-05 | Idempotent; never overwrite manual marks. Decided 2026-11-20 (owner): marks are written automatically — autowrite comes on per course when a live class with a start and end time is added (preview and Apply stay available; a course can switch it off) | P0 | Custom |
 | ATT-06 | Instructor override with reason, who/when audit, reconciliation report (evidence vs final mark) | P0 | Custom + mod_attendance |
 | ATT-07 | Missing-callback queue and retry, dedup, monitoring, retention; payload schema pinned to BBB version with a regression test | P0 | Custom |
 | ATT-08 | Optional BBB activity completion by minimum attendance duration | P1 | Core |
@@ -397,7 +397,7 @@ Lean option: launch the pilot after phase 3 with receipts checked by hand and th
 | Plugin compatibility | Confirm 5.3 releases for mod_attendance, tool_certificate, mod_coursecertificate and the approval plugin; replace or fork any without one |
 | Custom plugin effort | Three Hikmah plugins plus a theme need PHP/Moodle API skills and a maintainer after launch |
 | Enrollment policy | Final profile fields, eligibility, fee/refund/discount rules, payment accounts and reviewer authority |
-| Attendance accuracy | Finish register comparison; decide status mapping, rounding, grace periods, exceptions and write authorization |
+| Attendance accuracy | Write authorization decided 2026-11-20: automatic, no hand marking by teachers or students; one live class per class (room open from class start to end) gives each class its register session and link. Missing BBB report after 2 h: joined = Present, not joined = Absent (replaced if the report arrives). Still open: compare with real registers; status mapping, rounding, grace periods |
 | Certificates | Approve design, signatory, QR data, revocation policy, issuing authority; test Urdu/Arabic fonts |
 | Privacy and retention | Approve retention and access rules for learner data, receipts, recordings and participation events |
 | Operations | Platform owner, support hours, escalation, monitoring and an upgrade calendar aligned to Moodle minor releases |

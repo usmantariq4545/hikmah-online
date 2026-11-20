@@ -95,7 +95,7 @@
                                     </svg>
                                     <span>{{#hasprogress}}{{percent}}<small>%</small>{{/hasprogress}}{{^hasprogress}}–{{/hasprogress}}</span>
                                 </span>
-                                <span class="hk-dash__course-name">{{{name}}}</span>
+                                <span class="hk-dash__course-name">{{{name}}}{{#hasattendance}}<small class="hk-dash__course-att">{{#str}}dash_attendance, theme_hikmah{{/str}} {{attendance}}%</small>{{/hasattendance}}</span>
                                 <span class="hk-dash__go" aria-hidden="true">→</span>
                                 {{#hasprogress}}<span class="visually-hidden">{{percent}}%</span>{{/hasprogress}}
                             </a>

@@ -72,6 +72,8 @@ class manager {
     public const EVIDENCE_GRACE = 172800;
     /** @var int Join logs this long before the window start still count as "joined". */
     public const JOIN_LEAD = 1800;
+    /** @var string Evidence note: no BBB report, marked from the join log only. */
+    public const NOTE_JOINSONLY = 'joinlogonly';
 
     // ---- Configuration ---------------------------------------------------------------------------
 
@@ -244,6 +246,118 @@ class manager {
         self::audit($linkid, (int) $link->sessionid, null, $actorid, 'link_deleted', '', '', '');
     }
 
+    /**
+     * Add a session to an attendance activity through mod_attendance. No calendar event: the live
+     * class already puts the class in the calendar.
+     *
+     * @param stdClass $attendance attendance record
+     * @param int $start
+     * @param int $duration seconds
+     * @param string $description
+     * @return int session id
+     */
+    public static function create_session(stdClass $attendance, int $start, int $duration, string $description): int {
+        global $CFG;
+        require_once($CFG->dirroot . '/mod/attendance/locallib.php');
+        $course = get_course($attendance->course);
+        $cm = get_coursemodule_from_instance('attendance', $attendance->id, $course->id, false, MUST_EXIST);
+        $structure = new \mod_attendance_structure($attendance, $cm, $course, \context_module::instance($cm->id));
+        return (int) $structure->add_session((object) [
+            'sessdate' => $start,
+            'duration' => $duration,
+            'groupid' => 0,
+            'description' => $description,
+            'descriptionformat' => FORMAT_HTML,
+            'descriptionitemid' => 0,
+            'timemodified' => time(),
+            'statusset' => 0,
+            'calendarevent' => 0,
+            'absenteereport' => 1,
+        ]);
+    }
+
+    /**
+     * The standard set-up for a scheduled live class (a room with an opening and closing time):
+     * an attendance session for that time, linked to the room, in a course that marks attendance
+     * automatically. Creates what is missing and moves a not-yet-held class when the room's times
+     * change. Rooms without both times, or linked to several sessions by hand, are left alone.
+     *
+     * @param int $bbbid
+     * @param int $actorid
+     * @return string|null 'created', 'moved' or null when nothing changed
+     */
+    public static function ensure_for_room(int $bbbid, int $actorid): ?string {
+        global $CFG, $DB;
+        $room = $DB->get_record('bigbluebuttonbn', ['id' => $bbbid], 'id, course, openingtime, closingtime');
+        if (!$room || (int) $room->openingtime <= 0 || (int) $room->closingtime <= (int) $room->openingtime) {
+            return null;
+        }
+        $start = (int) $room->openingtime;
+        $end = (int) $room->closingtime;
+        $courseid = (int) $room->course;
+        $result = null;
+
+        $links = $DB->get_records(self::TABLE_LINK, ['bbbid' => $room->id]);
+        if (count($links) > 1) {
+            return null;
+        }
+        if ($link = reset($links)) {
+            $moved = (int) $link->windowstart !== $start || (int) $link->windowend !== $end;
+            if ($moved && $link->state === self::LINK_WAITING) {
+                // shortcut: direct update, fine because these sessions have no calendar event of their own.
+                $DB->update_record('attendance_sessions',
+                    (object) ['id' => $link->sessionid, 'sessdate' => $start, 'duration' => $end - $start, 'timemodified' => time()]);
+                $link->windowstart = $start;
+                $link->windowend = $end;
+                self::save_link($link, $actorid);
+                $result = 'moved';
+            }
+        } else {
+            $attendance = $DB->get_records('attendance', ['course' => $courseid], 'id', '*', 0, 1);
+            $attendance = reset($attendance);
+            if (!$attendance) {
+                require_once($CFG->dirroot . '/course/lib.php');
+                $info = create_module((object) [
+                    'modulename' => 'attendance',
+                    'course' => $courseid,
+                    'section' => 0,
+                    'visible' => 1,
+                    'name' => get_string('modulename', 'attendance'),
+                    'grade' => 100,
+                    'introeditor' => ['text' => '', 'format' => FORMAT_HTML, 'itemid' => 0],
+                ]);
+                $attendance = $DB->get_record('attendance', ['id' => $info->instance], '*', MUST_EXIST);
+            }
+            // A register session the teacher already made for this start time is used, not duplicated.
+            $sessionid = (int) $DB->get_field_sql('SELECT s.id FROM {attendance_sessions} s
+                    LEFT JOIN {' . self::TABLE_LINK . '} l ON l.sessionid = s.id
+                    WHERE s.attendanceid = ? AND s.sessdate = ? AND l.id IS NULL', [$attendance->id, $start], IGNORE_MULTIPLE);
+            if (!$sessionid) {
+                $cm = get_coursemodule_from_instance('bigbluebuttonbn', $room->id, $courseid, false, MUST_EXIST);
+                $sessionid = self::create_session($attendance, $start, $end - $start,
+                    get_string('sessiondescription', 'local_hikmahattendance', get_section_name($courseid, $cm->sectionnum)));
+            }
+            self::save_link((object) [
+                'courseid' => $courseid,
+                'bbbid' => (int) $room->id,
+                'attendanceid' => (int) $attendance->id,
+                'sessionid' => $sessionid,
+                'windowstart' => $start,
+                'windowend' => $end,
+                'threshold' => null,
+                'cancelled' => 0,
+            ], $actorid);
+            $result = 'created';
+        }
+
+        // Scheduled classes mark attendance on their own, unless someone has decided otherwise for this course.
+        if (!$DB->record_exists(self::TABLE_COURSE, ['courseid' => $courseid])) {
+            self::set_autowrite($courseid, true, $actorid);
+            $result = $result ?? 'autowrite';
+        }
+        return $result;
+    }
+
     // ---- Evidence --------------------------------------------------------------------------------
 
     /**
@@ -343,10 +457,16 @@ class manager {
 
         $evidence = self::read_evidence($link);
         $link->callbackcount = $evidence->callbackcount;
+        $joinsonly = false;
         if ($evidence->callbackcount === 0) {
             $hours = (float) (get_config('local_hikmahattendance', 'missinghours') ?: 2);
             $late = $now > (int) $link->windowend + (int) ($hours * HOURSECS);
-            return $setstate($late ? self::LINK_MISSING : self::LINK_WAITING);
+            if (!$late || !self::autowrite_enabled((int) $link->courseid)) {
+                return $setstate($late ? self::LINK_MISSING : self::LINK_WAITING);
+            }
+            // Automatic course and BBB never reported: mark from Moodle's join log (joined = present).
+            // A report arriving later still replaces these marks with measured ones.
+            $joinsonly = true;
         }
 
         [$learnerids, $staffids] = self::roster($link);
@@ -356,6 +476,13 @@ class manager {
         // Parse everything first: one unknown shape sends the whole session to the exceptions queue.
         $parsed = [];
         $schemas = [];
+        if ($joinsonly) {
+            $schemas['joinlog'] = true;
+            foreach (array_keys($evidence->joined) as $userid) {
+                $parsed[$userid][] = ['intervals' => [], 'total' => $denominator, 'conflict' => false,
+                    'notes' => [self::NOTE_JOINSONLY], 'moderator' => false, 'schema' => 'joinlog'];
+            }
+        }
         try {
             foreach ($evidence->summaries as $userid => $attendees) {
                 foreach ($attendees as $attendee) {
@@ -730,7 +857,9 @@ class manager {
                 'studentid' => $userid,
                 'statusid' => $statuses[$acronym]->id,
                 'statusset' => $statusset,
-                'remarks' => get_string('logremark', 'local_hikmahattendance', (object) [
+                'remarks' => str_contains((string) $decision->evidence, self::NOTE_JOINSONLY)
+                    ? get_string('logremark_joins', 'local_hikmahattendance')
+                    : get_string('logremark', 'local_hikmahattendance', (object) [
                     'percent' => $decision->percent,
                     'minutes' => (int) round($decision->seconds / 60),
                 ]),

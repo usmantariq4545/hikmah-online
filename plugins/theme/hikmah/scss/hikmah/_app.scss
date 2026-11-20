@@ -776,6 +776,12 @@
         flex: 1;
         font-weight: 500;
     }
+    &__course-att {
+        display: block;
+        font-size: .8rem;
+        font-weight: 400;
+        color: $hk-muted;
+    }
     &__go {
         opacity: .35;
         transition: transform .25s $hk-ease, opacity .2s ease;
@@ -1635,6 +1641,11 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
     .date-item {
         white-space: normal;
     }
+}
+// Live classes: "Starts: … · Duration: …" (local/live_classes.php).
+.hk-livedates {
+    font-size: .9rem;
+    color: $hk-muted;
 }
 // Arabic words inside English text: a little larger so the letters and vowel marks are readable.
 .hk-arabic {

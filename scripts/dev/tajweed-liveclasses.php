@@ -55,12 +55,16 @@ function hk_tajweed_liveclasses(stdClass $course): int {
         $existing = array_filter($sectioncms, fn($cm) => $cm->modname === 'bigbluebuttonbn');
         if ($existing) {
             $room = $DB->get_record('bigbluebuttonbn', ['id' => reset($existing)->instance], '*', MUST_EXIST);
+            if ((int) $room->closingtime !== $end) {
+                // The room is the class: it closes when the class ends (shown as "Duration: 1 hour").
+                $DB->set_field('bigbluebuttonbn', 'closingtime', $end, ['id' => $room->id]);
+            }
         } else {
             $instance = $gen->create_module('bigbluebuttonbn', ['course' => $course->id, 'section' => $n,
                 'name' => 'Live class', 'type' => 0, 'wait' => 1, 'record' => 1,
                 'intro' => '<p>Class ' . $n . ' is live here on ' . userdate($start, '%A %d %B, %I:%M %p', 'Asia/Karachi', false)
                     . ' (Pakistan time). The recording appears here a few hours after the class.</p>',
-                'openingtime' => $start, 'closingtime' => $end + 30 * MINSECS]);
+                'openingtime' => $start, 'closingtime' => $end]);
             $room = $DB->get_record('bigbluebuttonbn', ['id' => $instance->id], '*', MUST_EXIST);
             if ($generalroom) {
                 $DB->set_field('bigbluebuttonbn', 'participants', $generalroom->participants, ['id' => $room->id]);
@@ -93,6 +97,8 @@ function hk_tajweed_liveclasses(stdClass $course): int {
         if ($end < $now) {
             $held[] = $room;
         }
+        // The standard set-up: register session, link and automatic marking (as for any course).
+        \local_hikmahattendance\manager::ensure_for_room((int) $room->id, (int) $teacher->id);
     }
 
     // The general room's recordings, oldest first, to the held classes in order; any extra to the last.

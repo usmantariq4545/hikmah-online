@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-11-20 — Live classes standard; attendance marked by the platform
+
+- Theme: a held class is titled "Class recording" on the course page (not while editing); Moodle's
+  "Opens / Closes" under a scheduled live class becomes "Starts: Sat 21 Nov, 6:00 PM · Duration:
+  1 hour" ("Started" once held). Student dashboard: attendance % per course and an Attendance tile
+  (mod_attendance's own numbers, marked classes only).
+- local_hikmahattendance 0.2.0: a live class with an opening and closing time gets its register
+  session (an existing one at that time is reused), the link, and automatic marking for its course
+  (observer on course module created/updated; `manager::ensure_for_room`; moving a class not yet held
+  moves its session). With autowrite on and no BBB report 2 hours after class, learners who joined
+  are marked Present and the rest Absent; a report arriving later replaces those marks. `link.php`
+  uses the shared `manager::create_session`. Tests: join-log fallback and room set-up.
+- `090-attendance.php` runs the same set-up for existing scheduled live classes.
+- Demo Tajweed course: rooms close at class end (one hour) instead of 30 minutes after.
+- Decision change (owner, 2026-11-20): autowrite no longer ships off for scheduled classes; PRD
+  ATT-05, open decisions and CLAUDE.md updated.
+
 ## 2026-11-19 — One live class per class
 
 - Theme: under every scheduled live class (opening and closing time) the course page shows

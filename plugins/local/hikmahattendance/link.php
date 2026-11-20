@@ -108,20 +108,9 @@ if ($data = $form->get_data()) {
     if ($kind === 'n') {
         // Create the attendance session for this class window through mod_attendance.
         $attendance = $DB->get_record('attendance', ['id' => $targetid, 'course' => $course->id], '*', MUST_EXIST);
-        $cm = get_coursemodule_from_instance('attendance', $attendance->id, $course->id, false, MUST_EXIST);
-        $structure = new mod_attendance_structure($attendance, $cm, $course, context_module::instance($cm->id));
-        $session = new stdClass();
-        $session->sessdate = (int) $data->windowstart;
-        $session->duration = (int) $data->windowend - (int) $data->windowstart;
-        $session->groupid = 0;
-        $session->description = get_string('sessiondescription', 'local_hikmahattendance', $bbbs[$data->bbbid]);
-        $session->descriptionformat = FORMAT_HTML;
-        $session->descriptionitemid = 0;
-        $session->timemodified = time();
-        $session->statusset = 0;
-        $session->calendarevent = 0;
-        $session->absenteereport = 1;
-        $sessionid = $structure->add_session($session);
+        $sessionid = manager::create_session($attendance, (int) $data->windowstart,
+            (int) $data->windowend - (int) $data->windowstart,
+            get_string('sessiondescription', 'local_hikmahattendance', $bbbs[$data->bbbid]));
         $attendanceid = (int) $attendance->id;
     } else {
         $session = $DB->get_record('attendance_sessions', ['id' => $targetid], '*', MUST_EXIST);
