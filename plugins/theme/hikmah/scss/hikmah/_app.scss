@@ -1760,3 +1760,9 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
 .hk-panel--flush .table-responsive {
     position: relative;
 }
+// The site-wide participant list ("People"): roles and groups only mean something inside a course.
+#page-course-view-participants.course-1 #participants {
+    .c3, .c4 {
+        display: none;
+    }
+}

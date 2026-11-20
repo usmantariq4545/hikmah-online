@@ -71,6 +71,9 @@ function theme_hikmah_get_extra_scss($theme): string {
  * @param moodle_page $page
  */
 function theme_hikmah_page_init(moodle_page $page): void {
+    if ($page->pagetype === 'course-view-participants' && $page->course->id == SITEID) {
+        $page->set_primary_active_tab('hkpeople');
+    }
     if (!isloggedin() || isguestuser() || empty($page->course->id) || $page->course->id == SITEID) {
         return;
     }

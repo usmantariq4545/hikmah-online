@@ -172,6 +172,11 @@ class core_renderer extends \theme_boost\output\core_renderer {
      * @return string HTML
      */
     public function context_header($headerinfo = null, $headinglevel = 1): string {
+        if ($this->page->pagetype === 'course-view-participants' && $this->page->course->id == SITEID
+                && !isset($headerinfo['heading'])) {
+            // The site's participant list is the "People" page of the top menu.
+            return parent::context_header(['heading' => get_string('nav_people', 'theme_hikmah')], $headinglevel);
+        }
         $title = \theme_hikmah\local\live_classes::held_title($this->page);
         if ($title && !isset($headerinfo['heading'])) {
             $name = $this->page->cm->get_formatted_name();
