@@ -41,4 +41,8 @@ $callbacks = [
         'hook' => \core\hook\navigation\primary_extend::class,
         'callback' => [\theme_hikmah\hook_callbacks::class, 'primary_extend'],
     ],
+    [
+        'hook' => \core\hook\navigation\secondary_extend::class,
+        'callback' => [\theme_hikmah\hook_callbacks::class, 'secondary_extend'],
+    ],
 ];

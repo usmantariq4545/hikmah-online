@@ -134,6 +134,14 @@ if (class_exists('\local_hikmahaccess\peers')) {
         hk_changed("classmates messaging rule applied to $changedpeers student(s)");
     }
 }
+// Support sees who is a student or teacher on a course's participants page (else every row says "No roles").
+foreach (['student', 'teacher', 'editingteacher'] as $shortname) {
+    $target = (int) $DB->get_field('role', 'id', ['shortname' => $shortname], MUST_EXIST);
+    if (!$DB->record_exists('role_allow_view', ['roleid' => $support, 'allowview' => $target])) {
+        core_role_set_view_allowed($support, $target);
+        hk_changed("support may view role $shortname");
+    }
+}
 foreach ([$finance, $support] as $target) {
     if (!$DB->record_exists('role_allow_assign', ['roleid' => $manager, 'allowassign' => $target])) {
         core_role_set_assign_allowed($manager, $target);

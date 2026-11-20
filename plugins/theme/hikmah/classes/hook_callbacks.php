@@ -80,6 +80,24 @@ class hook_callbacks {
     }
 
     /**
+     * Course tabs: no Grades tab for staff who are not on the course and cannot see its grades.
+     *
+     * @param \core\hook\navigation\secondary_extend $hook
+     */
+    public static function secondary_extend(\core\hook\navigation\secondary_extend $hook): void {
+        global $PAGE;
+        if (!self::is_active() || empty($PAGE->course->id) || $PAGE->course->id == SITEID) {
+            return;
+        }
+        // Staff who are not on the course (support) only get "Cannot view grades." behind the Grades tab.
+        $context = \context_course::instance($PAGE->course->id);
+        if (!is_enrolled($context) && !has_capability('moodle/grade:viewall', $context)
+                && ($grades = $hook->get_secondaryview()->get('grades'))) {
+            $grades->remove();
+        }
+    }
+
+    /**
      * Role-aware top menu: staff get links to their own tools, and only staff who hold the
      * capability see them (finance reviewers, managers and the administrator see "Payment reviews").
      *
@@ -90,13 +108,21 @@ class hook_callbacks {
             return;
         }
         $system = \context_system::instance();
-        if (has_capability('paygw/hikmahtransfer:review', $system)) {
-            // Finance reviewers with no courses of their own would only find an empty "My courses".
-            if (!has_capability('moodle/course:view', $system) && !enrol_get_my_courses('id', null, 1)
-                    && ($mycourses = $hook->get_primaryview()->find('mycourses', \navigation_node::TYPE_ROOTNODE))) {
-                $mycourses->remove();
-            }
-            $hook->get_primaryview()->add(
+        $view = $hook->get_primaryview();
+        $isreviewer = has_capability('paygw/hikmahtransfer:review', $system);
+        // Staff with no courses of their own who cannot create one (finance, support) would only find an empty "My courses".
+        if (($isreviewer || has_capability('moodle/course:view', $system)) && !has_capability('moodle/course:create', $system)
+                && !enrol_get_my_courses('id', null, 1)
+                && ($mycourses = $view->find('mycourses', \navigation_node::TYPE_ROOTNODE))) {
+            $mycourses->remove();
+        }
+        // Support finds learners in the site's participant list.
+        if (has_capability('moodle/site:viewparticipants', $system) && !is_siteadmin()) {
+            $view->add(get_string('nav_people', 'theme_hikmah'), new \moodle_url('/user/index.php', ['id' => SITEID]),
+                \navigation_node::TYPE_CUSTOM, null, 'hkpeople');
+        }
+        if ($isreviewer) {
+            $view->add(
                 get_string('nav_paymentreviews', 'theme_hikmah'),
                 new \moodle_url('/payment/gateway/hikmahtransfer/review.php'),
                 \navigation_node::TYPE_CUSTOM,

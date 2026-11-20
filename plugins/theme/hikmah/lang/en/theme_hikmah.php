@@ -272,3 +272,4 @@ $string['dash_payreturned'] = 'Returned (30 days)';
 $string['dash_paywaiting'] = 'Waiting';
 $string['dash_sitecourses'] = 'Courses';
 $string['dash_sitecourseslink'] = 'All courses';
+$string['nav_people'] = 'People';
