@@ -1031,6 +1031,17 @@
     }
     .hk-receipt {
         position: static;
+        order: 1;
+    }
+    // One column: details, then the receipt, then the decision and history.
+    .hk-review > div:first-child {
+        display: contents;
+        > * {
+            order: 2;
+        }
+        > :first-child {
+            order: 0;
+        }
     }
     .hk-filters {
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);

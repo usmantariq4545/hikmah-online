@@ -42,7 +42,7 @@ $PAGE->set_title(get_string('statustitle', 'paygw_hikmahtransfer'));
 $PAGE->set_heading(get_string('statustitle', 'paygw_hikmahtransfer'));
 $PAGE->add_body_class('hk-paypage');
 
-$dateformat = get_string('strftimedatetimeshort', 'langconfig');
+$dateformat = get_string('strftimedatetime', 'langconfig');
 
 if (!$id) {
     $rows = [];

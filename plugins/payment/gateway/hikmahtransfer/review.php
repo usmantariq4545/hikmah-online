@@ -47,11 +47,12 @@ $baseurl = new moodle_url('/payment/gateway/hikmahtransfer/review.php');
 $PAGE->set_context($systemcontext);
 $PAGE->set_url(new moodle_url($baseurl, $id ? ['id' => $id] : []));
 $PAGE->set_pagelayout('standard');
+$PAGE->set_primary_active_tab('hkpaymentreviews');
 $PAGE->set_title(get_string('reviewtitle', 'paygw_hikmahtransfer'));
 $PAGE->set_heading(get_string('reviewtitle', 'paygw_hikmahtransfer'));
 $PAGE->add_body_class('hk-paypage');
 
-$dateformat = get_string('strftimedatetimeshort', 'langconfig');
+$dateformat = get_string('strftimedatetime', 'langconfig');
 
 // ---- Decision ------------------------------------------------------------------------------------
 if ($id && $action !== '' && data_submitted()) {

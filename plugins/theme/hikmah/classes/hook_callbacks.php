@@ -89,7 +89,14 @@ class hook_callbacks {
         if (!self::is_active() || !isloggedin() || isguestuser()) {
             return;
         }
-        if (has_capability('paygw/hikmahtransfer:review', \context_system::instance())) {
+        $system = \context_system::instance();
+        if (has_capability('paygw/hikmahtransfer:review', $system)) {
+            // Finance reviewers with no courses of their own would only find an empty "My courses".
+            if (!has_capability('moodle/course:view', $system) && !enrol_get_my_courses('id', null, 1)
+                    && ($mycourses = $hook->get_primaryview()->find('mycourses', 
+avigation_node::TYPE_ROOTNODE))) {
+                $mycourses->remove();
+            }
             $hook->get_primaryview()->add(
                 get_string('nav_paymentreviews', 'theme_hikmah'),
                 new \moodle_url('/payment/gateway/hikmahtransfer/review.php'),
