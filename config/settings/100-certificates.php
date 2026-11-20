@@ -82,4 +82,19 @@ foreach (['guest', 'user'] as $shortname) {
     }
 }
 
+// Certificate rules (owner's decision, 2026-11-20): each course sets its minimum grade and attendance
+// (course fields certgrade / certattendance, or its "Certificate rules" page); these are the defaults.
+// Every course with a certificate is brought in line once here; after that its own edits re-apply them.
+if (class_exists('\local_hikmahcompletion\rules')) {
+    hk_set('defaultgrade', 50, 'local_hikmahcompletion');
+    hk_set('defaultattendance', 75, 'local_hikmahcompletion');
+    $certcourses = $DB->get_fieldset_sql("SELECT DISTINCT cm.course FROM {course_modules} cm
+        JOIN {modules} m ON m.id = cm.module AND m.name = 'coursecertificate' WHERE cm.deletioninprogress = 0");
+    foreach ($certcourses as $courseid) {
+        foreach (\local_hikmahcompletion\rules::sync((int) $courseid) as $change) {
+            hk_changed("certificate rules, course $courseid: $change");
+        }
+    }
+}
+
 hk_done(__FILE__);

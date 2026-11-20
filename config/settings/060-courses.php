@@ -38,6 +38,10 @@ $fields = [
     'prerequisites' => ['Prerequisites', 'text', $text(500)],
     'outcomes' => ['Learning outcomes (one per line)', 'textarea', $base + ['defaultvalue' => '',
         'defaultvalueformat' => FORMAT_PLAIN]],
+    // Certificate rules, read by local_hikmahcompletion (empty = site default). Teachers set them on the
+    // course's "Certificate rules" page.
+    'certgrade' => ['Certificate: minimum course grade (%)', 'text', $text(3)],
+    'certattendance' => ['Certificate: minimum attendance (%)', 'text', $text(3)],
 ];
 
 $existing = [];

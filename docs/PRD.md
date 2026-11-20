@@ -398,7 +398,8 @@ Lean option: launch the pilot after phase 3 with receipts checked by hand and th
 | Custom plugin effort | Three Hikmah plugins plus a theme need PHP/Moodle API skills and a maintainer after launch |
 | Enrollment policy | Final profile fields, eligibility, fee/refund/discount rules, payment accounts and reviewer authority |
 | Attendance accuracy | Write authorization decided 2026-11-20: automatic, no hand marking by teachers or students; one live class per class (room open from class start to end) gives each class its register session and link. Missing BBB report after 2 h: joined = Present, not joined = Absent (replaced if the report arrives). Still open: compare with real registers; status mapping, rounding, grace periods |
-| Certificates | Approve design, signatory, QR data, revocation policy, issuing authority; test Urdu/Arabic fonts |
+| Certificates | Rules decided 2026-11-20: each course sets its own minimum course grade and minimum attendance (course fields, or the course's "Certificate rules" page for teachers; site defaults 50% and 75%), and each item's weight in the course grade is set in Gradebook setup (local_hikmahcompletion). The certificate opens only when every tracked activity is complete and both minimums are met. Still open: approve design, signatory, QR data, revocation policy, issuing authority; test Urdu/Arabic fonts |
+| Sign-up flow (decided 2026-11-20) | One short form (username, password, email, name) with one "I agree to the Terms of Use and Privacy Policy" checkbox; the policy tool still records each accepted policy version. Profile details are asked after the first sign-in |
 | Privacy and retention | Approve retention and access rules for learner data, receipts, recordings and participation events |
 | Operations | Platform owner, support hours, escalation, monitoring and an upgrade calendar aligned to Moodle minor releases |
 

@@ -292,7 +292,7 @@ Pin every version in versions.lock. Before adding any plugin, check that it list
 | auth_oauth2 (core) | Google sign-in | Google Cloud OAuth client with redirect https://<host>/admin/oauth2callback.php for each environment |
 | antivirus_clamav (core) | Upload scanning | TCP mode to clamav:3310; action on error = refuse upload |
 
-Completion rules per course: required activities + quiz pass marks + attendance % (via mod_attendance grade or a completion condition). Certificates depend on course completion only.
+Completion rules per course (decided 2026-11-20): every activity with completion tracking + the course's minimum course grade + minimum attendance (register pass grade), each set per course (local_hikmahcompletion, "Certificate rules"); item weights in Gradebook setup. The certificate activity is restricted to those rules (local_hikmahcompletion writes the restriction and the course completion criteria).
 
 ### 10. Milestones
 

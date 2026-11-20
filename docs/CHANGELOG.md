@@ -61,6 +61,14 @@
   item says what it is and how long ("Quiz • 20 min", "Assignment • Due Sat 21 Nov"); each class page
   has a summary line ("1 live class · 2 readings · 1 quiz"). "General" reads "Course info"
   (135-strings). The footer spans the window over the class list instead of being cut by it.
+- New plugin local_hikmahcompletion: certificate rules per course. Certificates were being issued to
+  anyone who opened them (no restriction, no completion rules). Each course now sets a minimum course
+  grade and a minimum attendance (course fields certgrade/certattendance, or the course's "Certificate
+  rules" page for teachers; defaults 50% and 75% in 100-certificates); item weights stay in Gradebook
+  setup. rules::sync() sets the register's pass grade and completion, the course completion criteria
+  (every tracked activity + course grade) and the certificate's restriction; it re-runs when activities
+  or course settings change, and once for every course from 100-certificates. scripts/dev/
+  revoke-unearned.php revokes unearned certificates of demo accounts only. PHPUnit written, not run.
 
 ## 2026-11-19 — One live class per class
 
