@@ -315,3 +315,5 @@ $string['hero_preferences_title'] = 'Preferences';
 $string['hero_profile'] = 'Your profile';
 $string['hero_profile_lead'] = '';
 $string['hero_profile_title'] = 'Profile';
+$string['card_startedon'] = 'Started {$a}';
+$string['card_startson'] = 'Starts {$a}';

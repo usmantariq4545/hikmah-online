@@ -93,6 +93,8 @@
   its --mds-* variables: Noto Sans 0.875rem, grey selected pill with a 4px blue dot, no underline or
   click box) on the fast server-rendered menu. Profile, grades, payments and preferences highlight
   Dashboard instead of Home.
+- Catalogue cards: the start date reads "Starts 1 Nov" or "Started 1 Nov" (year added when it is not
+  this year) instead of "1/11/26".
 
 ## 2026-11-19 — One live class per class
 

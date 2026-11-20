@@ -287,7 +287,10 @@ class catalog {
             'length' => (string) ($fields['length'] ?? ''),
             'teachers' => implode(', ', array_slice($teachers, 0, 2)) . (count($teachers) > 2 ? ' +' . (count($teachers) - 2) : ''),
             'hasteachers' => !empty($teachers),
-            'startdate' => $course->startdate ? userdate($course->startdate, get_string('strftimedatefullshort', 'langconfig')) : '',
+            // "Starts 1 Nov" (or "Started 1 Nov"; the year only when it is not this year) instead of "1/11/26".
+            'startdate' => $course->startdate ? get_string($course->startdate > time() ? 'card_startson' : 'card_startedon',
+                'theme_hikmah', userdate($course->startdate, userdate($course->startdate, '%Y') === userdate(time(), '%Y')
+                ? '%d %b' : '%d %b %Y')) : '',
             'startts' => (int) $course->startdate,
             'isfree' => $price['isfree'],
             'pricelabel' => $price['label'],
