@@ -202,6 +202,16 @@ class core_renderer extends \theme_boost\output\core_renderer {
             } catch (\Throwable $e) {
                 debugging('Hikmah dashboard summary failed: ' . $e->getMessage(), DEBUG_DEVELOPER);
             }
+        } else if (!$done && isset(\theme_hikmah\local\pagehero::PAGES[$this->page->pagetype])) {
+            // Profile, grades, payments and preferences open with the dashboard's banner.
+            $done = true;
+            try {
+                if ($hero = \theme_hikmah\local\pagehero::export($this->page)) {
+                    $html .= $this->render_from_template('theme_hikmah/pagehero', $hero);
+                }
+            } catch (\Throwable $e) {
+                debugging('Hikmah page banner failed: ' . $e->getMessage(), DEBUG_DEVELOPER);
+            }
         }
         return $html;
     }

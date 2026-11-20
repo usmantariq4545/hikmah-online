@@ -75,6 +75,13 @@
   …") and for live classes (their Starts/Duration line says it). Once a learner has submitted an
   assignment, finished a quiz attempt or completed an item, its "Due / Closes" line is removed and the
   label reads "Submitted" or "Attempted".
+- Header loads at once: the top menu is server-rendered (theme override of core/primarymoremenu without
+  Moodle 5.3's React PrimaryNav, which replaced the menu only after its scripts loaded and measured;
+  core/moremenu still handles "More"). Logos shrunk from 900x434 (19 KB) to 360x174 (4 KB / 3.5 KB);
+  the header logo is preloaded with high priority and the footer logo is no longer lazy-loaded.
+- Profile, grades, My payments and preferences open with the dashboard's banner (eyebrow, title, lead
+  and numbers: courses/completed/certificates; graded courses/average; waiting/needs action/approved);
+  Moodle's repeated page heading is hidden there and the content sits in the dashboard's white panels.
 
 ## 2026-11-19 — One live class per class
 

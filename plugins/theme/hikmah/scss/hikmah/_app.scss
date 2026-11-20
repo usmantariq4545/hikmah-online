@@ -1839,3 +1839,38 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
         margin-inline-end: -315px;
     }
 }
+
+// ---- Learner pages with the dashboard banner (profile, grades, payments, preferences) ----------
+.hk-pagehero__lead {
+    margin: .5rem 0 0;
+    color: rgba(255, 255, 255, .72);
+    max-width: 40rem;
+}
+// The banner carries the page title; Moodle's own heading above it would repeat it.
+#page-user-profile,
+#page-grade-report-overview-index,
+#page-payment-gateway-hikmahtransfer-status,
+#page-user-preferences {
+    #page-header .page-context-header,
+    #page-header .page-header-headings {
+        display: none;
+    }
+}
+// Content under the banner: the same white rounded panels as the dashboard.
+#page-user-profile .card,
+#page-user-profile .profile_tree section,
+#page-grade-report-overview-index #region-main .generaltable,
+#page-user-preferences #region-main .card {
+    border: 1px solid $hk-line;
+    border-radius: $hk-radius-lg;
+    box-shadow: none;
+}
+#page-user-profile .profile_tree section,
+#page-user-preferences #region-main .card {
+    padding: clamp(1rem, 2vw, 1.5rem);
+    background: #fff;
+}
+#page-grade-report-overview-index #region-main .generaltable {
+    overflow: hidden;
+    background: #fff;
+}

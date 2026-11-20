@@ -75,7 +75,10 @@ class hook_callbacks {
             "w.hkRevealReady=true;});" .
             "setTimeout(function(){if(!w.hkRevealReady){h.classList.remove('hk-js');}},4000);" .
             "})(window,document);</script>\n" .
-            '<meta name="theme-color" content="#1a1a1a">'
+            '<meta name="theme-color" content="#1a1a1a">' .
+            // The header logo downloads first, ahead of the stylesheet and script bundle.
+            '<link rel="preload" as="image" fetchpriority="high" href="'
+            . s($hook->renderer->image_url('logo-dark', 'theme_hikmah')->out(false)) . '">'
         );
     }
 
