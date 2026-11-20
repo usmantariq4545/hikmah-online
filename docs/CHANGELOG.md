@@ -71,6 +71,10 @@
   revoke-unearned.php revokes unearned certificates of demo accounts only. PHPUnit written, not run.
   The certificate shows to learners as locked with every requirement listed (a hidden failing
   condition had hidden it entirely).
+- Course items: the type label is left out when the name already says it ("Your certificate", "Quiz 1:
+  …") and for live classes (their Starts/Duration line says it). Once a learner has submitted an
+  assignment, finished a quiz attempt or completed an item, its "Due / Closes" line is removed and the
+  label reads "Submitted" or "Attempted".
 
 ## 2026-11-19 — One live class per class
 

@@ -193,6 +193,10 @@ class hook_callbacks {
                 $section = get_fast_modinfo($PAGE->course)->get_section_info_by_id($sectionid, IGNORE_MISSING);
                 $summary = $section ? ($items['sections'][$section->section] ?? '') : '';
             }
+            // Submitted, attempted or completed items lose their "Due / Closes" line.
+            $hook->add_html('<script>(function(d,x){x.forEach(function(id){var e=d.querySelector('
+                . '\'li.activity[data-id="\'+id+\'"] [data-region="activity-dates"]\');if(e){e.remove();}});})(document,'
+                . json_encode(array_values($items['done'])) . ');</script>');
             $hook->add_html('<script>(function(d,m,s){Object.keys(m).forEach(function(id){'
                 . 'var a=d.querySelector(\'li.activity[data-id="\'+id+\'"] .activity-name-area\');'
                 . 'if(!a||a.querySelector(".hk-cmmeta")){return;}var e=d.createElement("div");e.className="hk-cmmeta";'

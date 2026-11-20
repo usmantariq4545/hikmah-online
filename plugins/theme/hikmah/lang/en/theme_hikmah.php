@@ -297,3 +297,5 @@ $string['sum_quiz'] = '{$a} quiz';
 $string['sum_quizs'] = '{$a} quizzes';
 $string['sum_reading'] = '{$a} reading';
 $string['sum_readings'] = '{$a} readings';
+$string['item_attempted'] = 'Attempted';
+$string['item_submitted'] = 'Submitted';

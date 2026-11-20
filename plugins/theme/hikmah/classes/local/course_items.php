@@ -42,29 +42,60 @@ class course_items {
     /**
      * Label per visible item and summary per section.
      *
+     * Items the user has already submitted, attempted or completed are listed in done: their due and
+     * closing dates no longer matter to them, so the page drops those lines.
+     *
      * @param stdClass $course
-     * @return array{items: array<int, string>, sections: array<int, string>} cm id => label, section number => summary
+     * @param int|null $userid defaults to the current user
+     * @return array{items: array<int, string>, sections: array<int, string>, done: int[]} cm id => label,
+     *     section number => summary, cm ids done
      */
-    public static function export(stdClass $course): array {
-        global $DB;
-        $modinfo = get_fast_modinfo($course);
+    public static function export(stdClass $course, ?int $userid = null): array {
+        global $CFG, $DB, $USER;
+        require_once($CFG->libdir . '/completionlib.php');
+        $userid = $userid ?? (int) $USER->id;
+        $modinfo = get_fast_modinfo($course, $userid);
         $cms = array_filter($modinfo->get_cms(), static fn($cm) => $cm->is_visible_on_course_page()
             && $cm->modname !== 'label');
         $quizzes = self::instances('quiz', $cms, 'id, timelimit');
         $assigns = self::instances('assign', $cms, 'id, duedate');
+        $submitted = $assigns ? $DB->get_records_select_menu('assign_submission',
+            'userid = ? AND latest = 1 AND status = ? AND assignment IN (' . implode(',', array_keys($assigns)) . ')',
+            [$userid, 'submitted'], '', 'assignment, id') : [];
+        $attempted = $quizzes ? $DB->get_records_select_menu('quiz_attempts',
+            'userid = ? AND state = ? AND quiz IN (' . implode(',', array_keys($quizzes)) . ')',
+            [$userid, 'finished'], '', 'DISTINCT quiz, quiz AS q') : [];
+        $completion = new \completion_info($course);
 
         $items = [];
+        $done = [];
         $counts = [];
         foreach ($cms as $cm) {
             $kind = self::KINDS[$cm->modname] ?? null;
-            $label = $kind ? get_string('item_' . $kind, 'theme_hikmah') : get_string('modulename', $cm->modname);
-            if ($cm->modname === 'quiz' && !empty($quizzes[$cm->instance]->timelimit)) {
-                $label .= ' • ' . get_string('item_minutes', 'theme_hikmah', (int) ceil($quizzes[$cm->instance]->timelimit / 60));
-            } else if ($cm->modname === 'assign' && !empty($assigns[$cm->instance]->duedate)) {
-                $label .= ' • ' . get_string('item_due', 'theme_hikmah',
-                    userdate($assigns[$cm->instance]->duedate, get_string('item_dateformat', 'theme_hikmah')));
+            $isdone = ($cm->modname === 'assign' && isset($submitted[$cm->instance]))
+                || ($cm->modname === 'quiz' && isset($attempted[$cm->instance]))
+                || ($completion->is_enabled($cm) && $completion->get_data($cm, true, $userid)->completionstate > 0);
+            if ($isdone && $cm->modname !== 'bigbluebuttonbn') {
+                $done[] = $cm->id;
             }
-            $items[$cm->id] = $label;
+            // The type, unless the name already says it ("Quiz 1: …", "Your certificate") or, for a live
+            // class, its "Starts … · Duration …" line does.
+            $type = $kind ? get_string('item_' . $kind, 'theme_hikmah') : get_string('modulename', $cm->modname);
+            $parts = $cm->modname === 'bigbluebuttonbn' || \core_text::strpos(\core_text::strtolower($cm->name),
+                \core_text::strtolower($type)) !== false ? [] : [$type];
+            if ($cm->modname === 'assign' && isset($submitted[$cm->instance])) {
+                $parts[] = get_string('item_submitted', 'theme_hikmah');
+            } else if ($cm->modname === 'assign' && !$isdone && !empty($assigns[$cm->instance]->duedate)) {
+                $parts[] = get_string('item_due', 'theme_hikmah',
+                    userdate($assigns[$cm->instance]->duedate, get_string('item_dateformat', 'theme_hikmah')));
+            } else if ($cm->modname === 'quiz' && isset($attempted[$cm->instance])) {
+                $parts[] = get_string('item_attempted', 'theme_hikmah');
+            } else if ($cm->modname === 'quiz' && !empty($quizzes[$cm->instance]->timelimit)) {
+                $parts[] = get_string('item_minutes', 'theme_hikmah', (int) ceil($quizzes[$cm->instance]->timelimit / 60));
+            }
+            if ($parts) {
+                $items[$cm->id] = implode(' • ', $parts);
+            }
             if ($kind && in_array($kind, self::SUMMARY, true)) {
                 $counts[$cm->sectionnum][$kind] = ($counts[$cm->sectionnum][$kind] ?? 0) + 1;
             }
@@ -80,7 +111,7 @@ class course_items {
             }
             $sections[$sectionnum] = implode(' · ', $parts);
         }
-        return ['items' => $items, 'sections' => $sections];
+        return ['items' => $items, 'sections' => $sections, 'done' => $done];
     }
 
     /**
