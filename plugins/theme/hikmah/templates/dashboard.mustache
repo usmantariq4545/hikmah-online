@@ -32,6 +32,9 @@
         "haspayments": false,
         "payments": [],
         "work": [],
+        "showgrid": true,
+        "coursestitle": "Continue learning",
+        "courseslink": "All my courses",
         "mycoursesurl": "#",
         "catalogurl": "#"
     }
@@ -77,11 +80,12 @@
         </div>
     {{/haspayments}}
 
+    {{#showgrid}}
     <div class="hk-dash__grid">
         <div class="hk-dash__panel" data-hk-reveal>
             <div class="hk-dash__panel-head">
-                <h3>{{#isteacher}}{{#str}}dash_teaching, theme_hikmah{{/str}}{{/isteacher}}{{^isteacher}}{{#str}}dash_continue, theme_hikmah{{/str}}{{/isteacher}}</h3>
-                <a href="{{mycoursesurl}}">{{#str}}dash_allcourses, theme_hikmah{{/str}}</a>
+                <h3>{{coursestitle}}</h3>
+                <a href="{{mycoursesurl}}">{{courseslink}}</a>
             </div>
             {{#hascourses}}
                 <ul class="hk-dash__courses">
@@ -140,4 +144,5 @@
             {{/hasevents}}
         </div>
     </div>
+    {{/showgrid}}
 </section>

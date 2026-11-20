@@ -47,6 +47,14 @@ class dashboard {
             'visible DESC, sortorder ASC');
         $dbman = $DB->get_manager();
 
+        // Staff with no enrolments (managers, support) see the whole site; finance reviewers see payments.
+        $system = \context_system::instance();
+        $siteview = !$courses && has_capability('moodle/course:view', $system);
+        $finance = !$courses && !$siteview && has_capability('paygw/hikmahtransfer:review', $system);
+        $eventcourses = $siteview
+            ? $DB->get_records_select('course', 'id <> ? AND visible = 1', [SITEID], 'sortorder', 'id, fullname')
+            : $courses;
+
         // Courses with progress.
         $rows = [];
         $progresssum = 0;
@@ -78,9 +86,9 @@ class dashboard {
         // Upcoming classes and deadlines for the next two weeks.
         $events = [];
         $seenlive = [];
-        if ($courses) {
+        if ($eventcourses) {
             $now = time();
-            $raw = calendar_get_legacy_events($now - HOURSECS, $now + 14 * DAYSECS, true, true, array_keys($courses), true, true);
+            $raw = calendar_get_legacy_events($now - HOURSECS, $now + 14 * DAYSECS, true, true, array_keys($eventcourses), true, true);
             usort($raw, static fn($a, $b): int => $a->timestart <=> $b->timestart);
             foreach ($raw as $event) {
                 if (count($events) >= self::MAX_EVENTS) {
@@ -116,7 +124,7 @@ class dashboard {
                 $seenlive[$key] = true;
                 $events[] = [
                     'name' => $name,
-                    'course' => isset($courses[$event->courseid]) ? format_string($courses[$event->courseid]->fullname) : '',
+                    'course' => isset($eventcourses[$event->courseid]) ? format_string($eventcourses[$event->courseid]->fullname) : '',
                     'day' => userdate($event->timestart, '%d'),
                     'month' => userdate($event->timestart, '%b'),
                     'time' => userdate($event->timestart, get_string('strftimetime', 'langconfig')),
@@ -175,7 +183,23 @@ class dashboard {
             static fn($c): bool => !has_capability('moodle/grade:viewall', \context_course::instance($c->id)));
         if ($isteacher) {
             [$stats, $rows] = self::teaching($courses);
+        } else if ($siteview && $eventcourses) {
+            // shortcut: counts every course on each visit; fine for tens of courses, cache it past a few hundred.
+            [$stats, $rows] = self::teaching($eventcourses);
+        } else if ($finance) {
+            $since = time() - 30 * DAYSECS;
+            $count = static fn(string $where, array $params = []): int =>
+                $DB->count_records_select('paygw_hikmahtransfer_req', $where, $params);
+            $stats = [
+                ['value' => $count("status = 'pending'"), 'suffix' => '', 'label' => get_string('dash_paywaiting', 'theme_hikmah')],
+                ['value' => $count("status = 'approved' AND timemodified >= ?", [$since]), 'suffix' => '',
+                    'label' => get_string('dash_payapproved', 'theme_hikmah')],
+                ['value' => $count("status IN ('rejected', 'resubmit') AND timemodified >= ?", [$since]), 'suffix' => '',
+                    'label' => get_string('dash_payreturned', 'theme_hikmah')],
+            ];
         }
+        $allcourses = $siteview ? new moodle_url(has_capability('moodle/category:manage', $system)
+            ? '/course/management.php' : '/course/index.php') : new moodle_url('/my/courses.php');
 
         $hour = (int) userdate(time(), '%H');
         return [
@@ -185,11 +209,13 @@ class dashboard {
             'greeting' => get_string($hour < 12 ? 'dash_morning' : ($hour < 17 ? 'dash_afternoon' : 'dash_evening'),
                 'theme_hikmah'),
             'stats' => $stats,
-            'isteacher' => $isteacher,
+            'coursestitle' => get_string($siteview ? 'dash_sitecourses' : ($isteacher ? 'dash_teaching' : 'dash_continue'),
+                'theme_hikmah'),
+            'courseslink' => get_string($siteview ? 'dash_managecourses' : 'dash_allcourses', 'theme_hikmah'),
+            'showgrid' => !$finance,
             'courses' => $rows,
             'hascourses' => !empty($rows),
-            'morecourses' => count($courses) > self::MAX_COURSES,
-            'mycoursesurl' => (new moodle_url('/my/courses.php'))->out(false),
+            'mycoursesurl' => $allcourses->out(false),
             'catalogurl' => (new moodle_url('/theme/hikmah/catalog.php'))->out(false),
             'events' => $events,
             'hasevents' => !empty($events),
@@ -329,16 +355,19 @@ class dashboard {
                     "courseid $insql AND state IN ('ready', 'missing', 'unknown')",
                     $params
                 );
-                $first = reset($teaching);
+                // Open the course that has the work, else the first course.
+                $flagged = $DB->get_field_select('local_hikmahatt_link', 'MIN(courseid)',
+                    "courseid $insql AND state IN ('ready', 'missing', 'unknown')", $params);
                 $work[] = [
                     'value' => $toreview,
                     'label' => get_string('work_attendance', 'theme_hikmah'),
-                    'url' => (new moodle_url('/local/hikmahattendance/index.php', ['courseid' => $first->id]))->out(false),
+                    'url' => (new moodle_url('/local/hikmahattendance/index.php',
+                        ['courseid' => $flagged ?: reset($teaching)->id]))->out(false),
                     'urgent' => $toreview > 0,
                 ];
 
-                $tograde = $DB->count_records_sql(
-                    "SELECT COUNT(s.id)
+                $tograde = $DB->get_record_sql(
+                    "SELECT COUNT(s.id) AS total, MIN(a.course) AS courseid
                        FROM {assign_submission} s
                        JOIN {assign} a ON a.id = s.assignment
                   LEFT JOIN {assign_grades} g ON g.assignment = s.assignment AND g.userid = s.userid
@@ -348,10 +377,12 @@ class dashboard {
                     $params
                 );
                 $work[] = [
-                    'value' => $tograde,
+                    'value' => (int) $tograde->total,
                     'label' => get_string('work_grading', 'theme_hikmah'),
-                    'url' => (new moodle_url('/my/courses.php'))->out(false),
-                    'urgent' => $tograde > 0,
+                    // The course's assignments, where the "Needs grading" counts are.
+                    'url' => ($tograde->courseid ? new moodle_url('/mod/assign/index.php', ['id' => $tograde->courseid])
+                        : new moodle_url('/my/courses.php'))->out(false),
+                    'urgent' => $tograde->total > 0,
                 ];
             }
         }

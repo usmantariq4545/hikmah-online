@@ -12,6 +12,8 @@
     max-width: 1040px;
     margin-inline: auto;
     display: grid;
+    // One column that may shrink, so a wide table scrolls in its box instead of widening the page.
+    grid-template-columns: minmax(0, 1fr);
     gap: 1.25rem;
     &--narrow {
         max-width: 720px;
@@ -1031,7 +1033,7 @@
         position: static;
     }
     .hk-filters {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     }
     .hk-tiles {
         grid-template-columns: 1fr 1fr;
@@ -1718,6 +1720,28 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
         th.group, td.group, th.author, td.author, td.author + td, th.lastpost,
         tr > :nth-last-child(2) {
             display: none;
+        }
+    }
+}
+
+// Filter fields, action bars and drop-down menus shrink to the screen instead of widening the page.
+.hk-filters input,
+.hk-filters select {
+    width: 100%;
+    min-width: 0;
+}
+.tertiary-navigation .d-flex {
+    flex-wrap: wrap;
+    row-gap: .5rem;
+}
+#region-main {
+    .singleselect, .urlselect, .activity-section-selector {
+        max-width: 100%;
+    }
+    .singleselect, .urlselect {
+        select {
+            max-width: 100%;
+            min-width: 0;
         }
     }
 }
