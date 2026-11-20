@@ -1833,9 +1833,9 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
         z-index: 1025;
     }
     #page.drawers.show-drawer-left #page-footer.hk-footer.footer-popover {
-        margin-inline-start: calc(-3rem - 285px);
+        margin-inline-start: -285px;
     }
     #page.drawers.show-drawer-right #page-footer.hk-footer.footer-popover {
-        margin-inline-end: calc(-3rem - 315px);
+        margin-inline-end: -315px;
     }
 }
