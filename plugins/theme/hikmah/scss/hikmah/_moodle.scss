@@ -20,35 +20,52 @@
     .hk-navbar__brand:hover .hk-navbar__logo {
         transform: scale(1.04);
     }
+    // Top menu (owner's review, 2026-11-20): soft pills, not an underline. The current page is a filled
+    // pill with a dot; hover is a lighter pill; a mouse click leaves no box (keyboard focus keeps a ring).
+    .primary-navigation .navigation .more-nav {
+        align-items: center;
+        gap: .15rem;
+    }
     .primary-navigation .navigation .nav-link {
         position: relative;
-        height: $navbar-height;
+        height: auto;
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        padding: .45rem .95rem;
         font-family: $hk-font-display;
         font-size: .98rem;
         font-weight: 500;
         color: $hk-ink;
         border: 0 !important;
-        padding-inline: .9rem;
-        &::after {
-            content: "";
-            position: absolute;
-            inset-inline: .9rem;
-            bottom: 1.05rem;
-            height: 3px;
-            border-radius: 3px;
-            background: $hk-sun;
-            transform: scaleX(0);
-            transform-origin: left center;
-            transition: transform .35s $hk-ease;
+        border-radius: 999px;
+        background: transparent;
+        box-shadow: none !important;
+        transition: background-color .2s ease, color .2s ease;
+        &:hover {
+            background: rgba(26, 26, 26, .05);
         }
-        &:hover::after,
-        &:focus-visible::after,
-        &.active::after {
-            transform: scaleX(1);
+        &:focus {
+            outline: 0;
         }
-        &.active {
-            font-weight: 600;
+        &:focus:not(:hover):not(.active) {
             background: transparent;
+        }
+        &:focus-visible {
+            outline: 2px solid $hk-ink;
+            outline-offset: 2px;
+        }
+        &.active,
+        &[aria-current="true"] {
+            font-weight: 600;
+            background: rgba(26, 26, 26, .07);
+            &::before {
+                content: "";
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: $hk-ink;
+            }
         }
     }
     .usermenu .login a,
@@ -62,9 +79,6 @@
     .nav-link {
         border-radius: 999px;
     }
-}
-[dir="rtl"] .navbar.fixed-top .primary-navigation .navigation .nav-link::after {
-    transform-origin: right center;
 }
 .moremenu .dropdown-menu,
 .dropdown-menu {

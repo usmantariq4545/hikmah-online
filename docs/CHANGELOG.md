@@ -89,6 +89,9 @@
   overflowing items into "More", the menu's second line is clipped (hk-pending) instead of wrapping.
   050-roles: no block editing on one's own profile (moodle/user:manageownblocks prevented), so learners
   no longer get "Edit mode" and "Reset page to default" there.
+- Top menu look (owner's review): soft pills instead of the yellow underline; the current page is a
+  filled pill with a dot, hover a lighter pill, a mouse click leaves no box (keyboard focus keeps a
+  ring). Profile, grades, payments and preferences highlight Dashboard instead of Home.
 
 ## 2026-11-19 — One live class per class
 

@@ -74,6 +74,11 @@ function theme_hikmah_page_init(moodle_page $page): void {
     if ($page->pagetype === 'course-view-participants' && $page->course->id == SITEID) {
         $page->set_primary_active_tab('hkpeople');
     }
+    // A learner's own pages (profile, grades, payments, preferences) belong with the Dashboard; Moodle
+    // would otherwise highlight Home.
+    if (isset(\theme_hikmah\local\pagehero::PAGES[$page->pagetype])) {
+        $page->set_primary_active_tab('myhome');
+    }
     if (!isloggedin() || isguestuser() || empty($page->course->id) || $page->course->id == SITEID) {
         return;
     }
