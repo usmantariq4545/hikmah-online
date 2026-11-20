@@ -155,10 +155,9 @@ class rules {
         if ($attendanceitem) {
             $conditions[] = ['type' => 'grade', 'id' => (int) $attendanceitem->id, 'min' => (float) $rules['attendance']];
         }
-        // The grade minimums are listed to learners; the long activity list is not (the course index shows
-        // what is left to complete).
-        $availability = json_encode(['op' => '&', 'c' => $conditions,
-            'showc' => array_map(static fn($c) => $c['type'] === 'grade', $conditions)]);
+        // Every condition is shown, so learners see the certificate locked with what is left (a hidden
+        // condition that fails would hide the certificate itself; Moodle folds long lists behind "Show more").
+        $availability = json_encode(['op' => '&', 'c' => $conditions, 'showc' => array_fill(0, count($conditions), true)]);
         foreach ($certificates as $cm) {
             if ((string) $DB->get_field('course_modules', 'availability', ['id' => $cm->id]) !== $availability) {
                 $DB->set_field('course_modules', 'availability', $availability, ['id' => $cm->id]);
