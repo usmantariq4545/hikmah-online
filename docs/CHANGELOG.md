@@ -8,6 +8,8 @@
   "Class recording" there too. Attendance page: "Not marked yet" instead of "?" (and "–" for its points).
   Date of birth left empty is now refused by the server as well (local_hikmahaccess). Live class: the main
   buttons are Hikmah blue, no longer near-black on the dark meeting background.
+- Course list: on short pages it now ends where the footer starts, so its last classes stay reachable
+  (the footer used to cover them).
 - Security: Nginx no longer serves Moodle's source, test and package files (/behat/, db/install.xml,
   upgrade.txt, environment.xml and the like; Moodle's "public paths" check). "Open to search engines"
   off: it only let crawlers in as guest, and guest access is off.

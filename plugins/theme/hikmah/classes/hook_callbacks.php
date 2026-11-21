@@ -170,6 +170,13 @@ class hook_callbacks {
         global $PAGE, $DB;
         if (self::is_active()) {
             self::courseindex($hook);
+            // The footer sits over the side lists (_app.scss); shorten them to end where it starts, so their
+            // last items (the final classes) stay reachable on short pages.
+            $hook->add_html('<script>(function(d,w){var f=d.getElementById("page-footer");if(!f){return;}function a(){'
+                . 'var t=f.getBoundingClientRect().top;d.querySelectorAll(".drawer.drawer-left,.drawer.drawer-right")'
+                . '.forEach(function(x){x.style.height="";if(t<w.innerHeight&&w.innerWidth>=992){'
+                . 'x.style.height=Math.max(0,t-x.getBoundingClientRect().top)+"px";}});}'
+                . 'w.addEventListener("scroll",a,{passive:true});w.addEventListener("resize",a);a();})(document,window);</script>');
         }
         if (self::is_active() && str_starts_with($PAGE->pagetype, 'mod-attendance-')) {
             // mod_attendance writes a bare "?" (and "? / 2.0" points) for sessions not marked yet.
