@@ -2,6 +2,9 @@
 
 ## 2026-11-20 — Live classes standard; attendance marked by the platform
 
+- Sign-up page: "Continue with Google" button above the form (and an "or sign up with email" divider),
+  shown once Google sign-in has its keys (030-auth.php reads GOOGLE_OAUTH_CLIENT_ID/SECRET).
+
 - Theme: a held class is titled "Class recording" on the course page (not while editing); Moodle's
   "Opens / Closes" under a scheduled live class becomes "Starts: Sat 21 Nov, 6:00 PM · Duration:
   1 hour" ("Started" once held). Student dashboard: attendance % per course and an Attendance tile

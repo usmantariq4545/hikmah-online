@@ -31,5 +31,7 @@ $string['privacy:metadata'] = 'The Hikmah access rules plugin stores no personal
 $string['task_syncpeers'] = 'Apply the classmates messaging rule to all students';
 $string['privacypolicy'] = 'Privacy Policy';
 $string['signupagree'] = 'I agree to the {$a->terms} and {$a->privacy}';
+$string['signupor'] = 'or sign up with email';
+$string['signupwith'] = 'Continue with {$a}';
 $string['signupagree_required'] = 'Please agree to the Terms of Use and Privacy Policy to create your account.';
 $string['termsofuse'] = 'Terms of Use';

@@ -989,6 +989,38 @@
             color: $hk-muted;
         }
     }
+    // Sign-up page: "Continue with Google" above the form (local_hikmahaccess), styled like the login page's.
+    .hk-signup-idp {
+        margin-bottom: 1.5rem;
+        .login-identityprovider-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .6rem;
+            padding: .75rem 1rem;
+            margin-bottom: .75rem;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+        .login-separator {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.25rem;
+            font-size: .74rem;
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            color: $hk-muted;
+            &::before,
+            &::after {
+                content: "";
+                flex: 1;
+                height: 1px;
+                background: $hk-line-strong;
+            }
+        }
+    }
     .login-container,
     .login-wrapper,
     .loginform {
