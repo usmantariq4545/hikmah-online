@@ -58,7 +58,8 @@ services:
       SITE_HOST: ${SITE_HOST:?set SITE_HOST (for example staging.example.org)}
       ACME_EMAIL: ${ACME_EMAIL:?set ACME_EMAIL for Let's Encrypt}
     volumes:
-      - ../docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      # The folder, not the file: a deploy replaces the file, and a single-file mount would keep the old one.
+      - ../docker/caddy:/etc/caddy:ro
       - caddydata:/data
       - caddyconfig:/config
     depends_on:
