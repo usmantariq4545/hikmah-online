@@ -4,6 +4,8 @@
 
 - Sign-up page: "Continue with Google" button above the form (and an "or sign up with email" divider),
   shown once Google sign-in has its keys (030-auth.php reads GOOGLE_OAUTH_CLIENT_ID/SECRET).
+- Plugins updated (security review): mod_attendance 2026111201 (group access and self-marking checks),
+  tool_certificate and mod_coursecertificate 5.0.12 (now declare Moodle 5.3 support; revoke fix).
 - Security review fixes: the admin password goes only to the one-time install command, no longer into the
   running containers; Nginx passes the real visitor address on (Moodle logged every visitor as Caddy's
   172.18.0.9) and limits sign-in, sign-up, password-reset and app-token posts to 20 a minute per visitor
