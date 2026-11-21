@@ -16,6 +16,12 @@
 	header {
 		Strict-Transport-Security "max-age=31536000; includeSubDomains"
 		X-Frame-Options SAMEORIGIN
+		# Moodle needs inline and eval'd scripts, so script sources stay open; this blocks plugins (Flash, Java),
+		# foreign <base> links and framing by other sites, and upgrades any http:// asset to https://.
+		Content-Security-Policy "object-src 'none'; base-uri 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
+		# Off for features the site never uses. Camera, microphone, screen sharing and fullscreen stay at the
+		# browser default: live classes ask for them inside the classroom frame.
+		Permissions-Policy "geolocation=(), payment=(), usb=(), serial=(), bluetooth=(), hid=(), midi=(), magnetometer=(), gyroscope=(), accelerometer=()"
 		-Server
 	}
 	reverse_proxy nginx:80 {

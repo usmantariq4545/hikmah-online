@@ -4,6 +4,11 @@
 
 - Sign-up page: "Continue with Google" button above the form (and an "or sign up with email" divider),
   shown once Google sign-in has its keys (030-auth.php reads GOOGLE_OAUTH_CLIENT_ID/SECRET).
+- Security review fixes: the admin password goes only to the one-time install command, no longer into the
+  running containers; Nginx passes the real visitor address on (Moodle logged every visitor as Caddy's
+  172.18.0.9) and limits sign-in, sign-up, password-reset and app-token posts to 20 a minute per visitor
+  (bursts of 30; 429 after); Content-Security-Policy (object-src none, base-uri and frame-ancestors self,
+  upgrade-insecure-requests) and Permissions-Policy (unused device features off) headers.
 - Spelling: "enroll" everywhere people read it (Enroll, Enrollment, Unenroll), in Hikmah's own wording and,
   through the en_local language pack (135-strings.php), in Moodle's and its plugins' wording (338 strings).
   Code names and addresses (enrol_fee, /enrol/) are unchanged.

@@ -23,8 +23,9 @@ if [ -z "$(env_value HIKMAH_ADMIN_PASSWORD)" ]; then
 fi
 
 say "Installing Moodle database"
-# The administrator password is read from the container environment, never printed.
-moodle_exec sh -c 'php admin/cli/install_database.php \
+# The administrator password goes to this one command only (never into the running app), never printed.
+dc exec -T -u www-data -w /var/www/moodle -e "HIKMAH_ADMIN_PASSWORD=$(env_value HIKMAH_ADMIN_PASSWORD)" \
+    moodle sh -c 'php admin/cli/install_database.php \
     --lang=en \
     --adminuser="$HIKMAH_ADMIN_USER" \
     --adminpass="$HIKMAH_ADMIN_PASSWORD" \

@@ -10,6 +10,12 @@ server {
     client_max_body_size 100M;
     server_tokens off;
 
+    # The visitor's own address (Caddy, the only way in, sets X-Forwarded-For to it), so Moodle's logs and
+    # the limits below see each visitor instead of Caddy.
+    set_real_ip_from 172.16.0.0/12;
+    real_ip_header X-Forwarded-For;
+    limit_req_status 429;
+
     # Look Moodle (PHP-FPM) up through Docker's DNS on every request instead of once at start-up, so
     # restarting or recreating the moodle container (it gets a new address) never leaves Nginx
     # pointing at the old one (seen on the live site 2026-11-18: 502 until Nginx was restarted).
@@ -75,6 +81,7 @@ server {
         # not the port Nginx listens on inside the container.
         fastcgi_param SERVER_NAME $host;
         fastcgi_param SERVER_PORT $hk_port;
+        limit_req zone=hklogin burst=30 nodelay;
         fastcgi_read_timeout 300s;
         fastcgi_buffers 16 16k;
         fastcgi_buffer_size 32k;
@@ -91,3 +98,11 @@ map $http_x_forwarded_proto $forwarded_https {
     default "";
     https on;
 }
+# Sign-in, sign-up, password reset and app-token requests: at most 20 a minute per visitor (POST only;
+# bursts of 30 pass, so a class signing in from one network is not blocked). Answer: 429.
+map "$request_method:$uri" $hk_login_key {
+    "~^POST:/login/(index|signup|forgot_password|token)\.php$" $binary_remote_addr;
+    default "";
+}
+limit_req_zone $hk_login_key zone=hklogin:10m rate=20r/m;
+
