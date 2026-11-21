@@ -57,7 +57,9 @@ hk_set('forcelogin', 0);
 hk_set('guestloginbutton', 0);
 hk_set('autologinguests', 0);
 hk_set('forceloginforprofiles', 1);
-hk_set('opentowebcrawlers', 1);
+// Off: it only lets search engines in as a guest, and guest access is off; the public pages above are
+// open to them anyway (Moodle's security report flags it).
+hk_set('opentowebcrawlers', 0);
 
 // The Hikmah home page replaces Moodle's default front page lists.
 hk_set('enablemyhome', 1); // Keeps the site home page (/) available; without it Moodle 5.3 sends visitors to the login page.

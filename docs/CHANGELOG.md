@@ -4,6 +4,9 @@
 
 - Sign-up page: "Continue with Google" button above the form (and an "or sign up with email" divider),
   shown once Google sign-in has its keys (030-auth.php reads GOOGLE_OAUTH_CLIENT_ID/SECRET).
+- Security: Nginx no longer serves Moodle's source, test and package files (/behat/, db/install.xml,
+  upgrade.txt, environment.xml and the like; Moodle's "public paths" check). "Open to search engines"
+  off: it only let crawlers in as guest, and guest access is off.
 - Forms: date of birth and a payment's "date paid" start empty ("Day / Month / Year", required) instead of
   showing today's date; no default country (was Pakistan), so the profile form asks for it.
 - Google sign-in no longer asks for an email confirmation (Google has verified the address); a Google

@@ -33,6 +33,11 @@ server {
     add_header X-Content-Type-Options nosniff always;
     add_header Referrer-Policy strict-origin-when-cross-origin always;
 
+    # Source, test and package files Moodle lists as internal (its "public paths" security check).
+    location ~ (/vendor/|/node_modules/|composer\.json|/readme|/README|readme\.txt|/upgrade\.txt|/UPGRADING\.md|db/install\.xml|/fixtures/|/behat/|phpunit\.xml|\.lock$|/environment\.xml|thirdpartylibs\.xml) {
+        return 404;
+    }
+
     # Dotfiles are never served (ACME challenges excepted).
     location ~ /\.(?!well-known) {
         return 404;
