@@ -74,3 +74,9 @@ for dir in $(ls -1d 20* 2>/dev/null); do
 done
 
 echo "Backup complete: backups/$HIKMAH_ENV/$STAMP"
+
+# Heartbeat for outside monitoring: a failed backup exits above, so the ping goes missing and alerts.
+PING="$(env_value HEALTHCHECK_BACKUP_URL || true)"
+if [ -n "$PING" ]; then
+    curl -fsS -m 10 --retry 3 -o /dev/null "$PING" || echo "Backup heartbeat ping failed." >&2
+fi

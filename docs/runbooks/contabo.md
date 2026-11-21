@@ -185,6 +185,8 @@ rclone ls b2:hikmah-backups | head      # it should be listed there
 
 Keeps 7 daily, 4 weekly and 6 monthly sets on the server and copies each one to B2.
 
+Uptime, server, cron and backup alerts: `docs/runbooks/monitoring.md`.
+
 ## 9. Updating the site later (commit first, then deploy)
 
 Every change is committed and pushed to GitHub first; the live site only ever runs a pushed

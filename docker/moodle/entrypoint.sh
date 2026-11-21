@@ -25,8 +25,14 @@ case "${1:-fpm}" in
         echo "cron: running $CLI/cron.php every 60 s"
         while true; do
             # Before the first install cron.php exits with an error; that is expected, keep waiting.
-            as_www php "$CLI/cron.php" --keep-alive=0 \
-                || echo "cron: run failed or Moodle is not installed yet (exit $?); retrying in 60 s"
+            if as_www php "$CLI/cron.php" --keep-alive=0; then
+                # Heartbeat for outside monitoring (docs/runbooks/monitoring.md); a failed ping never stops cron.
+                [ -z "${HEALTHCHECK_CRON_URL:-}" ] \
+                    || curl -fsS -m 10 --retry 3 -o /dev/null "$HEALTHCHECK_CRON_URL" \
+                    || echo "cron: heartbeat ping failed"
+            else
+                echo "cron: run failed or Moodle is not installed yet (exit $?); retrying in 60 s"
+            fi
             sleep 60
         done
         ;;
