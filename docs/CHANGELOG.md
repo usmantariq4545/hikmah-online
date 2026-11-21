@@ -4,6 +4,10 @@
 
 - Sign-up page: "Continue with Google" button above the form (and an "or sign up with email" divider),
   shown once Google sign-in has its keys (030-auth.php reads GOOGLE_OAUTH_CLIENT_ID/SECRET).
+- Two-step sign-in (tool_mfa) for site administrators, managers, finance reviewers and support: an
+  authenticator-app code, 7 days' grace to set it up; teachers and learners unaffected. Email codes off
+  (no outgoing email yet). Failed sign-in alerts (10 in a row) go to the main administrator. Sign-up
+  reCAPTCHA comes on by itself once RECAPTCHA_SITE_KEY / RECAPTCHA_SECRET_KEY are set.
 - Plugins updated (security review): mod_attendance 2026111201 (group access and self-marking checks),
   tool_certificate and mod_coursecertificate 5.0.12 (now declare Moodle 5.3 support; revoke fix).
 - Security review fixes: the admin password goes only to the one-time install command, no longer into the

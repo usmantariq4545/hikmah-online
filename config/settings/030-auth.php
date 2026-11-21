@@ -14,6 +14,8 @@ hk_set('showloginform', 1);
 hk_set('loginpageautofocus', 0);
 hk_set('recaptchapublickey', hk_env('RECAPTCHA_SITE_KEY', ''));
 hk_set('recaptchaprivatekey', hk_env('RECAPTCHA_SECRET_KEY', ''), null, true);
+// The "I'm not a robot" check on the sign-up form, once both keys are set.
+hk_set('recaptcha', hk_env('RECAPTCHA_SITE_KEY') && hk_env('RECAPTCHA_SECRET_KEY') ? 1 : 0, 'auth_email');
 
 // Google OAuth 2. Redirect URI for the Google Cloud client: <wwwroot>/admin/oauth2callback.php
 $clientid = hk_env('GOOGLE_OAUTH_CLIENT_ID');
