@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'theme_hikmah';
-$plugin->version = 2026112102;
+$plugin->version = 2026112103;
 $plugin->requires = 2026100500; // Moodle 5.3.
 $plugin->supported = [503, 503];
 $plugin->maturity = MATURITY_BETA;

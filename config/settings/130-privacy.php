@@ -63,14 +63,19 @@ $purposes = [
         '(7 days on the free tier).'],
     'Attendance evidence' => ['P1Y', 'Join and leave times used to compute attendance. Removed by ' .
         'local_hikmahattendance after the retention period; the computed result is kept.'],
-    'Learning records' => ['P5Y', 'Enrolments, grades, completion and certificates.'],
+    'Learning records' => ['P5Y', 'Enrollments, grades, completion and certificates.'],
 ];
 $have = [];
 foreach (\tool_dataprivacy\api::get_purposes() as $purpose) {
-    $have[$purpose->get('name')] = true;
+    $have[$purpose->get('name')] = $purpose;
 }
 foreach ($purposes as $name => [$period, $description]) {
     if (isset($have[$name])) {
+        if ($have[$name]->get('description') !== $description) {
+            $have[$name]->set('description', $description);
+            $have[$name]->update();
+            hk_changed("retention purpose \"$name\" description");
+        }
         continue;
     }
     \tool_dataprivacy\api::create_purpose((object) [

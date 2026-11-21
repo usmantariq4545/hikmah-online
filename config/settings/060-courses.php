@@ -31,7 +31,7 @@ $fields = [
     'language' => ['Language', 'select', $select("English\nUrdu\nArabic\nEnglish and Urdu")],
     'length' => ['Length', 'text', $text(100)],
     'schedule' => ['Schedule', 'text', $text(500)],
-    'price' => ['Price (shown before enrolment opens)', 'text', $text(20)],
+    'price' => ['Price (shown before enrollment opens)', 'text', $text(20)],
     'currency' => ['Currency', 'select', $select("PKR\nUSD\nGBP\nEUR")],
     'accesspolicy' => ['Access policy', 'text', $text(200)],
     'eligibility' => ['Eligibility', 'text', $text(500)],
@@ -46,10 +46,15 @@ $fields = [
 
 $existing = [];
 foreach ($handler->get_fields() as $field) {
-    $existing[$field->get('shortname')] = true;
+    $existing[$field->get('shortname')] = $field;
 }
 foreach ($fields as $shortname => [$name, $type, $configdata]) {
     if (isset($existing[$shortname])) {
+        if ($existing[$shortname]->get('name') !== $name) {
+            $existing[$shortname]->set('name', $name);
+            $existing[$shortname]->save();
+            hk_changed("course field $shortname renamed");
+        }
         continue;
     }
     $field = \core_customfield\field_controller::create(0, (object) ['type' => $type, 'categoryid' => $categoryid],

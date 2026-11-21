@@ -4,6 +4,9 @@
 
 - Sign-up page: "Continue with Google" button above the form (and an "or sign up with email" divider),
   shown once Google sign-in has its keys (030-auth.php reads GOOGLE_OAUTH_CLIENT_ID/SECRET).
+- Spelling: "enroll" everywhere people read it (Enroll, Enrollment, Unenroll), in Hikmah's own wording and,
+  through the en_local language pack (135-strings.php), in Moodle's and its plugins' wording (338 strings).
+  Code names and addresses (enrol_fee, /enrol/) are unchanged.
 - Course list (left drawer): a lock beside a class that has locked items; a held live class reads
   "Class recording" there too. Attendance page: "Not marked yet" instead of "?" (and "–" for its points).
   Date of birth left empty is now refused by the server as well (local_hikmahaccess). Live class: the main
