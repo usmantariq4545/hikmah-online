@@ -4,6 +4,8 @@
 
 - Sign-up page: "Continue with Google" button above the form (and an "or sign up with email" divider),
   shown once Google sign-in has its keys (030-auth.php reads GOOGLE_OAUTH_CLIENT_ID/SECRET).
+- Google sign-in no longer asks for an email confirmation (Google has verified the address); a Google
+  account joins an existing account with the same email (owner's decision, 030-auth.php).
 
 - Theme: a held class is titled "Class recording" on the course page (not while editing); Moodle's
   "Opens / Closes" under a scheduled live class becomes "Starts: Sat 21 Nov, 6:00 PM · Duration:

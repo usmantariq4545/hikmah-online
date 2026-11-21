@@ -37,9 +37,9 @@ if ($clientid && $clientsecret) {
         'clientsecret' => $clientsecret,
         'enabled' => 1,
         'showonloginpage' => \core\oauth2\issuer::EVERYWHERE,
-        // Linking to an existing account needs email confirmation, which prevents duplicates
-        // and account takeover through an unverified address.
-        'requireconfirmation' => 1,
+        // Google has already verified the address, so Google accounts get in at once and join an
+        // existing account with the same email (owner's decision, 2026-11-21; was: confirm by email).
+        'requireconfirmation' => 0,
     ];
     $dirty = false;
     foreach ($wanted as $key => $value) {
