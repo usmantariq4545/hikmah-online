@@ -23,11 +23,12 @@
     --color-off-white: #fbfaf6;
     --user-list-bg: #f4f1e7;
 
-    --btn-primary-bg: #1a1a1a;
+    /* Sky, not ink: the meeting area behind the buttons is ink too. */
+    --btn-primary-bg: #0a6a9c;
     --btn-primary-color: #ffffff;
-    --btn-primary-hover-bg: #3a3a36;
-    --btn-primary-active-bg: #3a3a36;
-    --btn-primary-border: #1a1a1a;
+    --btn-primary-hover-bg: #085680;
+    --btn-primary-active-bg: #064566;
+    --btn-primary-border: #0a6a9c;
 
     --loader-bg: #1a1a1a;
     --loader-bullet: #ffe000;

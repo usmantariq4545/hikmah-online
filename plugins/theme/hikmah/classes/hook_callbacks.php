@@ -168,6 +168,15 @@ class hook_callbacks {
      */
     public static function before_footer(\core\hook\output\before_footer_html_generation $hook): void {
         global $PAGE, $DB;
+        if (self::is_active()) {
+            self::courseindex($hook);
+        }
+        if (self::is_active() && str_starts_with($PAGE->pagetype, 'mod-attendance-')) {
+            // mod_attendance writes a bare "?" (and "? / 2.0" points) for sessions not marked yet.
+            $hook->add_html('<script>(function(d,t){d.querySelectorAll("table td").forEach(function(td){'
+                . 'var s=td.textContent.trim();if(s==="?"){td.textContent=t;}else if(/^\? \/ [\d.,]+$/.test(s)){td.textContent="–";}});})'
+                . '(document,' . json_encode(get_string('att_notmarked', 'theme_hikmah')) . ');</script>');
+        }
         if (self::is_active() && str_starts_with($PAGE->pagetype, 'mod-bigbluebuttonbn-')) {
             // The recordings table dates its rows with the browser's "en" (US) order; reorder to "Wednesday 18 November 2026".
             $hook->add_html('<script>(function(d){var re=/^(\w+), (\w+) (\d{1,2}), (\d{4})$/;function f(){'
@@ -229,6 +238,46 @@ class hook_callbacks {
             . 'if(n.childNodes[i].nodeType===3&&n.childNodes[i].nodeValue.trim()){n.childNodes[i].nodeValue=l.title+" ";break;}}}'
             . '(li.querySelector(".activity-item")||li).appendChild(b);});})(document,'
             . json_encode($live, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ');</script>');
+    }
+
+    /**
+     * Course index (left list), on course and activity pages: a lock beside a class with locked items, and a
+     * held live class named "Class recording" as on the course page. Core draws the list in the browser, so a
+     * small observer re-applies both whenever it redraws.
+     *
+     * @param \core\hook\output\before_footer_html_generation $hook
+     */
+    private static function courseindex(\core\hook\output\before_footer_html_generation $hook): void {
+        global $PAGE;
+        if (!isloggedin() || isguestuser() || empty($PAGE->course->id) || $PAGE->course->id == SITEID
+                || !preg_match('/^(course-view-|mod-)/', $PAGE->pagetype)) {
+            return;
+        }
+        $locked = [];
+        foreach (get_fast_modinfo($PAGE->course)->get_cms() as $cm) {
+            if (!$cm->uservisible && $cm->availableinfo && $cm->is_visible_on_course_page()) {
+                $locked[$cm->section] = $cm->section;
+            }
+        }
+        $titles = [];
+        if (!$PAGE->user_is_editing()) {
+            foreach (\theme_hikmah\local\live_classes::for_course($PAGE->course) as $cmid => $live) {
+                if (!empty($live['title'])) {
+                    $titles[$cmid] = $live['title'];
+                }
+            }
+        }
+        if (!$locked && !$titles) {
+            return;
+        }
+        $flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
+        $hook->add_html('<script>(function(d,l,t){function a(){'
+            . 'l.forEach(function(id){var e=d.querySelector(\'.courseindex [data-for="section"][data-id="\'+id+\'"] '
+            . '[data-for="section_item"]\');if(e&&!e.classList.contains("hk-locked")){e.classList.add("hk-locked");}});'
+            . 'Object.keys(t).forEach(function(id){var e=d.querySelector(\'.courseindex [data-for="cm"][data-id="\'+id+\'"] '
+            . 'a[data-for="cm_name"]\');if(e&&e.textContent.trim()!==t[id]){e.textContent=t[id];}});}'
+            . 'a();new MutationObserver(a).observe(d.getElementById("courseindex")||d.body,{childList:true,subtree:true});})'
+            . '(document,' . json_encode(array_values($locked)) . ',' . json_encode((object) $titles, $flags) . ');</script>');
     }
 
     /**

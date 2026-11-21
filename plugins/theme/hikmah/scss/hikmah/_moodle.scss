@@ -581,6 +581,10 @@ section.block {
         font-family: $hk-font-display;
         font-weight: 500;
     }
+    // A class with locked items shows core's lock icon (hook_callbacks::courseindex adds hk-locked).
+    .courseindex-item.hk-locked .courseindex-locked {
+        display: block;
+    }
 }
 .drawer {
     background: $hk-paper;

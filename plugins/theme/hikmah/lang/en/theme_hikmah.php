@@ -247,6 +247,7 @@ $string['verify_valid_text'] = 'It was issued by Hikmah Institute to the person 
 $string['work_attendance'] = 'Classes needing attention';
 $string['work_grading'] = 'Submissions to grade';
 $string['work_payments'] = 'Receipts to verify';
+$string['att_notmarked'] = 'Not marked yet';
 $string['live_held'] = 'Held';
 $string['live_join'] = 'Join class';
 $string['live_joinnow'] = 'Join now';
