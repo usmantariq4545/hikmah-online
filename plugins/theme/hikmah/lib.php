@@ -79,6 +79,16 @@ function theme_hikmah_page_init(moodle_page $page): void {
     if (isset(\theme_hikmah\local\pagehero::PAGES[$page->pagetype])) {
         $page->set_primary_active_tab('myhome');
     }
+    // Date of birth starts empty until the person gives it (Moodle would show today's date).
+    if (in_array($page->pagetype, ['user-edit', 'user-editadvanced'], true) && isloggedin()) {
+        global $DB, $USER;
+        $userid = optional_param('id', $USER->id, PARAM_INT);
+        $fieldid = $DB->get_field('user_info_field', 'id', ['shortname' => 'hkdob']);
+        if ($fieldid) {
+            \theme_hikmah\local\blankdates::add('profile_field_hkdob', $userid > 0 && $DB->record_exists_select(
+                'user_info_data', "fieldid = ? AND userid = ? AND data <> '' AND data <> '0'", [$fieldid, $userid]));
+        }
+    }
     if (!isloggedin() || isguestuser() || empty($page->course->id) || $page->course->id == SITEID) {
         return;
     }

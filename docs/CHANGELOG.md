@@ -4,6 +4,8 @@
 
 - Sign-up page: "Continue with Google" button above the form (and an "or sign up with email" divider),
   shown once Google sign-in has its keys (030-auth.php reads GOOGLE_OAUTH_CLIENT_ID/SECRET).
+- Forms: date of birth and a payment's "date paid" start empty ("Day / Month / Year", required) instead of
+  showing today's date; no default country (was Pakistan), so the profile form asks for it.
 - Google sign-in no longer asks for an email confirmation (Google has verified the address); a Google
   account joins an existing account with the same email (owner's decision, 030-auth.php).
 

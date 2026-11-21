@@ -101,6 +101,11 @@ if ($request->status === request::STATUS_RESUBMIT && !$form->is_submitted()) {
     ]);
 }
 
+// The date paid starts empty ("Day / Month / Year") unless it is a resubmission.
+if (class_exists('\theme_hikmah\local\blankdates')) {
+    \theme_hikmah\local\blankdates::add('paiddate', $request->status === request::STATUS_RESUBMIT);
+}
+
 $accounts = [];
 $add = static function (string $method, array $rows) use (&$accounts, $methods): void {
     if (!in_array($method, $methods, true)) {

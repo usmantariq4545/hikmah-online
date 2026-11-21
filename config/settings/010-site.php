@@ -17,7 +17,8 @@ if ($site->fullname !== $fullname || $site->shortname !== 'Hikmah') {
 // Times are stored in UTC and shown in the user's timezone; the default is Asia/Karachi.
 hk_set('timezone', 'Asia/Karachi');
 hk_set('forcetimezone', '99'); // 99 = users may choose their own timezone.
-hk_set('country', 'PK');
+// No default country: each person picks theirs (owner, 2026-11-21: fields start empty unless known).
+hk_set('country', '');
 
 // Language: English only (owner decision 2026-11-19; Urdu/Arabic interfaces dropped). Arabic text
 // inside lessons still displays with the theme's Arabic font.

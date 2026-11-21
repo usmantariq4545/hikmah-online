@@ -69,7 +69,7 @@ class submission extends \moodleform {
 
         $mform->addElement('date_selector', 'paiddate', get_string('field_paiddate', 'paygw_hikmahtransfer'),
             ['startyear' => (int) date('Y') - 1, 'stopyear' => (int) date('Y')]);
-        $mform->setDefault('paiddate', time());
+        // No default: the theme gives the day, month and year lists an empty "Day / Month / Year" choice.
 
         $mform->addElement('filemanager', 'receipt', get_string('field_receipt', 'paygw_hikmahtransfer'), null,
             receipt::filemanager_options());
@@ -98,7 +98,10 @@ class submission extends \moodleform {
         if ((float) $data['paidamount'] <= 0) {
             $errors['paidamount'] = get_string('error:amount', 'paygw_hikmahtransfer');
         }
-        if ((int) $data['paiddate'] > time() + DAYSECS) {
+        $raw = (array) $this->_form->getSubmitValue('paiddate');
+        if (in_array('', [$raw['day'] ?? '', $raw['month'] ?? '', $raw['year'] ?? ''], true)) {
+            $errors['paiddate'] = get_string('required');
+        } else if ((int) $data['paiddate'] > time() + DAYSECS) {
             $errors['paiddate'] = get_string('error:futuredate', 'paygw_hikmahtransfer');
         }
         if (!in_array($data['method'], $this->_customdata['methods'], true)) {
