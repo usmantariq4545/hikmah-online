@@ -117,9 +117,16 @@ hk_role_cap($authenticated, 'moodle/user:manageownblocks', CAP_PREVENT);
 hk_role_cap($manager, 'moodle/user:manageownblocks', CAP_PREVENT);
 
 // Personal access tokens (outside programs acting as the user): super administrator only. The
-// Moodle app signs in with moodle/webservice:createmobiletoken, which stays allowed.
+// Moodle app signs in with moodle/webservice:createmobiletoken, which stays allowed for learners and teachers.
 hk_role_cap($authenticated, 'moodle/api:createtoken', CAP_PREVENT);
 hk_role_cap($manager, 'moodle/api:createtoken', CAP_PREVENT);
+// Staff work on the website only (owner, 2026-11-21): the app's password sign-in (login/token.php) skips
+// two-step sign-in, so manager, finance and support get no app access at all. Site administrators are
+// not limited by roles; their app sign-in goes through the website (030-auth.php, typeoflogin).
+foreach ([$manager, $finance, $support] as $roleid) {
+    // Prohibit, not prevent: every signed-in user's role allows it, and any role's allow would win.
+    hk_role_cap($roleid, 'moodle/webservice:createmobiletoken', CAP_PROHIBIT);
+}
 
 // Classmates switch (HIKMAH_STUDENT_PEERS, off by default): whether students may see classmate
 // lists and profiles and message each other. Teachers stay reachable either way. The messaging

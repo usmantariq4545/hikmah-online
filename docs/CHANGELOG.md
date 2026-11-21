@@ -4,6 +4,9 @@
 
 - Sign-up page: "Continue with Google" button above the form (and an "or sign up with email" divider),
   shown once Google sign-in has its keys (030-auth.php reads GOOGLE_OAUTH_CLIENT_ID/SECRET).
+- Moodle app: signs in through the website (embedded browser), so two-step sign-in applies there too;
+  managers, finance reviewers and support get no app access (createmobiletoken prohibited), since the
+  app's password endpoint skips two-step sign-in.
 - Two-step sign-in (tool_mfa) for site administrators, managers, finance reviewers and support: an
   authenticator-app code, 7 days' grace to set it up; teachers and learners unaffected. Email codes off
   (no outgoing email yet). Failed sign-in alerts (10 in a row) go to the main administrator. Sign-up

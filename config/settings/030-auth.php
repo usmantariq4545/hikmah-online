@@ -17,6 +17,10 @@ hk_set('recaptchaprivatekey', hk_env('RECAPTCHA_SECRET_KEY', ''), null, true);
 // The "I'm not a robot" check on the sign-up form, once both keys are set.
 hk_set('recaptcha', hk_env('RECAPTCHA_SITE_KEY') && hk_env('RECAPTCHA_SECRET_KEY') ? 1 : 0, 'auth_email');
 
+// The Moodle app signs in through the website's own sign-in page (embedded browser), so two-step sign-in,
+// Google sign-in and the sign-in limits apply there too (3 = tool_mobile\api::LOGIN_VIA_EMBEDDED_BROWSER).
+hk_set('typeoflogin', 3, 'tool_mobile');
+
 // Google OAuth 2. Redirect URI for the Google Cloud client: <wwwroot>/admin/oauth2callback.php
 $clientid = hk_env('GOOGLE_OAUTH_CLIENT_ID');
 $clientsecret = hk_env('GOOGLE_OAUTH_CLIENT_SECRET');
