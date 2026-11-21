@@ -52,8 +52,8 @@ Monitors only read pages (GET), so the sign-in limit (20 posts a minute) and fai
 
 - Planned work longer than 10 minutes (upgrades with maintenance mode): pause "Hikmah cron" in
   Healthchecks and the uptime monitor in HetrixTools, and resume them afterwards.
-- To test alerts: `scripts/dc.sh stop cron`, wait about 12 minutes for the Telegram alert, then
-  `scripts/dc.sh start cron` (a recovery message follows). For the site, change the keyword to a word
+- To test alerts: `HIKMAH_ENV=prod scripts/dc.sh stop cron`, wait about 12 minutes for the Telegram alert, then
+  `HIKMAH_ENV=prod scripts/dc.sh start cron` (a recovery message follows). For the site, change the keyword to a word
   not on the page for 2 minutes, then change it back.
 
 ## 5. At the domain move
