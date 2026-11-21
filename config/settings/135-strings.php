@@ -13,6 +13,13 @@ $overrides = [
         'waitformoderator' => 'Your teacher hasn\'t started the class yet.',
         'view_message_conference_wait_for_moderator' => 'Your teacher hasn\'t started the class yet.',
     ],
+    // Month and day names: Moodle's English uses Australian English, which writes "Sept"; US English is the
+    // only installed English locale that writes "Sep" (owner's request, 2026-11-21). Date layouts stay
+    // as Moodle's own strings set them ("21 Nov", "Sat 21 Nov, 6:00 PM").
+    'langconfig' => [
+        'locale' => 'en_US.UTF-8',
+        'localecldr' => 'en-US',
+    ],
     // The course's first section (course info, announcements, the register) in the class list.
     'format_topics' => [
         'section0name' => 'Course info',

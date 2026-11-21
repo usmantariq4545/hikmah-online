@@ -95,7 +95,8 @@
   Profile, grades, payments and preferences highlight
   Dashboard instead of Home.
 - Catalogue cards: the start date reads "Starts 1 Nov" or "Started 1 Nov" (year added when it is not
-  this year) instead of "1/11/26".
+  this year) instead of "1/11/26". Month names use US English (135-strings: langconfig locale en_US),
+  so September is "Sep", not Australian "Sept", across the site.
 
 ## 2026-11-19 — One live class per class
 
