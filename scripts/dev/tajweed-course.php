@@ -356,7 +356,7 @@ try {
     $attendance = $DB->get_record('attendance', ['course' => $course->id], '*', MUST_EXIST);
     $attcm = get_coursemodule_from_instance('attendance', $attendance->id, $course->id, false, MUST_EXIST);
     $structure = new mod_attendance_structure($attendance, $attcm, $course, context_module::instance($attcm->id));
-    foreach ($DB->get_records('local_hikmahattendance_link', ['courseid' => $course->id]) as $link) {
+    foreach ($DB->get_records('local_hikmahatt_link', ['courseid' => $course->id]) as $link) {
         \local_hikmahattendance\manager::delete_link((int) $link->id, (int) $teacher->id);
     }
     $oldsessions = $DB->get_records('attendance_sessions', ['attendanceid' => $attendance->id]);
