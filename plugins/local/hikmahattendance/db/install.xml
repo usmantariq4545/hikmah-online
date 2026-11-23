@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="local/hikmahattendance/db" VERSION="20261113" COMMENT="XMLDB file for local_hikmahattendance"
+<XMLDB PATH="local/hikmahattendance/db" VERSION="20261123" COMMENT="XMLDB file for local_hikmahattendance"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="local_hikmahatt_link" COMMENT="Links a BigBlueButton activity to an attendance session and its class window">
+    <TABLE NAME="local_hikmahattendance_link" COMMENT="Links a BigBlueButton activity to an attendance session and its class window">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
@@ -35,7 +35,7 @@
         <INDEX NAME="bbbid" UNIQUE="false" FIELDS="bbbid"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="local_hikmahatt_decision" COMMENT="Computed attendance per learner and session, with evidence and review state">
+    <TABLE NAME="local_hikmahattendance_decision" COMMENT="Computed attendance per learner and session, with evidence and review state">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="linkid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
@@ -59,7 +59,7 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="linkid" TYPE="foreign" FIELDS="linkid" REFTABLE="local_hikmahatt_link" REFFIELDS="id"/>
+        <KEY NAME="linkid" TYPE="foreign" FIELDS="linkid" REFTABLE="local_hikmahattendance_link" REFFIELDS="id"/>
         <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
@@ -67,7 +67,7 @@
         <INDEX NAME="current" UNIQUE="false" FIELDS="sessionid, userid, state"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="local_hikmahatt_audit" COMMENT="Who did what to attendance decisions: link, override, approve, apply">
+    <TABLE NAME="local_hikmahattendance_audit" COMMENT="Who did what to attendance decisions: link, override, approve, apply">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="linkid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
@@ -82,14 +82,14 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="linkid" TYPE="foreign" FIELDS="linkid" REFTABLE="local_hikmahatt_link" REFFIELDS="id"/>
+        <KEY NAME="linkid" TYPE="foreign" FIELDS="linkid" REFTABLE="local_hikmahattendance_link" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="userid" UNIQUE="false" FIELDS="userid"/>
         <INDEX NAME="actorid" UNIQUE="false" FIELDS="actorid"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="local_hikmahatt_course" COMMENT="Per-course switches. Autowrite ships off and only the course owner can turn it on">
+    <TABLE NAME="local_hikmahattendance_course" COMMENT="Per-course switches. Autowrite ships off and only the course owner can turn it on">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-23 — Attendance tables renamed
+
+- local_hikmahattendance tables renamed from local_hikmahatt_* to local_hikmahattendance_* (link, decision,
+  audit, course) so they carry the plugin name, as Moodle requires. The upgrade step renames them in place
+  and keeps every row; take a backup before deploying.
+
 ## 2026-11-23 — Plugin checks pass
 
 - All Hikmah plugins pass moodle-plugin-ci on Moodle 5.3 again: code style, PHPDoc, valid template HTML

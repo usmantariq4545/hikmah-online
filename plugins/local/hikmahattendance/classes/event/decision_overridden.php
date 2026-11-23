@@ -28,7 +28,7 @@ class decision_overridden extends \core\event\base {
      * Initialise the event.
      */
     protected function init() {
-        $this->data['objecttable'] = 'local_hikmahatt_decision';
+        $this->data['objecttable'] = 'local_hikmahattendance_decision';
         $this->data['crud'] = 'u';
         $this->data['edulevel'] = self::LEVEL_TEACHING;
     }
@@ -68,7 +68,7 @@ class decision_overridden extends \core\event\base {
      * @return array
      */
     public static function get_objectid_mapping() {
-        return ['db' => 'local_hikmahatt_decision', 'restore' => \core\event\base::NOT_MAPPED];
+        return ['db' => 'local_hikmahattendance_decision', 'restore' => \core\event\base::NOT_MAPPED];
     }
 
     /**
