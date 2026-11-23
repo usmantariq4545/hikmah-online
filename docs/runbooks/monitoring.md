@@ -8,7 +8,6 @@ What tells you, on Discord (private server "Hikmah alerts", #alerts) and by emai
 | Server | HetrixTools agent | disk > 85%, RAM > 85%, CPU > 90% for 5 min |
 | Background tasks (cron) | Healthchecks.io "Hikmah cron" | no successful cron run for 11 minutes |
 | Nightly backup | Healthchecks.io "Hikmah backup" | no finished backup for 26 hours |
-| Certificate | HetrixTools uptime monitor | the HTTPS certificate expires within 14 days |
 
 Failed sign-in alerts (10 in a row) are separate: they go to the main administrator inside Moodle
 (020-security.php).
@@ -38,8 +37,8 @@ The ping URLs are like passwords (anyone with one can send fake "all well" signa
 ## 3. HetrixTools (site and server)
 
 1. Sign up at hetrixtools.com, then Contact Lists → add Discord and email.
-2. **Uptime monitor**: Website, URL `https://online.hikmahinstitute.org.pk/login/index.php`, every
-   1 minute, keyword `Log in to Hikmah Online`, SSL expiry alert on (14 days). The keyword comes from
+2. **Uptime monitor**: Website, URL `https://online.hikmahinstitute.org.pk/login/index.php`,
+   keyword `Log in to Hikmah Online` (the check interval is the plan default). No SSL alert: Caddy, later Cloudflare, renews the certificate. The keyword comes from
    PHP and the database, so a broken database shows as down even when the web server answers.
 3. **Server agent**: Server Monitor → add, copy the install command. Before running it, have the
    script read (it runs as root): paste the command in the chat. Then as `ubuntu`: run the command.
