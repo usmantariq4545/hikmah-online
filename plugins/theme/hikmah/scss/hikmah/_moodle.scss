@@ -312,6 +312,7 @@ body {
     .page-header-headings h1,
     .page-context-header h1 {
         font-weight: 400;
+        // stylelint-disable-next-line csstree/validator
         font-size: clamp(1.7rem, 3vw, 2.4rem);
     }
 }
@@ -656,6 +657,7 @@ section.block {
         overflow: hidden;
         background: $hk-ink;
         color: rgba(255, 255, 255, .72);
+        // stylelint-disable-next-line csstree/validator
         padding-block: clamp(2.5rem, 6vw, 4.5rem) 1.5rem;
         &::before {
             content: "";
@@ -684,6 +686,7 @@ section.block {
         position: relative;
         display: grid;
         grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr));
+        // stylelint-disable-next-line csstree/validator
         gap: clamp(1.5rem, 4vw, 3rem);
     }
     &__logo {
@@ -723,6 +726,7 @@ section.block {
         justify-content: space-between;
         align-items: center;
         gap: 1rem;
+        // stylelint-disable-next-line csstree/validator
         margin-top: clamp(2rem, 5vw, 3.5rem);
         padding-top: 1.25rem;
         border-top: 1px solid rgba(255, 255, 255, .14);
@@ -811,6 +815,7 @@ section.block {
         color: rgba(255, 255, 255, .6);
         margin: 0;
         max-width: none;
+        // stylelint-disable-next-line csstree/validator
         padding: 0 clamp(1.1rem, 4vw, 2.5rem) 1.5rem;
         font-size: .85rem;
         a {

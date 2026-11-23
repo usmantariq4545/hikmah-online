@@ -193,6 +193,7 @@
 }
 
 // Cross-document view transitions where the browser supports them: pages cross-fade softly.
+// stylelint-disable-next-line csstree/validator
 @view-transition {
     // stylelint-disable-next-line property-no-unknown
     navigation: auto;
@@ -265,6 +266,7 @@
         opacity: 1;
         transform: none;
     }
+    // stylelint-disable-next-line csstree/validator
     @view-transition {
         // stylelint-disable-next-line property-no-unknown
         navigation: none;

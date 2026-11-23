@@ -222,6 +222,7 @@ h6,
 .h5,
 .h6 {
     letter-spacing: -.012em;
+    // stylelint-disable-next-line csstree/validator
     text-wrap: balance;
 }
 
@@ -293,6 +294,7 @@ html[lang|="ur"] body,
     width: 100%;
     max-width: 1200px;
     margin-inline: auto;
+    // stylelint-disable-next-line csstree/validator
     padding-inline: clamp(1.1rem, 4vw, 2.5rem);
 }
 
@@ -326,6 +328,7 @@ html[lang|="ur"] body,
 }
 
 .hk-section {
+    // stylelint-disable-next-line csstree/validator
     padding-block: clamp(3.5rem, 8vw, 6.5rem);
     position: relative;
     &--tint {
@@ -337,6 +340,7 @@ html[lang|="ur"] body,
     }
     &__head {
         max-width: 46rem;
+        // stylelint-disable-next-line csstree/validator
         margin-bottom: clamp(2rem, 4vw, 3.25rem);
         &--center {
             margin-inline: auto;
@@ -344,6 +348,7 @@ html[lang|="ur"] body,
         }
     }
     &__title {
+        // stylelint-disable-next-line csstree/validator
         font-size: clamp(1.9rem, 3.6vw, 2.9rem);
         font-weight: 400;
         margin: .9rem 0 .8rem;

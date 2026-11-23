@@ -22,6 +22,7 @@
         max-width: none;
     }
     &__title {
+        // stylelint-disable-next-line csstree/validator
         font-size: clamp(1.5rem, 2.6vw, 2.1rem);
         font-weight: 400;
         margin: .7rem 0 .4rem;
@@ -94,6 +95,7 @@
     background: #fff;
     border: 1px solid $hk-line;
     border-radius: $hk-radius-lg;
+    // stylelint-disable-next-line csstree/validator
     padding: clamp(1.1rem, 2.4vw, 1.75rem);
     box-shadow: $hk-shadow-1;
     &--flush {
@@ -658,6 +660,7 @@
         background: $hk-ink;
         color: #fff;
         border-radius: $hk-radius-lg;
+        // stylelint-disable-next-line csstree/validator
         padding: clamp(1.4rem, 3vw, 2.4rem);
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
@@ -680,6 +683,7 @@
         opacity: .9;
     }
     &__title {
+        // stylelint-disable-next-line csstree/validator
         font-size: clamp(1.6rem, 3.2vw, 2.5rem);
         font-weight: 300;
         color: #fff;
@@ -688,6 +692,7 @@
     }
     &__stats {
         display: flex;
+        // stylelint-disable-next-line csstree/validator
         gap: clamp(1rem, 2.6vw, 2.4rem);
         margin: 0;
         > div {
@@ -721,6 +726,7 @@
     }
     &__num {
         font-family: $hk-font-display;
+        // stylelint-disable-next-line csstree/validator
         font-size: clamp(1.7rem, 2.8vw, 2.4rem);
         line-height: 1.1;
         color: $hk-sun;
@@ -967,6 +973,7 @@
     }
     .loginform {
         h1 {
+            // stylelint-disable-next-line csstree/validator
             font-size: clamp(1.9rem, 3vw, 2.4rem);
             font-weight: 400;
             margin-bottom: .3rem;
@@ -1250,6 +1257,7 @@
 // faded, with dark shading behind the logo (top) and the message (bottom) so both stay readable.
 .hk-auth {
     &__motif {
+        // stylelint-disable-next-line csstree/validator
         width: min(105%, 600px);
         left: 64%;
         top: 46%;
@@ -1891,10 +1899,13 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
 }
 // Room above the heading and between the form and the links below it.
 .hk-auth__panel {
+    // stylelint-disable-next-line csstree/validator
     padding-block: clamp(3rem, 8vw, 5rem);
+    // stylelint-disable-next-line csstree/validator
     padding-inline: clamp(1.25rem, 5vw, 4rem);
 }
 .hk-auth__legal {
+    // stylelint-disable-next-line csstree/validator
     margin-top: clamp(2.5rem, 6vw, 3.5rem);
     padding-top: 1.5rem;
     border-top: 1px solid $hk-line;
@@ -1982,6 +1993,7 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
 }
 #page-user-profile .profile_tree section,
 #page-user-preferences #region-main .card {
+    // stylelint-disable-next-line csstree/validator
     padding: clamp(1rem, 2vw, 1.5rem);
     background: #fff;
 }
