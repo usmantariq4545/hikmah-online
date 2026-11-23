@@ -12,6 +12,8 @@
 - Users page: filters match the columns on screen; administrators and managers get a "Columns" button to show
   any detail (gender, date of birth, guardian, city, country, sign-in method, roles, number of courses, joined,
   first and last access, last IP...), remembered per person. Support keeps name, email, phone and last access.
+- Users page: the table scrolls inside a screen-high box, so its sideways scrollbar is always in view; the header
+  row stays put and cells stay on one line.
 - Releases: every successful deploy is tagged live-<date>-<commit> on GitHub with the backup taken before it;
   scripts/deploy-live.sh <tag> goes back to an earlier release (docs/runbooks/contabo.md).
 - Smoke test: the "cron last run" check waits up to 3 minutes for cron after a long deploy instead of failing.
