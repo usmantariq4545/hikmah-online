@@ -2,6 +2,12 @@
 
 ## 2026-11-20 — Live classes standard; attendance marked by the platform
 
+- Course form ("Add a new course" / course settings): four steps (Basics, Catalog details, Certificate rules,
+  Advanced settings) with a step bar, labels above fields, a save bar that stays on screen and a live
+  preview of the catalog card (theme_hikmah/courseform). The two certificate fields moved to their own
+  custom-field category "Certificate rules" (060-courses.php; values kept). Presentation only: the same
+  fields are saved.
+
 - Version control: each change on its own branch, merged into main through a pull request the owner
   approves, then deployed. A pre-push hook (.githooks/pre-push) refuses pushes straight to main.
 

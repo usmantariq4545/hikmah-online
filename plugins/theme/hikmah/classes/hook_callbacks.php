@@ -310,5 +310,30 @@ class hook_callbacks {
             $PAGE->requires->js_call_amd('theme_hikmah/classroom', 'intercept',
                 [(new \moodle_url('/theme/hikmah/classroom.php'))->out(false)]);
         }
+
+        // The course form in steps, with a live preview of its catalog card.
+        if ($PAGE->pagetype === 'course-edit') {
+            $str = static fn(string $id, $a = null): string => get_string($id, 'theme_hikmah', $a);
+            $defaults = (object) [
+                'grade' => get_config('local_hikmahcompletion', 'defaultgrade') ?: 50,
+                'attendance' => get_config('local_hikmahcompletion', 'defaultattendance') ?: 75,
+            ];
+            $strings = [
+                'steps' => [
+                    'basics' => [$str('cf_basics'), $str('cf_basics_lead')],
+                    'catalog' => [$str('cf_catalog'), $str('cf_catalog_lead')],
+                    'certificate' => [$str('cf_certificate'), $str('cf_certificate_lead', $defaults)],
+                    'advanced' => [$str('cf_advanced'), $str('cf_advanced_lead')],
+                ],
+                'preview' => $str('cf_preview'),
+                'previewlead' => $str('cf_preview_lead'),
+                'previewbutton' => $str('cf_previewbutton'),
+                'untitled' => $str('cf_untitled'),
+                'free' => $str('free'),
+                'startson' => $str('card_startson', '{date}'),
+                'stepsnav' => $str('cf_steps'),
+            ];
+            $PAGE->requires->js_call_amd('theme_hikmah/courseform', 'init', [$strings]);
+        }
     }
 }

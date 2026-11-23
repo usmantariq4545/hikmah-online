@@ -6,26 +6,33 @@ require(__DIR__ . '/lib.php');
 global $DB;
 
 $handler = \core_course\customfield\course_handler::create();
-$categoryname = 'Hikmah course details';
 
-$categoryid = 0;
-foreach ($handler->get_categories_with_fields() as $category) {
-    if ($category->get('name') === $categoryname) {
-        $categoryid = (int) $category->get('id');
+/**
+ * Id of the course custom field category with this name, created if missing.
+ *
+ * @param \core_course\customfield\course_handler $handler
+ * @param string $name
+ * @return int
+ */
+function hk_field_category(\core_course\customfield\course_handler $handler, string $name): int {
+    foreach ($handler->get_categories_with_fields() as $category) {
+        if ($category->get('name') === $name) {
+            return (int) $category->get('id');
+        }
     }
+    hk_changed("course custom field category '$name' created");
+    return (int) $handler->create_category($name);
 }
-if (!$categoryid) {
-    $categoryid = $handler->create_category($categoryname);
-    hk_changed('course custom field category created');
-}
-$category = \core_customfield\category_controller::create($categoryid);
+// Each category is its own step on the course form (theme_hikmah courseform.js).
+$categoryid = hk_field_category($handler, 'Hikmah course details');
+$certcategoryid = hk_field_category($handler, 'Certificate rules');
 
 $base = ['required' => 0, 'uniquevalues' => 0, 'locked' => 0, 'visibility' => 2];
 $text = static fn(int $max = 255): array => $base + ['defaultvalue' => '', 'displaysize' => 60, 'maxlength' => $max,
     'ispassword' => 0, 'link' => ''];
 $select = static fn(string $options): array => $base + ['options' => $options, 'defaultvalue' => ''];
 
-// Shortname => [name, type, configdata]. Shortnames are read by theme_hikmah\local\catalog.
+// Shortname => [name, type, configdata(, category id)]. Shortnames are read by theme_hikmah\local\catalog.
 $fields = [
     'mode' => ['Mode', 'select', $select("Live\nSelf-paced\nHybrid")],
     'language' => ['Language', 'select', $select("English\nUrdu\nArabic\nEnglish and Urdu")],
@@ -40,25 +47,33 @@ $fields = [
         'defaultvalueformat' => FORMAT_PLAIN]],
     // Certificate rules, read by local_hikmahcompletion (empty = site default). Teachers set them on the
     // course's "Certificate rules" page.
-    'certgrade' => ['Certificate: minimum course grade (%)', 'text', $text(3)],
-    'certattendance' => ['Certificate: minimum attendance (%)', 'text', $text(3)],
+    'certgrade' => ['Certificate: minimum course grade (%)', 'text', $text(3), $certcategoryid],
+    'certattendance' => ['Certificate: minimum attendance (%)', 'text', $text(3), $certcategoryid],
 ];
 
 $existing = [];
 foreach ($handler->get_fields() as $field) {
     $existing[$field->get('shortname')] = $field;
 }
-foreach ($fields as $shortname => [$name, $type, $configdata]) {
+foreach ($fields as $shortname => $spec) {
+    [$name, $type, $configdata] = $spec;
+    $fieldcategoryid = $spec[3] ?? $categoryid;
     if (isset($existing[$shortname])) {
         if ($existing[$shortname]->get('name') !== $name) {
             $existing[$shortname]->set('name', $name);
             $existing[$shortname]->save();
             hk_changed("course field $shortname renamed");
         }
+        if ((int) $existing[$shortname]->get('categoryid') !== $fieldcategoryid) {
+            // Moving keeps every course's value: data rows belong to the field, not the category.
+            $existing[$shortname]->set('categoryid', $fieldcategoryid);
+            $existing[$shortname]->save();
+            hk_changed("course field $shortname moved to another category");
+        }
         continue;
     }
-    $field = \core_customfield\field_controller::create(0, (object) ['type' => $type, 'categoryid' => $categoryid],
-        $category);
+    $field = \core_customfield\field_controller::create(0, (object) ['type' => $type, 'categoryid' => $fieldcategoryid],
+        \core_customfield\category_controller::create($fieldcategoryid));
     $handler->save_field_configuration($field, (object) [
         'name' => $name,
         'shortname' => $shortname,
