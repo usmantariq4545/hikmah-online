@@ -42,7 +42,10 @@ The ping URLs are like passwords (anyone with one can send fake "all well" signa
    PHP and the database, so a broken database shows as down even when the web server answers.
 3. **Server agent**: Server Monitor → add, copy the install command. Before running it, have the
    script read (it runs as root): paste the command in the chat. Then as `ubuntu`: run the command.
-   Set the warnings: disk 85%, RAM 85%, CPU 90% for 5 minutes.
+   It runs as its own limited user `hetrixtools` (the `0` after the ID). After installing, in
+   `/etc/hetrixtools/hetrixtools.cfg`: `NetworkInterfaces="eth0"` and add `|overlay|nsfs` to `IgnoredDisks`, so
+   Docker's short-lived interfaces and mounts are left out. Installed 2026-11-23.
+   Set the warnings in HetrixTools: disk 85%, RAM 85%, CPU 90% for 5 minutes.
 4. **Blacklist monitor** for 157.173.114.25: useful once the site sends email.
 
 Monitors only read pages (GET), so the sign-in limit (20 posts a minute) and fail2ban don't affect them.
