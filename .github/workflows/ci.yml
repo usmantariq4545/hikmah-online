@@ -1,13 +1,26 @@
 name: CI
 
+# Trimmed 2026-11-23 (owner): the free 2,000 minutes a month ran out at about 90 pushes. Plugin checks run only
+# when plugin code changes; Behat runs weekly and on demand; a newer push cancels the older run.
+# The secrets scan runs on every push in secrets.yml.
 on:
   push:
+    paths: ["plugins/**", "versions.lock", ".github/workflows/ci.yml"]
   pull_request:
+    paths: ["plugins/**", "versions.lock", ".github/workflows/ci.yml"]
+  schedule:
+    - cron: "0 3 * * 1"   # Mondays 03:00 UTC, with Behat
+  workflow_dispatch:      # "Run workflow" button, with Behat
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   plugin-ci:
     name: ${{ matrix.plugin.name }} on Moodle 5.3
     runs-on: ubuntu-24.04
+    timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:
@@ -16,6 +29,7 @@ jobs:
           - { name: local_hikmahattendance, path: plugins/local/hikmahattendance, extra: "danmarsden/moodle-mod_attendance" }
           - { name: theme_hikmah, path: plugins/theme/hikmah, extra: "" }
           - { name: local_hikmahaccess, path: plugins/local/hikmahaccess, extra: "" }
+          - { name: local_hikmahcompletion, path: plugins/local/hikmahcompletion, extra: "" }
           - { name: bbbext_hikmah, path: plugins/mod/bigbluebuttonbn/extension/hikmah, extra: "" }
 
     services:
@@ -94,15 +108,6 @@ jobs:
         run: moodle-plugin-ci phpunit --fail-on-warning
 
       - name: Behat
-        if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
+        if: ${{ !cancelled() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
         run: moodle-plugin-ci behat --profile chrome
 
-  secrets-scan:
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

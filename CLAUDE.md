@@ -171,7 +171,7 @@ Staging and prod terminate TLS with Caddy (automatic Let's Encrypt) or Nginx + c
 
 #### 4.5 CI
 
-- ci.yml: on every push, run moodle-plugin-ci for each Hikmah plugin against Moodle 5.3 + PostgreSQL.
+- ci.yml: on every push that changes plugins/ (or versions.lock), run moodle-plugin-ci for each Hikmah plugin against Moodle 5.3 + PostgreSQL; Behat weekly and on demand (trimmed 2026-11-23 to fit the free Actions minutes). secrets.yml: gitleaks on every push.
 - build.yml: on tag, docker buildx build --platform linux/amd64,linux/arm64 and push to GitHub Container Registry.
 
 ### 5. Site configuration as code
@@ -358,9 +358,9 @@ Check: PRD 14.2 go/no-go criteria all met. Then run the go-live runbook (Section
 
 | Gate | Tool | When | Pass condition |
 | --- | --- | --- | --- |
-| Code checks | moodle-plugin-ci (phplint, phpcs, phpdoc, savepoints, mustache, grunt) | Every push | Zero errors |
-| Unit tests | PHPUnit | Every push | All pass; business logic in payments and attendance covered |
-| Journey tests | Behat (headless browser) | Every merge to main | All P0 journeys in PRD 14.1 that exist so far pass |
+| Code checks | moodle-plugin-ci (phplint, phpcs, phpdoc, savepoints, mustache, grunt) | Every push that changes plugin code | Zero errors |
+| Unit tests | PHPUnit | Every push that changes plugin code | All pass; business logic in payments and attendance covered |
+| Journey tests | Behat (headless browser) | Weekly (Mondays) and on demand before a release | All P0 journeys in PRD 14.1 that exist so far pass |
 | Environment | admin/cli/checks.php + Environment page | Every deploy | No errors |
 | Smoke test | scripts/smoke-test.sh (login page 200, a course page, a static asset, cron last run < 5 min) | After every deploy | All pass |
 | Restore drill | backup.sh → fresh server → restore.sh | Monthly and before go-live | Site identical, users can log in |

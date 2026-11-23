@@ -2,6 +2,10 @@
 
 ## 2026-11-20 — Live classes standard; attendance marked by the platform
 
+- CI trimmed (GitHub Actions free minutes ran out, 2026-11-23): plugin checks run only when plugins/ or
+  versions.lock change, a newer push cancels the older run, Behat runs weekly and on demand, jobs time out
+  after 40 min; the secrets scan moved to secrets.yml (every push). local_hikmahcompletion added to the matrix.
+
 - Off-site backups go to Cloudflare R2 instead of Backblaze B2 (owner, 2026-11-23): `~/set-r2.sh` on the
   server writes the rclone remote and BACKUP_REMOTE; runbook contabo.md section 8.
 
