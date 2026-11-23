@@ -74,7 +74,7 @@ function theme_hikmah_page_init(moodle_page $page): void {
     }
     // A learner's own pages (profile, grades, payments, preferences) belong with the Dashboard; Moodle
     // would otherwise highlight Home.
-    if (isset(\theme_hikmah\local\pagehero::PAGES[$page->pagetype])) {
+    if (isset(\theme_hikmah\local\pagehero::PAGES[$page->pagetype]) && $page->pagetype !== 'course-edit') {
         $page->set_primary_active_tab('myhome');
     }
     // Date of birth starts empty until the person gives it (Moodle would show today's date).

@@ -14,6 +14,12 @@
 
 ## 2026-11-20 — Live classes standard; attendance marked by the platform
 
+- Course form ("Add a new course" / course settings): four steps (Basics, Catalog details, Certificate rules,
+  Advanced settings) with a step bar, labels above fields, a save bar that stays on screen and a live
+  preview of the catalog card (theme_hikmah/courseform). The two certificate fields moved to their own
+  custom-field category "Certificate rules" (060-courses.php; values kept). Presentation only: the same
+  fields are saved.
+
 - Course visibility: the course form now offers Hidden (only staff), Public, or Scheduled (hidden until a
   chosen date and time, then public by itself, checked every 5 minutes; local_hikmahaccess, table
   local_hikmahaccess_publish). Scheduled courses show "Scheduled: <time>" on the course management page.

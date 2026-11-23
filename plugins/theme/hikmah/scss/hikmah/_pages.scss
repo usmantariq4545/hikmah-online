@@ -1783,6 +1783,291 @@
     }
 }
 
+// Course form (course/edit.php): steps, open cards, live catalog card preview, sticky save bar.
+// The layout is built by theme_hikmah/courseform; without JS the form stays Moodle's standard one.
+#page-course-edit {
+    scroll-padding-top: $navbar-height + 90px;
+    // The steps are the cards here, so the page's own white panel goes.
+    #region-main {
+        background: transparent;
+        box-shadow: none;
+        border: 0;
+        padding: 0;
+    }
+    [role="main"] > h2:first-of-type,
+    .hk-cf-form .collapsible-actions {
+        display: none;
+    }
+    .hk-cf {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1.25rem;
+        align-items: start;
+        @media (min-width: 1200px) {
+            grid-template-columns: minmax(0, 1fr) 340px;
+            column-gap: 2rem;
+        }
+    }
+    .hk-cf__steps {
+        grid-column: 1 / -1;
+        position: sticky;
+        top: $navbar-height + 8px;
+        z-index: 30;
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+        padding: .5rem;
+        background: rgba(255, 255, 255, .92);
+        backdrop-filter: saturate(160%) blur(14px);
+        border: 1px solid $hk-line;
+        border-radius: $hk-radius-lg;
+        box-shadow: $hk-shadow-1;
+        ol {
+            display: flex;
+            gap: .35rem;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            overflow-x: auto;
+            scrollbar-width: none;
+            flex: 1 1 auto;
+        }
+        a {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .45rem .85rem .45rem .45rem;
+            border-radius: 999px;
+            color: $hk-muted;
+            font-weight: 500;
+            white-space: nowrap;
+            text-decoration: none;
+            transition: background-color .2s ease, color .2s ease;
+            &:hover {
+                background: $hk-paper;
+                color: $hk-ink;
+            }
+            &.is-current {
+                background: $hk-ink;
+                color: #fff;
+                .hk-cf__num {
+                    background: $hk-sun;
+                    color: $hk-ink;
+                }
+            }
+        }
+    }
+    .hk-cf__num {
+        display: inline-grid;
+        place-items: center;
+        flex: 0 0 auto;
+        width: 1.75rem;
+        height: 1.75rem;
+        border-radius: 50%;
+        background: $hk-paper;
+        border: 1px solid $hk-line;
+        color: $hk-ink;
+        font-family: $hk-font-display;
+        font-weight: 600;
+        font-size: .9rem;
+    }
+    .hk-cf__preview-toggle {
+        flex: 0 0 auto;
+        border-radius: 999px;
+        @media (min-width: 1200px) {
+            display: none;
+        }
+    }
+    .hk-cf__main {
+        display: grid;
+        gap: 1.25rem;
+        min-width: 0;
+    }
+    .hk-cf__step {
+        background: #fff;
+        border: 1px solid $hk-line;
+        border-radius: $hk-radius-lg;
+        box-shadow: $hk-shadow-1;
+        // stylelint-disable-next-line csstree/validator
+        padding: clamp(1.1rem, 3vw, 2rem);
+        min-width: 0;
+    }
+    .hk-cf__head {
+        display: flex;
+        gap: .9rem;
+        align-items: flex-start;
+        padding-bottom: 1rem;
+        margin-bottom: 1.25rem;
+        border-bottom: 1px solid $hk-line;
+        .hk-cf__num {
+            width: 2.25rem;
+            height: 2.25rem;
+            background: $hk-sun;
+            border-color: transparent;
+            font-size: 1.05rem;
+        }
+    }
+    .hk-cf__title {
+        margin: 0 0 .2rem;
+        font-family: $hk-font-display;
+        font-size: 1.35rem;
+        font-weight: 600;
+    }
+    .hk-cf__lead {
+        margin: 0;
+        color: $hk-muted;
+        font-size: .95rem;
+    }
+    // Inside a step: no section headings or toggles, just the fields.
+    fieldset.hk-cf__open {
+        margin: 0;
+        > legend {
+            display: none;
+        }
+        > .d-flex.align-items-center {
+            // Overrides a Bootstrap utility class, which is itself !important.
+            // stylelint-disable-next-line declaration-no-important
+            display: none !important;
+        }
+        + fieldset.hk-cf__open {
+            margin-top: 1.25rem;
+            padding-top: 1.25rem;
+            border-top: 1px dashed $hk-line-strong;
+        }
+    }
+    // Labels above their fields, full width.
+    .hk-cf .fitem.row {
+        margin-inline: 0;
+        margin-bottom: 1.1rem;
+        > .col-md-3,
+        > .col-md-9 {
+            flex: 0 0 100%;
+            max-width: 100%;
+            padding-inline: 0;
+        }
+        > .col-md-3 {
+            padding-bottom: .35rem;
+            justify-content: flex-start;
+            align-items: center;
+            gap: .4rem;
+            .form-label-addon {
+                // Overrides a Bootstrap utility class, which is itself !important.
+                // stylelint-disable-next-line declaration-no-important
+                margin: 0 !important;
+                order: 2;
+            }
+            label,
+            p {
+                font-weight: 600;
+                color: $hk-ink;
+            }
+        }
+    }
+    .hk-cf .form-control,
+    .hk-cf .form-select,
+    .hk-cf .custom-select {
+        min-height: 2.75rem;
+        border-radius: $hk-radius-sm;
+        border-color: $hk-line-strong;
+        &:focus {
+            border-color: $hk-sky-deep;
+            box-shadow: 0 0 0 .2rem rgba($hk-sky, .25);
+        }
+    }
+    .hk-cf select.form-select,
+    .hk-cf select.custom-select {
+        min-width: 10rem;
+    }
+    .hk-cf input.form-control[type="text"],
+    .hk-cf textarea.form-control {
+        width: 100%;
+        max-width: 100%;
+    }
+    .hk-cf .form-text,
+    .hk-cf .form-control-static {
+        color: $hk-muted;
+        font-size: .875rem;
+    }
+    // Course image: a drop zone.
+    .hk-cf .filemanager .fm-content-wrapper,
+    .hk-cf .filemanager .filemanager-container {
+        border: 2px dashed $hk-line-strong;
+        border-radius: $hk-radius;
+        background: $hk-paper;
+        min-height: 140px;
+    }
+    // Advanced: Moodle's sections as quiet accordion rows.
+    .hk-cf__step--advanced fieldset {
+        border: 1px solid $hk-line;
+        border-radius: $hk-radius;
+        padding: .25rem 1rem;
+        margin: 0 0 .6rem;
+        h3 {
+            font-size: 1.05rem;
+            margin: 0;
+        }
+    }
+    // Live preview of the catalog card.
+    .hk-cf__preview {
+        grid-column: 2;
+        grid-row: 2;
+        position: sticky;
+        top: $navbar-height + 90px;
+        @media (max-width: 1199.98px) {
+            display: none;
+            &.is-open {
+                display: grid;
+                place-items: center;
+                position: fixed;
+                inset: 0;
+                z-index: 1050;
+                padding: 1rem;
+                background: rgba(26, 26, 26, .55);
+            }
+        }
+    }
+    .hk-cf__preview-inner {
+        // stylelint-disable-next-line csstree/validator
+        width: min(340px, 100%);
+    }
+    .hk-cf__preview.is-open .hk-cf__preview-inner {
+        background: $hk-paper;
+        border-radius: $hk-radius-lg;
+        padding: 1.25rem;
+        box-shadow: $hk-shadow-3;
+    }
+    .hk-cf__preview-title {
+        font-family: $hk-font-display;
+        font-size: 1.05rem;
+        font-weight: 600;
+        margin: 0 0 .2rem;
+    }
+    .hk-cf__preview-lead {
+        color: $hk-muted;
+        font-size: .875rem;
+        margin: 0 0 .9rem;
+    }
+    .hk-cf__card {
+        padding: 0;
+        pointer-events: none;
+        .hk-course:hover {
+            transform: none;
+        }
+    }
+    // Save and Cancel stay in view at the bottom of the screen.
+    .hk-cf-form .stickyfooter {
+        z-index: 25;
+        margin-top: 1.5rem;
+        padding: .85rem 1rem;
+        // Overrides a Bootstrap utility class, which is itself !important.
+        // stylelint-disable-next-line declaration-no-important
+        background: #fff !important;
+        border: 1px solid $hk-line;
+        border-radius: $hk-radius-lg $hk-radius-lg 0 0;
+        box-shadow: 0 -8px 24px rgba(26, 26, 26, .08);
+    }
+}
+
 // Users page (local_hikmahaccess): with many columns the table is wider than the page. Keep it in a box no taller
 // than the screen so its sideways scrollbar is always in view, hold the header row in place, and keep cells on one line.
 #page-local-hikmahaccess-users .reportbuilder-report .table-responsive {

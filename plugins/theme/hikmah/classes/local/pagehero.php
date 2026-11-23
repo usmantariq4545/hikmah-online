@@ -34,6 +34,7 @@ class pagehero {
         'grade-report-overview-index' => 'hero_grades',
         'payment-gateway-hikmahtransfer-status' => 'hero_payments',
         'user-preferences' => 'hero_preferences',
+        'course-edit' => 'hero_courseedit',
     ];
 
     /**
@@ -58,6 +59,15 @@ class pagehero {
         $lead = get_string(self::PAGES[$page->pagetype] . '_lead', 'theme_hikmah');
 
         switch ($page->pagetype) {
+            case 'course-edit':
+                // Editing an existing course: its name as the title (the form's id is the course).
+                $courseid = optional_param('id', 0, PARAM_INT);
+                if ($courseid && ($course = get_course($courseid))) {
+                    $title = format_string($course->fullname, true, ['context' => \context_course::instance($courseid)]);
+                    $lead = get_string('hero_courseedit_editlead', 'theme_hikmah');
+                }
+                break;
+
             case 'user-profile':
                 $user = $DB->get_record('user', ['id' => $userid, 'deleted' => 0]);
                 if (!$user) {
