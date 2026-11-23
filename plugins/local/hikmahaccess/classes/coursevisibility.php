@@ -56,10 +56,10 @@ class coursevisibility {
             self::PUBLIC => get_string('visibility_public', 'local_hikmahaccess'),
             self::SCHEDULED => get_string('visibility_scheduled', 'local_hikmahaccess'),
         ];
-        $mform->insertElementBefore($mform->createElement('select', 'hkvisibility',
-            get_string('visibility', 'local_hikmahaccess'), $choices), 'visible');
-        $mform->insertElementBefore($mform->createElement('date_time_selector', 'hkpublishat',
-            get_string('publishat', 'local_hikmahaccess'), ['step' => 5]), 'visible');
+        $label = get_string('visibility', 'local_hikmahaccess');
+        $mform->insertElementBefore($mform->createElement('select', 'hkvisibility', $label, $choices), 'visible');
+        $label = get_string('publishat', 'local_hikmahaccess');
+        $mform->insertElementBefore($mform->createElement('date_time_selector', 'hkpublishat', $label, ['step' => 5]), 'visible');
         $mform->removeElement('visible');
         $mform->addHelpButton('hkvisibility', 'visibility', 'local_hikmahaccess');
         $mform->setDefault('hkvisibility', $default ? self::PUBLIC : self::HIDDEN);
@@ -148,8 +148,7 @@ class coursevisibility {
         } else if ($row) {
             $DB->update_record(self::TABLE, ['id' => $row->id, 'timepublish' => $timepublish, 'timemodified' => time()]);
         } else {
-            $DB->insert_record(self::TABLE, ['courseid' => $courseid, 'timepublish' => $timepublish,
-                'timemodified' => time()]);
+            $DB->insert_record(self::TABLE, ['courseid' => $courseid, 'timepublish' => $timepublish, 'timemodified' => time()]);
         }
     }
 
@@ -194,8 +193,8 @@ class coursevisibility {
         }
         $labels = [];
         foreach ($DB->get_records(self::TABLE) as $row) {
-            $labels[$row->courseid] = get_string('scheduledfor', 'local_hikmahaccess',
-                userdate($row->timepublish, get_string('strftimedatetimeshort', 'langconfig')));
+            $when = userdate($row->timepublish, get_string('strftimedatetimeshort', 'langconfig'));
+            $labels[$row->courseid] = get_string('scheduledfor', 'local_hikmahaccess', $when);
         }
         if (!$labels) {
             return;
