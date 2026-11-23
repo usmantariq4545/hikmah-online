@@ -45,7 +45,10 @@ The ping URLs are like passwords (anyone with one can send fake "all well" signa
    It runs as its own limited user `hetrixtools` (the `0` after the ID). After installing, in
    `/etc/hetrixtools/hetrixtools.cfg`: `NetworkInterfaces="eth0"` and add `|overlay|nsfs` to `IgnoredDisks`, so
    Docker's short-lived interfaces and mounts are left out. Installed 2026-11-23.
-   Set the warnings in HetrixTools: disk 85%, RAM 85%, CPU 90% for 5 minutes.
+   Warnings (set 2026-11-23): Uptime Monitors → click the monitor name ("Hikmah Online") → the box under each
+   graph saves as soon as it changes. CPU ≥ 90%, RAM ≥ 85%, disk ≥ 85%, each averaged over 5 min, repeated every
+   60 min; agent silent for 15 min; SSL expiry 10 days before. All go to the monitor's contact list
+   ("Default Contact": email + Discord). Monitor locations: London, Singapore, Sydney, Mumbai.
 4. **Blacklist monitor** for 157.173.114.25: useful once the site sends email.
 
 Monitors only read pages (GET), so the sign-in limit (20 posts a minute) and fail2ban don't affect them.
