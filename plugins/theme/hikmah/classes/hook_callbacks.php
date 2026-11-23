@@ -144,10 +144,10 @@ class hook_callbacks {
                 && ($mycourses = $view->find('mycourses', \navigation_node::TYPE_ROOTNODE))) {
             $mycourses->remove();
         }
-        // Support finds learners in the site's participant list.
-        if (has_capability('moodle/site:viewparticipants', $system) && !is_siteadmin()) {
-            $view->add(get_string('nav_people', 'theme_hikmah'), new \moodle_url('/user/index.php', ['id' => SITEID]),
-                \navigation_node::TYPE_CUSTOM, null, 'hkpeople');
+        // Users: everyone for administrators, managers and support; their learners for teachers (local_hikmahaccess).
+        if (class_exists('\local_hikmahaccess\userlist') && \local_hikmahaccess\userlist::report_class()) {
+            $view->add(get_string('nav_users', 'theme_hikmah'), new \moodle_url('/local/hikmahaccess/users.php'),
+                \navigation_node::TYPE_CUSTOM, null, 'hkusers');
         }
         if ($isreviewer) {
             $view->add(

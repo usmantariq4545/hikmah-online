@@ -207,6 +207,22 @@ server runs: backup, image rebuild, `upgrade.sh` (maintenance mode, upgrade, set
 The work runs on the server, so a dropped connection cannot stop it halfway. The deployed commit is
 recorded in `~/hikmah-online/DEPLOYED_COMMIT`; the full log is `~/deploy.log` on the server.
 
+Each successful deploy is tagged on GitHub as `live-<date>-<commit>`; the tag message names the backup
+taken just before it. List them with `git tag -n1 -l 'live-*'`.
+
+### Going back to an earlier release
+
+1. Pick the release to return to: `git tag -n1 -l 'live-*'`.
+2. If the release being undone changed plugin versions or the database (most do), first put the data
+   back as it was before it. On the server, use the backup named in the **bad** release's tag:
+   `cd ~/hikmah-online && HIKMAH_ENV=prod scripts/restore.sh backups/prod/<stamp>`.
+   Moodle refuses to run older code on a newer database, so this step can't be skipped then.
+   Anything learners did since that backup (sign-ups, submissions, payments) is lost: note it first.
+3. From the laptop: `scripts/deploy-live.sh live-<date>-<commit>` (the good release).
+
+The tag's backup is kept only while backup retention keeps it (7 daily, 4 weekly, 6 monthly sets;
+off-site copies too once `BACKUP_REMOTE` is set).
+
 ## 10. If something goes wrong
 
 | Symptom | Check |

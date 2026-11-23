@@ -58,6 +58,7 @@ foreach ([
     'enrol/manual:enrol',
     'enrol/manual:unenrol',
     'moodle/site:viewuseridentity',
+    'local/hikmahaccess:viewallusers', // The "Users" tab (view only, no download).
 ] as $capability) {
     hk_role_cap($support, $capability, CAP_ALLOW);
 }

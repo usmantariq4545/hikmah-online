@@ -274,6 +274,7 @@ $string['dash_paywaiting'] = 'Waiting';
 $string['dash_sitecourses'] = 'Courses';
 $string['dash_sitecourseslink'] = 'All courses';
 $string['nav_people'] = 'People';
+$string['nav_users'] = 'Users';
 $string['item_assign'] = 'Assignment';
 $string['item_attendance'] = 'Attendance';
 $string['item_certificate'] = 'Certificate';
