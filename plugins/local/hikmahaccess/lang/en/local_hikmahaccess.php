@@ -50,3 +50,14 @@ $string['courses'] = 'Courses';
 $string['hikmahaccess:choosecolumns'] = 'Choose which details the list of all users shows';
 $string['privacy:metadata:preference:usercolumns'] = 'The columns this person chose to show on the Users page.';
 $string['roles'] = 'Roles';
+$string['publishat'] = 'Goes public on';
+$string['publishatpast'] = 'Pick a date and time in the future.';
+$string['scheduledfor'] = 'Scheduled: {$a}';
+$string['task_publishcourses'] = 'Make scheduled courses public';
+$string['visibility'] = 'Visibility';
+$string['visibility_help'] = 'Hidden: only staff can see the course; it is not in the catalog and learners cannot open it.
+Public: listed in the catalog and open to enrolled learners.
+Scheduled: hidden until the date and time below, then public by itself (checked every 5 minutes).';
+$string['visibility_hidden'] = 'Hidden (only staff)';
+$string['visibility_public'] = 'Public';
+$string['visibility_scheduled'] = 'Scheduled';
