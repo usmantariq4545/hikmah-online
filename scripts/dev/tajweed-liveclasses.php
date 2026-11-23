@@ -89,9 +89,9 @@ function hk_tajweed_liveclasses(stdClass $course): int {
             course_update_section($course, $section, ['availability' => null]);
         }
 
-        $link = $DB->get_record('local_hikmahatt_link', ['sessionid' => $session->id]);
+        $link = $DB->get_record('local_hikmahattendance_link', ['sessionid' => $session->id]);
         if ($link && (int) $link->bbbid !== (int) $room->id) {
-            $DB->set_field('local_hikmahatt_link', 'bbbid', $room->id, ['id' => $link->id]);
+            $DB->set_field('local_hikmahattendance_link', 'bbbid', $room->id, ['id' => $link->id]);
         }
         if ($generalroom) {
             $DB->execute('UPDATE {bigbluebuttonbn_logs} SET bigbluebuttonbnid = ?, meetingid = ?

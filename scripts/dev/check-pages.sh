@@ -72,7 +72,7 @@ seerah="$(sql "SELECT id FROM {course} WHERE idnumber = 'demo-seerah'")"
 arabic="$(sql "SELECT id FROM {course} WHERE idnumber = 'demo-arabic'")"
 fee="$(sql "SELECT id FROM {enrol} WHERE enrol = 'fee' AND courseid = $tajweed")"
 fiqhfee="$(sql "SELECT e.id FROM {enrol} e JOIN {course} c ON c.id = e.courseid WHERE e.enrol = 'fee' AND c.idnumber = 'demo-fiqh'")"
-link="$(sql "SELECT MIN(id) FROM {local_hikmahatt_link} WHERE courseid = $tajweed")"
+link="$(sql "SELECT MIN(id) FROM {local_hikmahattendance_link} WHERE courseid = $tajweed")"
 pending="$(sql "SELECT MIN(id) FROM {paygw_hikmahtransfer_req} WHERE status = 'pending'")"
 code="$(sql "SELECT code FROM {tool_certificate_issues} ORDER BY id DESC LIMIT 1")"
 

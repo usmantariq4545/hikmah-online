@@ -396,19 +396,19 @@ class dashboard {
             ];
         }
 
-        if ($dbman->table_exists('local_hikmahatt_link')) {
+        if ($dbman->table_exists('local_hikmahattendance_link')) {
             $teaching = get_user_capability_course('local/hikmahattendance:review', $USER->id, true, 'fullname', 'fullname', 20);
             if ($teaching) {
                 $ids = array_column($teaching, 'id');
                 [$insql, $params] = $DB->get_in_or_equal($ids, SQL_PARAMS_NAMED, 'c');
                 $toreview = $DB->count_records_select(
-                    'local_hikmahatt_link',
+                    'local_hikmahattendance_link',
                     "courseid $insql AND state IN ('ready', 'missing', 'unknown')",
                     $params
                 );
                 // Open the course that has the work, else the first course.
                 $flagged = $DB->get_field_select(
-                    'local_hikmahatt_link',
+                    'local_hikmahattendance_link',
                     'MIN(courseid)',
                     "courseid $insql AND state IN ('ready', 'missing', 'unknown')",
                     $params
