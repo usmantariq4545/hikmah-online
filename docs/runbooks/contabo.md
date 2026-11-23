@@ -15,7 +15,7 @@ and note anything that differed in `docs/CHANGELOG.md`.
 | A domain you control | You will add one DNS record, e.g. `learn.<domain>` |
 | Access to the GitHub repository | To add a read-only deploy key |
 | An email address | For Let's Encrypt certificate notices |
-| Backblaze B2 account (free to open) | For off-site backups, about $1 a month |
+| Cloudflare account with R2 (free up to 10 GB; asks for a card) | For off-site backups |
 | SMTP sender (e.g. Brevo free) | For sign-up and payment emails; can be added after launch |
 
 Secrets (passwords, keys) are typed by you on the server. They never go into Git.
@@ -164,26 +164,32 @@ Then, in the browser:
   → Plugins → Activity modules → BigBlueButton). Nobody does this on your behalf.
 - Replace the draft privacy notice and terms (Site administration → Users → Privacy and policies).
 
-## 8. Off-site backups (Backblaze B2)
+## 8. Off-site backups (Cloudflare R2)
 
-1. Backblaze: create a **private** bucket (e.g. `hikmah-backups`) and an application key limited to
-   that bucket.
-2. On the server:
+1. Cloudflare dashboard → R2 Object Storage → create bucket `hikmah-backups` (location: Automatic;
+   it stays private: no public access, no custom domain).
+2. R2 → Manage API tokens → Create API token: permission **Object Read & Write**, applied to
+   **only** `hikmah-backups`. Note the Access Key ID, the Secret Access Key (shown once) and the Account ID.
+3. Bucket → Settings → Object lifecycle rules: delete objects after **190 days** (the server keeps
+   its own 7 daily, 4 weekly and 6 monthly sets; this stops the bucket growing forever).
+4. On the server, as `hikmah` (writes the rclone `r2` remote and `BACKUP_REMOTE=r2:hikmah-backups`, then tests an upload):
 
 ```bash
-rclone config            # n (new) → name: b2 → storage: b2 → paste key ID and key → defaults
-nano .env.prod           # BACKUP_REMOTE=b2:hikmah-backups
+~/set-r2.sh
 HIKMAH_ENV=prod scripts/backup.sh       # first backup, by hand
-rclone ls b2:hikmah-backups | head      # it should be listed there
+rclone ls r2:hikmah-backups | head      # it should be listed there
 ```
 
-3. Nightly at 02:15 server time (UTC, which is 07:15 in Pakistan):
+Restore from R2: `rclone copy r2:hikmah-backups/prod/<stamp> backups/prod/<stamp>`, then
+`docs/runbooks/backup-restore.md`.
+
+5. Nightly at 02:15 server time (UTC, which is 07:15 in Pakistan):
 
 ```bash
 ( crontab -l 2>/dev/null; echo '15 2 * * * cd /home/hikmah/hikmah-online && HIKMAH_ENV=prod scripts/backup.sh >> backup.log 2>&1' ) | crontab -
 ```
 
-Keeps 7 daily, 4 weekly and 6 monthly sets on the server and copies each one to B2.
+Keeps 7 daily, 4 weekly and 6 monthly sets on the server and copies each one to R2.
 
 Uptime, server, cron and backup alerts: `docs/runbooks/monitoring.md`.
 

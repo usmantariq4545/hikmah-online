@@ -2,6 +2,9 @@
 
 ## 2026-11-20 — Live classes standard; attendance marked by the platform
 
+- Off-site backups go to Cloudflare R2 instead of Backblaze B2 (owner, 2026-11-23): `~/set-r2.sh` on the
+  server writes the rclone remote and BACKUP_REMOTE; runbook contabo.md section 8.
+
 - Monitoring (security review fix 9): the cron container pings HEALTHCHECK_CRON_URL after each successful
   cron run and backup.sh pings HEALTHCHECK_BACKUP_URL when it finishes (both optional; empty = off).
   Uptime, server and alert setup (HetrixTools, Healthchecks.io, Telegram) in docs/runbooks/monitoring.md.
