@@ -14,6 +14,8 @@ HOST="${HIKMAH_DEPLOY_HOST:-hikmah@157.173.114.25}"
 SSHOPTS="-o BatchMode=yes -o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=4"
 SSH="ssh $SSHOPTS"
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
+# Any clone that deploys also gets the guard against pushing straight to main (.githooks/pre-push).
+[ "$(git config --get core.hooksPath)" = .githooks ] || git config core.hooksPath .githooks
 
 [ -z "$(git status --porcelain)" ] || { echo "Uncommitted changes: commit and push first." >&2; exit 1; }
 git fetch -q origin

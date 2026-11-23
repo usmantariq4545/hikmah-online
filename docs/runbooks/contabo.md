@@ -193,10 +193,24 @@ Keeps 7 daily, 4 weekly and 6 monthly sets on the server and copies each one to 
 
 Uptime, server, cron and backup alerts: `docs/runbooks/monitoring.md`.
 
-## 9. Updating the site later (commit first, then deploy)
+## 9. Updating the site later (branch, pull request, merge, then deploy)
 
-Every change is committed and pushed to GitHub first; the live site only ever runs a pushed
-commit. From the laptop, in the repository (Git Bash):
+Every change goes on its own branch and reaches `main` only through a pull request (owner, 2026-11-23):
+
+1. Branch from the latest main: `git switch main && git pull && git switch -c <short-name>`; commit there.
+2. `git push -u origin <short-name>`, then open the pull request:
+   `https://github.com/usmantariq4545/hikmah-online/compare/main...<short-name>?expand=1`.
+3. The owner reads the changes and the checks (secrets scan always; plugin checks when plugin code
+   changed) and presses **Merge pull request**, then **Delete branch**.
+4. `git switch main && git pull`, then deploy (below). Test on the live site; if it is wrong, go back
+   to the previous release (below) and fix it on a new branch.
+
+`git push` to `main` itself is refused by `.githooks/pre-push` (switched on by `deploy-live.sh`, or by hand
+with `git config core.hooksPath .githooks`). Emergency only: `HIKMAH_ALLOW_MAIN_PUSH=1 git push`.
+GitHub's own branch protection would also stop it on GitHub's side, but for private repositories it
+needs a paid plan (GitHub Pro).
+
+The live site only ever runs what is on main. From the laptop, in the repository (Git Bash):
 
 ```bash
 scripts/deploy-live.sh
