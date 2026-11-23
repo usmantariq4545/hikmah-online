@@ -2,6 +2,9 @@
 
 ## 2026-11-23 — Attendance tables renamed
 
+- Server: kernel 6.8.0-151 (TCP fix CVE-2026-98432) and ClamAV 1.5.5 (10 scanner CVEs) applied after a CVE
+  review of every component; everything else was already on its fixed version. An @reboot job now starts all
+  containers after a reboot (the moodle container stayed down once); documented in runbooks/contabo.md.
 - local_hikmahattendance tables renamed from local_hikmahatt_* to local_hikmahattendance_* (link, decision,
   audit, course) so they carry the plugin name, as Moodle requires. The upgrade step renames them in place
   and keeps every row; take a backup before deploying.
