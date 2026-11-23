@@ -36,13 +36,13 @@ use stdClass;
  */
 class manager {
     /** @var string Link table. */
-    public const TABLE_LINK = 'local_hikmahatt_link';
+    public const TABLE_LINK = 'local_hikmahattendance_link';
     /** @var string Decision table. */
-    public const TABLE_DECISION = 'local_hikmahatt_decision';
+    public const TABLE_DECISION = 'local_hikmahattendance_decision';
     /** @var string Audit table. */
-    public const TABLE_AUDIT = 'local_hikmahatt_audit';
+    public const TABLE_AUDIT = 'local_hikmahattendance_audit';
     /** @var string Course switches table. */
-    public const TABLE_COURSE = 'local_hikmahatt_course';
+    public const TABLE_COURSE = 'local_hikmahattendance_course';
 
     /** @var string Class window not finished, or callback not expected yet. */
     public const LINK_WAITING = 'waiting';
