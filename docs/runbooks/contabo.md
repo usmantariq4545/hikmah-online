@@ -200,8 +200,9 @@ Every change goes on its own branch and reaches `main` only through a pull reque
 1. Branch from the latest main: `git switch main && git pull && git switch -c <short-name>`; commit there.
 2. `git push -u origin <short-name>`, then open the pull request:
    `https://github.com/usmantariq4545/hikmah-online/compare/main...<short-name>?expand=1`.
-3. The owner reads the changes and the checks (secrets scan always; plugin checks when plugin code
-   changed) and presses **Merge pull request**, then **Delete branch**.
+3. Merge once the checks pass (secrets scan always; plugin checks when plugin code changed). Claude does
+   steps 2–4 with the GitHub CLI after the owner approves in chat (`gh pr create --fill`,
+   `gh pr checks --watch`, `gh pr merge --merge --delete-branch`); the owner can also merge on GitHub.
 4. `git switch main && git pull`, then deploy (below). Test on the live site; if it is wrong, go back
    to the previous release (below) and fix it on a new branch.
 
