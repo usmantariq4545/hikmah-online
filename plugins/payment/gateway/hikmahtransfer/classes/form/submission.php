@@ -55,27 +55,47 @@ class submission extends \moodleform {
             $mform->addRule('method', null, 'required', null, 'client');
         }
 
-        $mform->addElement('text', 'txnid', get_string('field_txnid', 'paygw_hikmahtransfer'),
-            ['size' => 40, 'maxlength' => 100, 'autocomplete' => 'off']);
+        $mform->addElement(
+            'text',
+            'txnid',
+            get_string('field_txnid', 'paygw_hikmahtransfer'),
+            ['size' => 40, 'maxlength' => 100, 'autocomplete' => 'off']
+        );
         $mform->setType('txnid', PARAM_TEXT);
         $mform->addRule('txnid', null, 'required', null, 'client');
         $mform->addRule('txnid', null, 'maxlength', 100, 'client');
         $mform->addHelpButton('txnid', 'field_txnid', 'paygw_hikmahtransfer');
 
-        $mform->addElement('float', 'paidamount', get_string('field_paidamount', 'paygw_hikmahtransfer', $custom['currency']),
-            ['size' => 12]);
+        $mform->addElement(
+            'float',
+            'paidamount',
+            get_string('field_paidamount', 'paygw_hikmahtransfer', $custom['currency']),
+            ['size' => 12]
+        );
         $mform->addRule('paidamount', null, 'required', null, 'client');
         $mform->setDefault('paidamount', $custom['amount']);
 
-        $mform->addElement('date_selector', 'paiddate', get_string('field_paiddate', 'paygw_hikmahtransfer'),
-            ['startyear' => (int) date('Y') - 1, 'stopyear' => (int) date('Y')]);
+        $mform->addElement(
+            'date_selector',
+            'paiddate',
+            get_string('field_paiddate', 'paygw_hikmahtransfer'),
+            ['startyear' => (int) date('Y') - 1, 'stopyear' => (int) date('Y')]
+        );
         // No default: the theme gives the day, month and year lists an empty "Day / Month / Year" choice.
 
-        $mform->addElement('filemanager', 'receipt', get_string('field_receipt', 'paygw_hikmahtransfer'), null,
-            receipt::filemanager_options());
+        $mform->addElement(
+            'filemanager',
+            'receipt',
+            get_string('field_receipt', 'paygw_hikmahtransfer'),
+            null,
+            receipt::filemanager_options()
+        );
         $mform->addRule('receipt', null, 'required', null, 'client');
-        $mform->addElement('static', 'receipthint', '', get_string('field_receipt_hint', 'paygw_hikmahtransfer',
-            display_size(receipt::maxbytes())));
+        $mform->addElement('static', 'receipthint', '', get_string(
+            'field_receipt_hint',
+            'paygw_hikmahtransfer',
+            display_size(receipt::maxbytes())
+        ));
 
         $this->add_action_buttons(true, get_string('submitreceipt', 'paygw_hikmahtransfer'));
     }

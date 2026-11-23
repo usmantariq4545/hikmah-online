@@ -3,53 +3,125 @@
 // switches off under prefers-reduced-motion.
 
 @keyframes hk-draw {
-    from { transform: scaleX(0); }
-    to { transform: scaleX(1); }
+    from {
+        transform: scaleX(0);
+    }
+    to {
+        transform: scaleX(1);
+    }
 }
+
 @keyframes hk-pulse {
-    0% { box-shadow: 0 0 0 0 rgba(229, 72, 77, .55); }
-    70% { box-shadow: 0 0 0 .55rem rgba(229, 72, 77, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(229, 72, 77, 0); }
+    0% {
+        box-shadow: 0 0 0 0 rgba(229, 72, 77, .55);
+    }
+    70% {
+        box-shadow: 0 0 0 .55rem rgba(229, 72, 77, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(229, 72, 77, 0);
+    }
 }
+
 @keyframes hk-rise {
-    from { opacity: 0; transform: translateY(26px); }
-    to { opacity: 1; transform: none; }
+    from {
+        opacity: 0;
+        transform: translateY(26px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
 }
+
 @keyframes hk-fade {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
+
 @keyframes hk-spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
+
 @keyframes hk-tile-in {
-    0% { opacity: 0; transform: scale(.2) rotate(-50deg); }
-    60% { opacity: 1; }
-    100% { opacity: 1; transform: none; }
+    0% {
+        opacity: 0;
+        transform: scale(.2) rotate(-50deg);
+    }
+    60% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 1;
+        transform: none;
+    }
 }
+
 @keyframes hk-tile-breathe {
-    0%, 100% { transform: none; }
-    50% { transform: scale(1.07); }
+    0%,
+    100% {
+        transform: none;
+    }
+    50% {
+        transform: scale(1.07);
+    }
 }
+
 @keyframes hk-float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
 }
+
 @keyframes hk-shimmer {
-    from { background-position: 200% 0; }
-    to { background-position: -200% 0; }
+    from {
+        background-position: 200% 0;
+    }
+    to {
+        background-position: -200% 0;
+    }
 }
+
 @keyframes hk-pop {
-    0% { transform: scale(.6); opacity: 0; }
-    70% { transform: scale(1.08); opacity: 1; }
-    100% { transform: none; opacity: 1; }
+    0% {
+        transform: scale(.6);
+        opacity: 0;
+    }
+    70% {
+        transform: scale(1.08);
+        opacity: 1;
+    }
+    100% {
+        transform: none;
+        opacity: 1;
+    }
 }
+
 @keyframes hk-check {
-    to { stroke-dashoffset: 0; }
+    to {
+        stroke-dashoffset: 0;
+    }
 }
+
 @keyframes hk-page-in {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: none; }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
 }
 
 // The rosette: tiles assemble one by one from the centre, then the whole ring turns slowly.
@@ -59,15 +131,21 @@
     .hk-tile {
         transform-box: fill-box;
         transform-origin: center;
-        &--y { fill: $hk-sun; }
-        &--b { fill: $hk-sky; }
+        &--y {
+            fill: $hk-sun;
+        }
+        &--b {
+            fill: $hk-sky;
+        }
     }
     &--animate {
         .hk-tile {
             animation: hk-tile-in .9s $hk-ease-out both;
+            // stylelint-disable-next-line time-min-milliseconds
             animation-delay: calc(var(--i) * 55ms + 150ms);
         }
         .hk-tile--b {
+            // stylelint-disable-next-line time-min-milliseconds
             animation-delay: calc(var(--i) * 55ms + 420ms);
         }
         // The whole graphic turns about its own centre.
@@ -87,12 +165,21 @@
     opacity: 0;
     transform: translateY(28px);
     transition: opacity .8s $hk-ease-out, transform .8s $hk-ease-out;
+    // stylelint-disable-next-line time-min-milliseconds
     transition-delay: calc(var(--hk-d, 0) * 90ms);
     will-change: opacity, transform;
-    &[data-hk-reveal="left"] { transform: translateX(-34px); }
-    &[data-hk-reveal="right"] { transform: translateX(34px); }
-    &[data-hk-reveal="scale"] { transform: scale(.94); }
-    &[data-hk-reveal="fade"] { transform: none; }
+    &[data-hk-reveal="left"] {
+        transform: translateX(-34px);
+    }
+    &[data-hk-reveal="right"] {
+        transform: translateX(34px);
+    }
+    &[data-hk-reveal="scale"] {
+        transform: scale(.94);
+    }
+    &[data-hk-reveal="fade"] {
+        transform: none;
+    }
     &.is-in {
         opacity: 1;
         transform: none;
@@ -106,7 +193,9 @@
 }
 
 // Cross-document view transitions where the browser supports them: pages cross-fade softly.
+// stylelint-disable-next-line csstree/validator
 @view-transition {
+    // stylelint-disable-next-line property-no-unknown
     navigation: auto;
 }
 ::view-transition-old(root) {
@@ -162,17 +251,24 @@
     *,
     *::before,
     *::after {
+        // stylelint-disable-next-line declaration-no-important, time-min-milliseconds
         animation-duration: .001ms !important;
+        // stylelint-disable-next-line declaration-no-important
         animation-delay: 0s !important;
+        // stylelint-disable-next-line declaration-no-important
         animation-iteration-count: 1 !important;
+        // stylelint-disable-next-line declaration-no-important, time-min-milliseconds
         transition-duration: .001ms !important;
+        // stylelint-disable-next-line declaration-no-important
         transition-delay: 0s !important;
     }
     .hk-js [data-hk-reveal] {
         opacity: 1;
         transform: none;
     }
+    // stylelint-disable-next-line csstree/validator
     @view-transition {
+        // stylelint-disable-next-line property-no-unknown
         navigation: none;
     }
 }
@@ -196,24 +292,39 @@
         animation: none;
     }
 }
+
 @keyframes hk-motif-breathe {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.04); }
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.04);
+    }
 }
 // Keep a GPU layer only while an element is waiting to be revealed, and move it less far, so
 // content settles quickly instead of sliding about during a scroll.
 .hk-js [data-hk-reveal] {
     transform: translateY(16px);
     transition-duration: .6s;
-    &[data-hk-reveal="left"] { transform: translateX(-20px); }
-    &[data-hk-reveal="right"] { transform: translateX(20px); }
-    &[data-hk-reveal="scale"] { transform: scale(.97); }
-    &[data-hk-reveal="fade"] { transform: none; }
+    &[data-hk-reveal="left"] {
+        transform: translateX(-20px);
+    }
+    &[data-hk-reveal="right"] {
+        transform: translateX(20px);
+    }
+    &[data-hk-reveal="scale"] {
+        transform: scale(.97);
+    }
+    &[data-hk-reveal="fade"] {
+        transform: none;
+    }
     &.is-in {
         transform: none;
         will-change: auto;
     }
 }
+
 @media (prefers-reduced-motion: reduce) {
     .hk-motif--breathe {
         animation: none;
@@ -240,10 +351,19 @@
 .is-paused .hk-chip--live .hk-chip__dot::after {
     animation-play-state: paused;
 }
+
 @keyframes hk-pulse-ring {
-    0% { transform: scale(1); opacity: 1; }
-    70%, 100% { transform: scale(3.4); opacity: 0; }
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    70%,
+    100% {
+        transform: scale(3.4);
+        opacity: 0;
+    }
 }
+
 @media (prefers-reduced-motion: reduce) {
     .hk-chip--live .hk-chip__dot::after {
         animation: none;

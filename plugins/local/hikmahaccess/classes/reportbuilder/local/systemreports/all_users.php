@@ -18,7 +18,7 @@ namespace local_hikmahaccess\reportbuilder\local\systemreports;
 
 use core\context\system;
 use core_admin\reportbuilder\local\filters\courserole;
-use core_reportbuilder\local\filters\number;
+use core_reportbuilder\local\filters\text;
 use core_reportbuilder\local\report\column;
 use core_reportbuilder\local\report\filter;
 use lang_string;
@@ -34,6 +34,9 @@ use local_hikmahaccess\userlist;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class all_users extends \core_admin\reportbuilder\local\systemreports\users {
+    /** @var string joins course names in SQL; not expected inside a course name */
+    private const SEPARATOR = '|~|';
+
     /**
      * Moodle's report, with download limited.
      */
@@ -69,13 +72,28 @@ class all_users extends \core_admin\reportbuilder\local\systemreports\users {
             } else if ($key === 'roles') {
                 $this->add_column($this->roles_column($u, $user->get_entity_name()));
             } else if ($key === 'courses') {
-                $this->add_column((new column('hkcourses', new lang_string('courses', 'local_hikmahaccess'),
-                    $user->get_entity_name()))
-                    ->set_type(column::TYPE_INTEGER)
+                // One tag per course; the hidden comma keeps "Course A, Course B" in downloads (cells become plain text).
+                $this->add_column((new column(
+                    'hkcourses',
+                    new lang_string('courses', 'local_hikmahaccess'),
+                    $user->get_entity_name()
+                ))
+                    ->set_type(column::TYPE_TEXT)
                     ->add_field($this->courses_sql($u), 'hkcourses')
-                    ->set_is_sortable(true));
+                    ->set_is_sortable(true)
+                    ->add_callback(static fn($value): string => implode(
+                        \html_writer::span(', ', 'visually-hidden'),
+                        array_map(
+                            fn($name) => \html_writer::span(format_string(
+                                $name,
+                                true,
+                                ['context' => system::instance()]
+                            ), 'badge text-bg-light border me-1 mb-1'),
+                            array_filter(explode(self::SEPARATOR, (string) $value))
+                        )
+                    )));
             } else if ($key === 'lastaccess' || $key === 'firstaccess') {
-                // "2 days" rather than a date, as in Moodle's own user list.
+                // Shows "2 days" rather than a date, as in Moodle's own user list.
                 $this->add_column_from_entity("user:$key")
                     ->set_callback(static fn($value): string => $value ? format_time(time() - $value) : get_string('never'));
             } else if (array_key_exists($key, $user->get_columns())) {
@@ -97,11 +115,19 @@ class all_users extends \core_admin\reportbuilder\local\systemreports\users {
             if ($key === 'phone') {
                 $this->add_filter(userlist::phone_filter($u, $user->get_entity_name()));
             } else if ($key === 'roles') {
-                $this->add_filter((new filter(courserole::class, 'courserole', new lang_string('roles', 'local_hikmahaccess'),
-                    $user->get_entity_name()))->set_field_sql("{$u}.id"));
+                $this->add_filter((new filter(
+                    courserole::class,
+                    'courserole',
+                    new lang_string('roles', 'local_hikmahaccess'),
+                    $user->get_entity_name()
+                ))->set_field_sql("{$u}.id"));
             } else if ($key === 'courses') {
-                $this->add_filter((new filter(number::class, 'hkcourses', new lang_string('courses', 'local_hikmahaccess'),
-                    $user->get_entity_name()))->set_field_sql($this->courses_sql($u)));
+                $this->add_filter((new filter(
+                    text::class,
+                    'hkcourses',
+                    new lang_string('courses', 'local_hikmahaccess'),
+                    $user->get_entity_name()
+                ))->set_field_sql($this->courses_sql($u)));
             } else if (array_key_exists($key, $user->get_filters())) {
                 $this->add_filter_from_entity("user:$key");
             }
@@ -141,13 +167,16 @@ class all_users extends \core_admin\reportbuilder\local\systemreports\users {
     }
 
     /**
-     * Number of courses the user is enrolled in.
+     * Names of the courses the user is enrolled in, A to Z, joined by self::SEPARATOR.
      *
      * @param string $u alias of the user table
      * @return string SQL
      */
     private function courses_sql(string $u): string {
-        return "(SELECT COUNT(DISTINCT hke.courseid) FROM {user_enrolments} hkue JOIN {enrol} hke ON hke.id = hkue.enrolid
-            WHERE hkue.userid = {$u}.id)";
+        global $DB;
+        $names = $DB->sql_group_concat('hkc.fullname', self::SEPARATOR, 'hkc.fullname');
+        return "(SELECT {$names} FROM (SELECT DISTINCT hkco.fullname FROM {user_enrolments} hkue
+            JOIN {enrol} hke ON hke.id = hkue.enrolid JOIN {course} hkco ON hkco.id = hke.courseid
+            WHERE hkue.userid = {$u}.id) hkc)";
     }
 }

@@ -57,8 +57,10 @@ if ($choose) {
     foreach (\local_hikmahaccess\userlist::column_options() as $key => $name) {
         $options[] = ['key' => $key, 'name' => $name, 'checked' => in_array($key, $chosen, true)];
     }
-    echo $OUTPUT->render_from_template('local_hikmahaccess/columns',
-        ['action' => $PAGE->url->out(false), 'sesskey' => sesskey(), 'options' => $options]);
+    echo $OUTPUT->render_from_template(
+        'local_hikmahaccess/columns',
+        ['action' => $PAGE->url->out(false), 'sesskey' => sesskey(), 'options' => $options]
+    );
 }
 echo $report->output();
 echo $OUTPUT->footer();

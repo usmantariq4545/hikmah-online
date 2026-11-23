@@ -29,11 +29,19 @@
  * @param stdClass $course
  * @param context_course $context
  */
-function local_hikmahcompletion_extend_navigation_course(navigation_node $navigation, stdClass $course,
-        context_course $context): void {
+function local_hikmahcompletion_extend_navigation_course(
+    navigation_node $navigation,
+    stdClass $course,
+    context_course $context
+): void {
     if (has_capability('local/hikmahcompletion:configure', $context)) {
-        $navigation->add(get_string('rules_title', 'local_hikmahcompletion'),
+        $navigation->add(
+            get_string('rules_title', 'local_hikmahcompletion'),
             new moodle_url('/local/hikmahcompletion/rules.php', ['courseid' => $course->id]),
-            navigation_node::TYPE_SETTING, null, 'local_hikmahcompletion', new pix_icon('i/completion-auto-y', ''));
+            navigation_node::TYPE_SETTING,
+            null,
+            'local_hikmahcompletion',
+            new pix_icon('i/completion-auto-y', '')
+        );
     }
 }

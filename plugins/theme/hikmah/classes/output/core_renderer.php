@@ -172,8 +172,10 @@ class core_renderer extends \theme_boost\output\core_renderer {
      * @return string HTML
      */
     public function context_header($headerinfo = null, $headinglevel = 1): string {
-        if ($this->page->pagetype === 'course-view-participants' && $this->page->course->id == SITEID
-                && !isset($headerinfo['heading'])) {
+        if (
+            $this->page->pagetype === 'course-view-participants' && $this->page->course->id == SITEID
+                && !isset($headerinfo['heading'])
+        ) {
             // The site's participant list is the "People" page of the top menu.
             return parent::context_header(['heading' => get_string('nav_people', 'theme_hikmah')], $headinglevel);
         }
@@ -194,8 +196,10 @@ class core_renderer extends \theme_boost\output\core_renderer {
     public function course_content_header($onlyifnotcalledbefore = false) {
         $html = parent::course_content_header($onlyifnotcalledbefore);
         static $done = false;
-        if (!$done && $this->page->pagelayout === 'mydashboard' && isloggedin() && !isguestuser()
-                && !$this->page->user_is_editing()) {
+        if (
+            !$done && $this->page->pagelayout === 'mydashboard' && isloggedin() && !isguestuser()
+                && !$this->page->user_is_editing()
+        ) {
             $done = true;
             try {
                 $html .= $this->render_from_template('theme_hikmah/dashboard', \theme_hikmah\local\dashboard::export());

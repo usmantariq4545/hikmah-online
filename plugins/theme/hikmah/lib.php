@@ -22,8 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Variables that must exist before Bootstrap and Boost are compiled.
  *
@@ -86,7 +84,10 @@ function theme_hikmah_page_init(moodle_page $page): void {
         $fieldid = $DB->get_field('user_info_field', 'id', ['shortname' => 'hkdob']);
         if ($fieldid) {
             \theme_hikmah\local\blankdates::add('profile_field_hkdob', $userid > 0 && $DB->record_exists_select(
-                'user_info_data', "fieldid = ? AND userid = ? AND data <> '' AND data <> '0'", [$fieldid, $userid]));
+                'user_info_data',
+                "fieldid = ? AND userid = ? AND data <> '' AND data <> '0'",
+                [$fieldid, $userid]
+            ));
         }
     }
     if (!isloggedin() || isguestuser() || empty($page->course->id) || $page->course->id == SITEID) {

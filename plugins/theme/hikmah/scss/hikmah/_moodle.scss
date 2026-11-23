@@ -3,12 +3,14 @@
 // Navbar: paper glass with a hairline, gains a shadow once the page scrolls.
 .navbar.fixed-top {
     height: $navbar-height;
+    // stylelint-disable-next-line declaration-no-important
     background: rgba(251, 250, 246, .86) !important;
     backdrop-filter: saturate(170%) blur(16px);
     border-bottom: 1px solid $hk-line;
     box-shadow: none;
     transition: box-shadow .35s ease, background-color .35s ease;
     &.is-scrolled {
+        // stylelint-disable-next-line declaration-no-important
         background: rgba(251, 250, 246, .96) !important;
         box-shadow: 0 6px 24px rgba(26, 26, 26, .07);
     }
@@ -46,8 +48,10 @@
         white-space: nowrap;
         color: var(--mds-text-subtle);
         background: transparent;
+        // stylelint-disable-next-line declaration-no-important
         border: 0 !important;
         border-radius: var(--mds-border-radius-md);
+        // stylelint-disable-next-line declaration-no-important
         box-shadow: none !important;
         &:hover:not(.active) {
             background-color: var(--mds-bg-nav-pill-hover);
@@ -259,7 +263,11 @@
 
 // Buttons.
 .btn {
-    transition: transform .2s $hk-ease, box-shadow .2s $hk-ease, background-color .15s ease, border-color .15s ease,
+    transition:
+        transform .2s $hk-ease,
+        box-shadow .2s $hk-ease,
+        background-color .15s ease,
+        border-color .15s ease,
         color .15s ease;
     &:not(.btn-icon):not(.btn-link):active {
         transform: scale(.98);
@@ -304,6 +312,7 @@ body {
     .page-header-headings h1,
     .page-context-header h1 {
         font-weight: 400;
+        // stylelint-disable-next-line csstree/validator
         font-size: clamp(1.7rem, 3vw, 2.4rem);
     }
 }
@@ -333,6 +342,7 @@ body[id^="page-course-view"] #region-main {
     box-shadow: none;
     padding: 0;
 }
+
 @include media-breakpoint-down(md) {
     // 16px side margin on phones (Boost uses 8px).
     #page.drawers .main-inner {
@@ -408,6 +418,7 @@ section.block {
 }
 .dashboard-card,
 .course-card {
+    // stylelint-disable-next-line declaration-no-important
     border-radius: $hk-radius !important;
     overflow: hidden;
     border-color: $hk-line;
@@ -646,6 +657,7 @@ section.block {
         overflow: hidden;
         background: $hk-ink;
         color: rgba(255, 255, 255, .72);
+        // stylelint-disable-next-line csstree/validator
         padding-block: clamp(2.5rem, 6vw, 4.5rem) 1.5rem;
         &::before {
             content: "";
@@ -674,6 +686,7 @@ section.block {
         position: relative;
         display: grid;
         grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr));
+        // stylelint-disable-next-line csstree/validator
         gap: clamp(1.5rem, 4vw, 3rem);
     }
     &__logo {
@@ -713,6 +726,7 @@ section.block {
         justify-content: space-between;
         align-items: center;
         gap: 1rem;
+        // stylelint-disable-next-line csstree/validator
         margin-top: clamp(2rem, 5vw, 3.5rem);
         padding-top: 1.25rem;
         border-top: 1px solid rgba(255, 255, 255, .14);
@@ -727,7 +741,9 @@ section.block {
         line-height: 1;
     }
     .btn-footer-popover {
+        // stylelint-disable-next-line declaration-no-important
         background: $hk-sun !important;
+        // stylelint-disable-next-line declaration-no-important
         color: $hk-ink !important;
         box-shadow: $hk-shadow-2;
     }
@@ -736,11 +752,13 @@ section.block {
 #page.drawers .hk-footer {
     margin-inline: -.5rem;
 }
+
 @include media-breakpoint-up(md) {
     #page.drawers .hk-footer {
         margin-inline: -2rem;
     }
 }
+
 @media (max-width: 767.98px) {
     .hk-footer__grid {
         grid-template-columns: 1fr 1fr;
@@ -797,13 +815,16 @@ section.block {
         color: rgba(255, 255, 255, .6);
         margin: 0;
         max-width: none;
+        // stylelint-disable-next-line csstree/validator
         padding: 0 clamp(1.1rem, 4vw, 2.5rem) 1.5rem;
         font-size: .85rem;
         a {
             color: rgba(255, 255, 255, .78);
         }
         .footer-section {
+            // stylelint-disable-next-line declaration-no-important
             padding: .35rem 0 !important;
+            // stylelint-disable-next-line declaration-no-important
             border: 0 !important;
         }
         .footer-section:has(a[href*="contactsitesupport"]),
@@ -816,4 +837,20 @@ section.block {
 // Footer text stays clear of the fixed "?" help button in the bottom corner.
 #page-footer .hk-footer__main > .hk-container {
     padding-inline-end: 4.5rem;
+}
+
+// "Download table data as" (every downloadable table): Moodle lines the row up by its bottom edge and gives the label a
+// bottom margin, so the label sat low; centre label, format list and Download button on one line.
+.dataformatselector > div {
+    // stylelint-disable-next-line declaration-no-important
+    align-items: center !important; // Overrides Moodle's align-items-end utility class.
+    gap: .5rem;
+}
+.dataformatselector label,
+.dataformatselector .form-select {
+    // stylelint-disable-next-line declaration-no-important
+    margin: 0 !important; // Overrides the me-1 utility; the gap spaces them.
+}
+.dataformatselector .form-select {
+    width: auto;
 }

@@ -94,8 +94,12 @@ if ($isrecording) {
         }
     }
     if (!$canjoin) {
-        redirect($viewurl, get_string('classroom_notopen', 'theme_hikmah'), null,
-            \core\output\notification::NOTIFY_INFO);
+        redirect(
+            $viewurl,
+            get_string('classroom_notopen', 'theme_hikmah'),
+            null,
+            \core\output\notification::NOTIFY_INFO
+        );
     }
 }
 

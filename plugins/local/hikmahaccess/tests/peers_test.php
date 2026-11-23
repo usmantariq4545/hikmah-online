@@ -51,8 +51,10 @@ final class peers_test extends \advanced_testcase {
         [$teacher, $s1, $s2] = $this->classroom();
 
         // The observer has already applied the rule when the students were enrolled.
-        $this->assertEquals(message_api::MESSAGE_PRIVACY_ONLYCONTACTS,
-            get_user_preferences(peers::PREFERENCE, null, $s1->id));
+        $this->assertEquals(
+            message_api::MESSAGE_PRIVACY_ONLYCONTACTS,
+            get_user_preferences(peers::PREFERENCE, null, $s1->id)
+        );
 
         $this->assertFalse(message_api::can_send_message($s2->id, $s1->id), 'student to student');
         $this->assertTrue(message_api::can_send_message($teacher->id, $s1->id), 'student to teacher');
@@ -77,8 +79,10 @@ final class peers_test extends \advanced_testcase {
 
         set_user_preference(peers::PREFERENCE, message_api::MESSAGE_PRIVACY_COURSEMEMBER, $s1->id);
         $this->assertSame(1, peers::sync_all());
-        $this->assertEquals(message_api::MESSAGE_PRIVACY_ONLYCONTACTS,
-            get_user_preferences(peers::PREFERENCE, null, $s1->id));
+        $this->assertEquals(
+            message_api::MESSAGE_PRIVACY_ONLYCONTACTS,
+            get_user_preferences(peers::PREFERENCE, null, $s1->id)
+        );
     }
 
     public function test_staff_are_left_alone(): void {

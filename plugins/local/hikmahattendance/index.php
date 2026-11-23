@@ -49,8 +49,12 @@ if ($action !== '' && data_submitted()) {
     require_sesskey();
     if ($action === 'autowrite' && $canconfigure) {
         manager::set_autowrite((int) $course->id, (bool) optional_param('enabled', 0, PARAM_BOOL), (int) $USER->id);
-        redirect($pageurl, get_string('autowrite_saved', 'local_hikmahattendance'), null,
-            \core\output\notification::NOTIFY_SUCCESS);
+        redirect(
+            $pageurl,
+            get_string('autowrite_saved', 'local_hikmahattendance'),
+            null,
+            \core\output\notification::NOTIFY_SUCCESS
+        );
     }
     if ($action === 'processall') {
         $n = 0;
@@ -58,8 +62,12 @@ if ($action !== '' && data_submitted()) {
             manager::process_link((int) $link->id);
             $n++;
         }
-        redirect($pageurl, get_string('processed_n', 'local_hikmahattendance', $n), null,
-            \core\output\notification::NOTIFY_SUCCESS);
+        redirect(
+            $pageurl,
+            get_string('processed_n', 'local_hikmahattendance', $n),
+            null,
+            \core\output\notification::NOTIFY_SUCCESS
+        );
     }
     redirect($pageurl);
 }
