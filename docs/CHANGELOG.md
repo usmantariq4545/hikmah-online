@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-23 — Plugin checks pass
+
+- All Hikmah plugins pass moodle-plugin-ci on Moodle 5.3 again: code style, PHPDoc, valid template HTML
+  (account details, history times and the statistics blocks), stylelint on the theme SCSS, rebuilt payment
+  JavaScript, a PHPUnit warning and the payment Behat setup (the transfer gateway is enabled first).
+
 ## 2026-11-20 — Live classes standard; attendance marked by the platform
 
 - Version control: each change on its own branch, merged into main through a pull request the owner
