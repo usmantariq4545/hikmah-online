@@ -47,15 +47,27 @@ class live_classes {
             return [];
         }
         [$insql, $params] = $DB->get_in_or_equal(array_keys($cms));
-        $rooms = $DB->get_records_select('bigbluebuttonbn', "id $insql AND openingtime > 0 AND closingtime > 0", $params,
-            '', 'id, openingtime, closingtime');
+        $rooms = $DB->get_records_select(
+            'bigbluebuttonbn',
+            "id $insql AND openingtime > 0 AND closingtime > 0",
+            $params,
+            '',
+            'id, openingtime, closingtime'
+        );
         if (!$rooms) {
             return [];
         }
         [$insql, $params] = $DB->get_in_or_equal(array_keys($rooms));
         $recordings = [];
-        foreach ($DB->get_records_select('bigbluebuttonbn_recordings', "bigbluebuttonbnid $insql", $params,
-                'timecreated DESC', 'id, bigbluebuttonbnid, status') as $recording) {
+        foreach (
+            $DB->get_records_select(
+                'bigbluebuttonbn_recordings',
+                "bigbluebuttonbnid $insql",
+                $params,
+                'timecreated DESC',
+                'id, bigbluebuttonbnid, status'
+            ) as $recording
+        ) {
             $recordings[$recording->bigbluebuttonbnid][] = $recording;
         }
         $embed = (bool) get_config('theme_hikmah', 'embedclassroom');
@@ -78,11 +90,16 @@ class live_classes {
                         . self::button($joinurl, get_string('live_joinnow', 'theme_hikmah'), 'hk-btn--sun')];
                 continue;
             }
-            $playable = array_values(array_filter($recordings[$room->id] ?? [],
-                fn($r) => in_array((int) $r->status, self::PLAYABLE, true)));
+            $playable = array_values(array_filter(
+                $recordings[$room->id] ?? [],
+                fn($r) => in_array((int) $r->status, self::PLAYABLE, true)
+            ));
             if ($playable) {
                 $playurl = $embed
-                    ? new moodle_url('/theme/hikmah/classroom.php', ['id' => $cm->id, 'rid' => $playable[0]->id, 'rtype' => 'presentation'])
+                    ? new moodle_url(
+                        '/theme/hikmah/classroom.php',
+                        ['id' => $cm->id, 'rid' => $playable[0]->id, 'rtype' => 'presentation']
+                    )
                     : new moodle_url('/mod/bigbluebuttonbn/view.php', ['id' => $cm->id]);
                 $html = self::button($playurl, get_string('live_watch', 'theme_hikmah'), '');
             } else {
@@ -90,7 +107,8 @@ class live_classes {
                     ? 'live_norecording' : 'live_processing', 'theme_hikmah') . '</span>';
             }
             $out[$cm->id] = ['state' => 'done', 'dates' => $dates,
-                'title' => get_string('live_recordingtitle', 'theme_hikmah'), 'html' => self::chip('done', get_string('live_held', 'theme_hikmah')) . $html];
+                'title' => get_string('live_recordingtitle', 'theme_hikmah'),
+                'html' => self::chip('done', get_string('live_held', 'theme_hikmah')) . $html];
         }
         return $out;
     }
@@ -104,8 +122,11 @@ class live_classes {
      */
     public static function dates(stdClass $room, ?int $now = null): string {
         $now = $now ?? time();
-        return '<span>' . get_string($now > $room->closingtime ? 'live_started' : 'live_starts', 'theme_hikmah',
-                userdate($room->openingtime, get_string('live_dateformat', 'theme_hikmah'))) . '</span> · <span>'
+        return '<span>' . get_string(
+            $now > $room->closingtime ? 'live_started' : 'live_starts',
+            'theme_hikmah',
+            userdate($room->openingtime, get_string('live_dateformat', 'theme_hikmah'))
+        ) . '</span> · <span>'
             . get_string('live_duration', 'theme_hikmah', format_time($room->closingtime - $room->openingtime)) . '</span>';
     }
 

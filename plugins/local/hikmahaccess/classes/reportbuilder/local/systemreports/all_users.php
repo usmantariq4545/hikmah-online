@@ -73,17 +73,27 @@ class all_users extends \core_admin\reportbuilder\local\systemreports\users {
                 $this->add_column($this->roles_column($u, $user->get_entity_name()));
             } else if ($key === 'courses') {
                 // One tag per course; the hidden comma keeps "Course A, Course B" in downloads (cells become plain text).
-                $this->add_column((new column('hkcourses', new lang_string('courses', 'local_hikmahaccess'),
-                    $user->get_entity_name()))
+                $this->add_column((new column(
+                    'hkcourses',
+                    new lang_string('courses', 'local_hikmahaccess'),
+                    $user->get_entity_name()
+                ))
                     ->set_type(column::TYPE_TEXT)
                     ->add_field($this->courses_sql($u), 'hkcourses')
                     ->set_is_sortable(true)
-                    ->add_callback(static fn($value): string => implode(\html_writer::span(', ', 'visually-hidden'),
-                        array_map(fn($name) => \html_writer::span(format_string($name, true,
-                            ['context' => system::instance()]), 'badge text-bg-light border me-1 mb-1'),
-                            array_filter(explode(self::SEPARATOR, (string) $value))))));
+                    ->add_callback(static fn($value): string => implode(
+                        \html_writer::span(', ', 'visually-hidden'),
+                        array_map(
+                            fn($name) => \html_writer::span(format_string(
+                                $name,
+                                true,
+                                ['context' => system::instance()]
+                            ), 'badge text-bg-light border me-1 mb-1'),
+                            array_filter(explode(self::SEPARATOR, (string) $value))
+                        )
+                    )));
             } else if ($key === 'lastaccess' || $key === 'firstaccess') {
-                // "2 days" rather than a date, as in Moodle's own user list.
+                // Shows "2 days" rather than a date, as in Moodle's own user list.
                 $this->add_column_from_entity("user:$key")
                     ->set_callback(static fn($value): string => $value ? format_time(time() - $value) : get_string('never'));
             } else if (array_key_exists($key, $user->get_columns())) {
@@ -105,11 +115,19 @@ class all_users extends \core_admin\reportbuilder\local\systemreports\users {
             if ($key === 'phone') {
                 $this->add_filter(userlist::phone_filter($u, $user->get_entity_name()));
             } else if ($key === 'roles') {
-                $this->add_filter((new filter(courserole::class, 'courserole', new lang_string('roles', 'local_hikmahaccess'),
-                    $user->get_entity_name()))->set_field_sql("{$u}.id"));
+                $this->add_filter((new filter(
+                    courserole::class,
+                    'courserole',
+                    new lang_string('roles', 'local_hikmahaccess'),
+                    $user->get_entity_name()
+                ))->set_field_sql("{$u}.id"));
             } else if ($key === 'courses') {
-                $this->add_filter((new filter(text::class, 'hkcourses', new lang_string('courses', 'local_hikmahaccess'),
-                    $user->get_entity_name()))->set_field_sql($this->courses_sql($u)));
+                $this->add_filter((new filter(
+                    text::class,
+                    'hkcourses',
+                    new lang_string('courses', 'local_hikmahaccess'),
+                    $user->get_entity_name()
+                ))->set_field_sql($this->courses_sql($u)));
             } else if (array_key_exists($key, $user->get_filters())) {
                 $this->add_filter_from_entity("user:$key");
             }

@@ -57,8 +57,12 @@ class gateway extends \core_payment\gateway {
             $mform->addElement('text', $name, get_string('config_' . $name, 'paygw_hikmahtransfer'), ['size' => $size]);
             $mform->setType($name, $type);
         }
-        $mform->addElement('textarea', 'instructions', get_string('config_instructions', 'paygw_hikmahtransfer'),
-            ['rows' => 4, 'cols' => 60]);
+        $mform->addElement(
+            'textarea',
+            'instructions',
+            get_string('config_instructions', 'paygw_hikmahtransfer'),
+            ['rows' => 4, 'cols' => 60]
+        );
         $mform->setType('instructions', PARAM_TEXT);
         $mform->addHelpButton('instructions', 'config_instructions', 'paygw_hikmahtransfer');
     }

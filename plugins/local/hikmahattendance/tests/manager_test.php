@@ -119,14 +119,22 @@ final class manager_test extends \advanced_testcase {
         $payload = json_decode(file_get_contents(__DIR__ . '/fixtures/bbb-3.0-analytics-callback.json'));
         $map = ['FULLSTAY' => 'fullstay', 'LATEJOIN' => 'latejoin', 'REJOIN' => 'rejoin', 'OVERLAP' => 'overlap',
             'EARLYLEAVE' => 'earlyleave', 'OUTSIDER' => 'outsider'];
-        $this->log('Callback', 0, ['internalmeetingid' => $payload->internal_meeting_id, 'callback' => 'meeting_events'],
-            self::END + 120);
+        $this->log(
+            'Callback',
+            0,
+            ['internalmeetingid' => $payload->internal_meeting_id, 'callback' => 'meeting_events'],
+            self::END + 120
+        );
         foreach ($payload->data->attendees as $attendee) {
             $userid = $attendee->ext_user_id === 'TEACHER'
                 ? $this->teacher->id : $this->users[$map[$attendee->ext_user_id]]->id;
             $attendee->ext_user_id = (string) $userid;
-            $this->log('Summary', (int) $userid, ['recordid' => $payload->internal_meeting_id, 'data' => $attendee],
-                self::END + 120);
+            $this->log(
+                'Summary',
+                (int) $userid,
+                ['recordid' => $payload->internal_meeting_id, 'data' => $attendee],
+                self::END + 120
+            );
             if (!in_array($attendee->_case, $skipjoin, true)) {
                 $this->log('Join', (int) $userid, [], self::START - 60);
             }
@@ -312,8 +320,12 @@ final class manager_test extends \advanced_testcase {
         }
 
         $sink = $this->redirectEvents();
-        $this->assertTrue(manager::override((int) $decision->id, calculator::STATUS_PRESENT, 'Audio only, was present',
-            (int) $this->teacher->id));
+        $this->assertTrue(manager::override(
+            (int) $decision->id,
+            calculator::STATUS_PRESENT,
+            'Audio only, was present',
+            (int) $this->teacher->id
+        ));
         $events = array_filter($sink->get_events(), static fn($e) => $e instanceof event\decision_overridden);
         $sink->close();
         $this->assertCount(1, $events);
@@ -327,8 +339,11 @@ final class manager_test extends \advanced_testcase {
 
         manager::apply((int) $this->link->id, (int) $this->teacher->id);
         $present = $DB->get_field('attendance_statuses', 'id', ['attendanceid' => $this->attendance->id, 'acronym' => 'P']);
-        $this->assertEquals($present, $DB->get_field('attendance_log', 'statusid',
-            ['sessionid' => $this->link->sessionid, 'studentid' => $this->users['latejoin']->id]));
+        $this->assertEquals($present, $DB->get_field(
+            'attendance_log',
+            'statusid',
+            ['sessionid' => $this->link->sessionid, 'studentid' => $this->users['latejoin']->id]
+        ));
     }
 
     /**
@@ -357,14 +372,20 @@ final class manager_test extends \advanced_testcase {
         $this->assertSame(calculator::STATUS_PRESENT, $decision->computedstatus);
         $this->assertSame(manager::LINK_READY, $link->state);
         // Register untouched until someone applies.
-        $this->assertEquals($before, $DB->get_field('attendance_log', 'statusid',
-            ['sessionid' => $this->link->sessionid, 'studentid' => $userid]));
+        $this->assertEquals($before, $DB->get_field(
+            'attendance_log',
+            'statusid',
+            ['sessionid' => $this->link->sessionid, 'studentid' => $userid]
+        ));
 
         // Our own earlier mark may be updated on the next apply.
         $result = manager::apply((int) $link->id, (int) $this->teacher->id);
         $this->assertSame(1, $result['written']);
-        $this->assertNotEquals($before, $DB->get_field('attendance_log', 'statusid',
-            ['sessionid' => $this->link->sessionid, 'studentid' => $userid]));
+        $this->assertNotEquals($before, $DB->get_field(
+            'attendance_log',
+            'statusid',
+            ['sessionid' => $this->link->sessionid, 'studentid' => $userid]
+        ));
     }
 
     /**
@@ -416,14 +437,20 @@ final class manager_test extends \advanced_testcase {
         $decisions = manager::current_decisions((int) $link->id);
         $this->assertSame(calculator::STATUS_PRESENT, $decisions[$this->users['fullstay']->id]->computedstatus);
         $this->assertSame(calculator::STATUS_ABSENT, $decisions[$this->users['latejoin']->id]->computedstatus);
-        $remark = $DB->get_field('attendance_log', 'remarks',
-            ['sessionid' => $link->sessionid, 'studentid' => $this->users['fullstay']->id]);
+        $remark = $DB->get_field(
+            'attendance_log',
+            'remarks',
+            ['sessionid' => $link->sessionid, 'studentid' => $this->users['fullstay']->id]
+        );
         $this->assertSame(get_string('logremark_joins', 'local_hikmahattendance'), $remark);
 
         $this->store_fixture();
         manager::process_link((int) $link->id, self::END + 4 * HOURSECS);
-        $remark = $DB->get_field('attendance_log', 'remarks',
-            ['sessionid' => $link->sessionid, 'studentid' => $this->users['latejoin']->id]);
+        $remark = $DB->get_field(
+            'attendance_log',
+            'remarks',
+            ['sessionid' => $link->sessionid, 'studentid' => $this->users['latejoin']->id]
+        );
         $this->assertNotSame(get_string('logremark_joins', 'local_hikmahattendance'), $remark);
     }
 
@@ -446,8 +473,10 @@ final class manager_test extends \advanced_testcase {
         $DB->set_field('bigbluebuttonbn', 'openingtime', self::START + HOURSECS, ['id' => $room->id]);
         $DB->set_field('bigbluebuttonbn', 'closingtime', self::END + HOURSECS, ['id' => $room->id]);
         $this->assertSame('moved', manager::ensure_for_room((int) $room->id, (int) get_admin()->id));
-        $this->assertSame(self::START + HOURSECS,
-            (int) $DB->get_field('attendance_sessions', 'sessdate', ['id' => $link->sessionid]));
+        $this->assertSame(
+            self::START + HOURSECS,
+            (int) $DB->get_field('attendance_sessions', 'sessdate', ['id' => $link->sessionid])
+        );
         $this->assertNull(manager::ensure_for_room((int) $room->id, (int) get_admin()->id));
         $this->assertSame(1, $DB->count_records('attendance', ['course' => $course->id]));
     }

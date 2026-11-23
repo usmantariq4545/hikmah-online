@@ -7,6 +7,7 @@
     color: #fff;
     overflow: hidden;
     isolation: isolate;
+    // stylelint-disable-next-line csstree/validator
     padding-block: clamp(4rem, 9vw, 7.5rem) clamp(6rem, 11vw, 9.5rem);
     &::before {
         // Soft light pooled behind the rosette.
@@ -22,10 +23,12 @@
         display: grid;
         grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
         align-items: center;
+        // stylelint-disable-next-line csstree/validator
         gap: clamp(2rem, 5vw, 4rem);
     }
     &__title {
         font-family: $hk-font-display;
+        // stylelint-disable-next-line csstree/validator
         font-size: clamp(2.6rem, 6.2vw, 5rem);
         font-weight: 300;
         line-height: 1.04;
@@ -50,10 +53,15 @@
             display: inline-block;
             animation: hk-line-up 1s $hk-ease-out both;
         }
-        &:nth-child(2) > span { animation-delay: .12s; }
-        &:nth-child(3) > span { animation-delay: .24s; }
+        &:nth-child(2) > span {
+            animation-delay: .12s;
+        }
+        &:nth-child(3) > span {
+            animation-delay: .24s;
+        }
     }
     &__lead {
+        // stylelint-disable-next-line csstree/validator
         font-size: clamp(1.05rem, 1.5vw, 1.22rem);
         line-height: 1.65;
         color: rgba(255, 255, 255, .74);
@@ -68,6 +76,7 @@
         animation: hk-rise .9s $hk-ease-out .6s both;
     }
     &__eyebrow {
+        // stylelint-disable-next-line no-unknown-animations
         animation: hk-fade 1s ease .1s both;
     }
     &__art {
@@ -90,6 +99,7 @@
         display: grid;
         place-items: center;
         font-family: $hk-font-brand-arabic;
+        // stylelint-disable-next-line csstree/validator
         font-size: clamp(2.2rem, 4.4vw, 3.5rem);
         font-weight: 700;
         color: #fff;
@@ -102,20 +112,27 @@
         inset-inline: 0;
         bottom: -1px;
         width: 100%;
+        // stylelint-disable-next-line csstree/validator
         height: clamp(40px, 6vw, 90px);
         fill: $hk-paper;
         z-index: -1;
     }
 }
+
 @keyframes hk-line-up {
-    from { transform: translateY(110%); }
-    to { transform: none; }
+    from {
+        transform: translateY(110%);
+    }
+    to {
+        transform: none;
+    }
 }
 
 // Stats strip overlapping the hero.
 .hk-stats {
     position: relative;
     z-index: 2;
+    // stylelint-disable-next-line csstree/validator
     margin-top: clamp(-5.5rem, -7vw, -3.5rem);
     &__grid {
         display: grid;
@@ -127,7 +144,12 @@
         overflow: hidden;
     }
     &__item {
+        // stylelint-disable-next-line csstree/validator
         padding: clamp(1.2rem, 2.4vw, 2rem);
+        // The label comes first in the markup (valid <dl>); the number shows above it.
+        display: flex;
+        flex-direction: column-reverse;
+        justify-content: flex-end;
         border-inline-start: 1px solid $hk-line;
         &:first-child {
             border-inline-start: 0;
@@ -135,6 +157,7 @@
     }
     &__num {
         font-family: $hk-font-display;
+        // stylelint-disable-next-line csstree/validator
         font-size: clamp(1.9rem, 3.4vw, 2.8rem);
         font-weight: 400;
         line-height: 1;
@@ -469,6 +492,7 @@
     text-align: center;
     &__motif {
         position: absolute;
+        // stylelint-disable-next-line csstree/validator
         width: min(760px, 120vw);
         left: 50%;
         top: 50%;
@@ -483,6 +507,7 @@
     }
     &__arabic {
         font-family: $hk-font-arabic-body;
+        // stylelint-disable-next-line csstree/validator
         font-size: clamp(1.7rem, 4vw, 2.8rem);
         line-height: 1.9;
         color: #fff;
@@ -490,6 +515,7 @@
     }
     &__text {
         font-family: $hk-font-display;
+        // stylelint-disable-next-line csstree/validator
         font-size: clamp(1.15rem, 2vw, 1.5rem);
         font-weight: 300;
         line-height: 1.5;
@@ -508,12 +534,14 @@
 .hk-verify {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    // stylelint-disable-next-line csstree/validator
     gap: clamp(1.5rem, 4vw, 4rem);
     align-items: center;
     background: #fff;
     border: 1px solid $hk-line;
     border-radius: $hk-radius-lg;
     box-shadow: $hk-shadow-1;
+    // stylelint-disable-next-line csstree/validator
     padding: clamp(1.6rem, 4vw, 3.25rem);
     position: relative;
     overflow: hidden;
@@ -649,6 +677,7 @@
     overflow: hidden;
     background: $hk-sun;
     border-radius: $hk-radius-lg;
+    // stylelint-disable-next-line csstree/validator
     padding: clamp(2rem, 5vw, 4rem);
     display: flex;
     flex-wrap: wrap;
@@ -656,6 +685,7 @@
     justify-content: space-between;
     gap: 1.5rem;
     &__title {
+        // stylelint-disable-next-line csstree/validator
         font-size: clamp(1.7rem, 3.4vw, 2.6rem);
         font-weight: 400;
         margin: 0;
@@ -684,6 +714,7 @@
     overflow: hidden;
     background: $hk-ink;
     color: #fff;
+    // stylelint-disable-next-line csstree/validator
     padding-block: clamp(2.6rem, 6vw, 4.5rem);
     isolation: isolate;
     &::before {
@@ -702,6 +733,7 @@
         z-index: -1;
     }
     &__title {
+        // stylelint-disable-next-line csstree/validator
         font-size: clamp(2rem, 4.6vw, 3.4rem);
         font-weight: 300;
         color: #fff;
@@ -716,6 +748,7 @@
         animation: hk-rise .8s $hk-ease-out .1s both;
     }
     .hk-crumbs {
+        // stylelint-disable-next-line no-unknown-animations
         animation: hk-fade .8s ease both;
     }
 }
@@ -743,6 +776,7 @@
 
 // ---- Catalog ---------------------------------------------------------------------------------------
 .hk-catalog {
+    // stylelint-disable-next-line csstree/validator
     padding-block: 2rem clamp(3rem, 7vw, 5.5rem);
     &__bar {
         position: sticky;
@@ -795,6 +829,7 @@
         appearance: none;
         width: 100%;
         border: 1.5px solid transparent;
+        // stylelint-disable-next-line function-url-scheme-disallowed-list
         background: $hk-paper-2 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%231a1a1a' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' d='m4 6 4 4 4-4'/%3E%3C/svg%3E") no-repeat right .9rem center / .9rem;
         border-radius: 999px;
         padding: .7rem 2.2rem .7rem 1rem;
@@ -845,6 +880,7 @@
 // ---- Course detail ---------------------------------------------------------------------------------
 .hk-detail {
     &__head {
+        // stylelint-disable-next-line csstree/validator
         padding-bottom: clamp(4rem, 8vw, 6rem);
     }
     &__chips {
@@ -857,8 +893,10 @@
     &__layout {
         display: grid;
         grid-template-columns: minmax(0, 1fr) 380px;
+        // stylelint-disable-next-line csstree/validator
         gap: clamp(1.5rem, 4vw, 3.5rem);
         align-items: start;
+        // stylelint-disable-next-line csstree/validator
         padding-bottom: clamp(3rem, 7vw, 5.5rem);
     }
     &__main > section {
@@ -875,6 +913,7 @@
     &__aside {
         position: sticky;
         top: $navbar-height + 20px;
+        // stylelint-disable-next-line csstree/validator
         margin-top: clamp(-9rem, -12vw, -5rem);
         z-index: 3;
     }
@@ -949,9 +988,18 @@
         background: $hk-paper-2;
         font-size: .9rem;
         margin-bottom: 1rem;
-        &--success { background: #e2f3ea; color: darken($hk-success, 6%); }
-        &--pending { background: #fff3cd; color: #6b4700; }
-        &--danger { background: #fbe9e7; color: $hk-danger; }
+        &--success {
+            background: #e2f3ea;
+            color: darken($hk-success, 6%);
+        }
+        &--pending {
+            background: #fff3cd;
+            color: #6b4700;
+        }
+        &--danger {
+            background: #fbe9e7;
+            color: $hk-danger;
+        }
     }
 }
 .hk-outcomes {
@@ -972,6 +1020,7 @@
             width: 1.3rem;
             height: 1.3rem;
             border-radius: 50%;
+            // stylelint-disable-next-line function-url-scheme-disallowed-list
             background: $hk-sun url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%231a1a1a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='m4 8.5 2.6 2.6L12 5.6'/%3E%3C/svg%3E") center / .8rem no-repeat;
         }
     }
@@ -1109,6 +1158,7 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        // stylelint-disable-next-line csstree/validator
         padding: clamp(1.75rem, 4vw, 3.5rem);
         isolation: isolate;
         &::before {
@@ -1121,6 +1171,7 @@
     }
     &__motif {
         position: absolute;
+        // stylelint-disable-next-line csstree/validator
         width: min(140%, 760px);
         left: 50%;
         top: 54%;
@@ -1134,6 +1185,7 @@
     &__quote {
         max-width: 26rem;
         h2 {
+            // stylelint-disable-next-line csstree/validator
             font-size: clamp(1.7rem, 3vw, 2.5rem);
             font-weight: 300;
             color: #fff;
@@ -1148,6 +1200,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        // stylelint-disable-next-line csstree/validator
         padding: clamp(1.5rem, 5vw, 4rem);
     }
     &__card {
@@ -1156,6 +1209,7 @@
         animation: hk-rise .8s $hk-ease-out .1s both;
     }
     &__title {
+        // stylelint-disable-next-line csstree/validator
         font-size: clamp(1.9rem, 3vw, 2.4rem);
         font-weight: 400;
         margin: .8rem 0 .4rem;
@@ -1298,11 +1352,25 @@
         }
     }
 }
+
 @keyframes hk-shake {
-    10%, 90% { transform: translateX(-1px); }
-    20%, 80% { transform: translateX(3px); }
-    30%, 50%, 70% { transform: translateX(-5px); }
-    40%, 60% { transform: translateX(5px); }
+    10%,
+    90% {
+        transform: translateX(-1px);
+    }
+    20%,
+    80% {
+        transform: translateX(3px);
+    }
+    30%,
+    50%,
+    70% {
+        transform: translateX(-5px);
+    }
+    40%,
+    60% {
+        transform: translateX(5px);
+    }
 }
 
 // ---- Responsive ------------------------------------------------------------------------------------
@@ -1390,6 +1458,7 @@
         }
     }
 }
+
 @media (max-width: 575.98px) {
     .hk-courses {
         grid-template-columns: 1fr;
@@ -1431,19 +1500,19 @@
 .hk-classroom {
     display: flex;
     flex-direction: column;
-    height: 100vh;
     height: 100dvh;
     background: $hk-ink;
     color: #fff;
     .hk-staging-banner ~ #page & {
-        height: calc(100vh - 1.9rem);
         height: calc(100dvh - 1.9rem);
     }
     &__bar {
         flex: 0 0 auto;
         display: flex;
         align-items: center;
+        // stylelint-disable-next-line csstree/validator
         gap: clamp(.6rem, 2vw, 1.4rem);
+        // stylelint-disable-next-line csstree/validator
         padding: .55rem clamp(.75rem, 2vw, 1.4rem);
         border-bottom: 1px solid rgba(255, 255, 255, .1);
         animation: hk-fade .6s $hk-ease-out both;
@@ -1602,6 +1671,7 @@
     }
     &__motif {
         position: absolute;
+        // stylelint-disable-next-line csstree/validator
         width: min(120%, 620px);
         left: 50%;
         top: 50%;
@@ -1611,9 +1681,11 @@
     }
     &__panel-body {
         max-width: 30rem;
+        // stylelint-disable-next-line time-min-milliseconds
         animation: hk-rise .7s $hk-ease-out .05s both;
         h2 {
             color: #fff;
+            // stylelint-disable-next-line csstree/validator
             font-size: clamp(1.5rem, 3vw, 2.1rem);
             font-weight: 300;
             margin-bottom: .6rem;
@@ -1651,6 +1723,7 @@
     height: 0;
     overflow: hidden;
 }
+
 @keyframes hk-classroom-pulse {
     0%,
     100% {
@@ -1660,6 +1733,7 @@
         box-shadow: 0 0 0 .35rem rgba(255, 224, 0, 0);
     }
 }
+
 @keyframes hk-classroom-dots {
     0% {
         content: "";
@@ -1674,6 +1748,7 @@
         content: "...";
     }
 }
+
 @media (max-width: 767.98px) {
     .hk-classroom {
         &__logo img {
@@ -1700,6 +1775,7 @@
         }
     }
 }
+
 @media (prefers-reduced-motion: reduce) {
     .hk-classroom__dot,
     .hk-classroom__panel--loading h2::after {

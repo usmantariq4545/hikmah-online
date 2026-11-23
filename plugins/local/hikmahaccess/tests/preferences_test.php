@@ -36,11 +36,21 @@ final class preferences_test extends \advanced_testcase {
     private function trimmed_for(int $userid): array {
         $account = new navigation_node(['text' => 'Preferences', 'key' => 'useraccount']);
         $account->add('Edit profile', new \core\url('/user/edit.php'), navigation_node::TYPE_SETTING, null, 'editprofile');
-        $account->add('Preferred language', new \core\url('/user/language.php'), navigation_node::TYPE_SETTING, null,
-            'preferredlanguage');
+        $account->add(
+            'Preferred language',
+            new \core\url('/user/language.php'),
+            navigation_node::TYPE_SETTING,
+            null,
+            'preferredlanguage'
+        );
         $account->add('Editor preferences', new \core\url('/user/editor.php'), navigation_node::TYPE_SETTING, null, 'editor');
-        $account->add('Content bank', new \core\url('/user/contentbank.php'), navigation_node::TYPE_SETTING, null,
-            'contentbankpreferences');
+        $account->add(
+            'Content bank',
+            new \core\url('/user/contentbank.php'),
+            navigation_node::TYPE_SETTING,
+            null,
+            'contentbankpreferences'
+        );
         preferences::trim($account, $userid);
         return array_values(array_map(fn($node) => $node->key, iterator_to_array($account->children)));
     }

@@ -75,7 +75,7 @@ class manager {
     /** @var string Evidence note: no BBB report, marked from the join log only. */
     public const NOTE_JOINSONLY = 'joinlogonly';
 
-    // ---- Configuration ---------------------------------------------------------------------------
+    // Configuration.
 
     /**
      * Site default threshold (percent needed for Present).
@@ -160,7 +160,7 @@ class manager {
         }
     }
 
-    // ---- Links -----------------------------------------------------------------------------------
+    // Links.
 
     /**
      * Fetch a link.
@@ -304,9 +304,11 @@ class manager {
         if ($link = reset($links)) {
             $moved = (int) $link->windowstart !== $start || (int) $link->windowend !== $end;
             if ($moved && $link->state === self::LINK_WAITING) {
-                // shortcut: direct update, fine because these sessions have no calendar event of their own.
-                $DB->update_record('attendance_sessions',
-                    (object) ['id' => $link->sessionid, 'sessdate' => $start, 'duration' => $end - $start, 'timemodified' => time()]);
+                // Shortcut: direct update, fine because these sessions have no calendar event of their own.
+                $DB->update_record(
+                    'attendance_sessions',
+                    (object) ['id' => $link->sessionid, 'sessdate' => $start, 'duration' => $end - $start, 'timemodified' => time()]
+                );
                 $link->windowstart = $start;
                 $link->windowend = $end;
                 self::save_link($link, $actorid);
@@ -322,6 +324,7 @@ class manager {
                     'course' => $courseid,
                     'section' => 0,
                     'visible' => 1,
+                    'cmidnumber' => '',
                     'name' => get_string('modulename', 'attendance'),
                     'grade' => 100,
                     'introeditor' => ['text' => '', 'format' => FORMAT_HTML, 'itemid' => 0],
@@ -336,8 +339,12 @@ class manager {
                 // From the database: the course cache may not know the new room yet inside its creation event.
                 $cm = get_coursemodule_from_instance('bigbluebuttonbn', $room->id, $courseid, false, MUST_EXIST);
                 $sectionnum = (int) $DB->get_field('course_sections', 'section', ['id' => $cm->section]);
-                $sessionid = self::create_session($attendance, $start, $end - $start,
-                    get_string('sessiondescription', 'local_hikmahattendance', get_section_name($courseid, $sectionnum)));
+                $sessionid = self::create_session(
+                    $attendance,
+                    $start,
+                    $end - $start,
+                    get_string('sessiondescription', 'local_hikmahattendance', get_section_name($courseid, $sectionnum))
+                );
             }
             self::save_link((object) [
                 'courseid' => $courseid,
@@ -360,7 +367,7 @@ class manager {
         return $result;
     }
 
-    // ---- Evidence --------------------------------------------------------------------------------
+    // Evidence.
 
     /**
      * Read the stored BBB evidence for a link.
@@ -425,7 +432,7 @@ class manager {
         return [$learnerids, $staffids];
     }
 
-    // ---- Processing ------------------------------------------------------------------------------
+    // Processing.
 
     /**
      * Compute decisions for a link from the stored evidence. Safe to run any number of times:
@@ -500,7 +507,13 @@ class manager {
         $computed = [];
         foreach ($learnerids as $userid) {
             $computed[$userid] = self::compute_decision(
-                $link, $userid, $parsed[$userid] ?? [], isset($evidence->joined[$userid]), $threshold, $denominator, ''
+                $link,
+                $userid,
+                $parsed[$userid] ?? [],
+                isset($evidence->joined[$userid]),
+                $threshold,
+                $denominator,
+                ''
             );
         }
         // Participants with a Moodle id who are neither learners nor staff: shown for review, never written.
@@ -516,7 +529,13 @@ class manager {
             $unmapped++;
             if ($DB->record_exists('user', ['id' => $userid, 'deleted' => 0])) {
                 $computed[$userid] = self::compute_decision(
-                    $link, $userid, $entries, isset($evidence->joined[$userid]), $threshold, $denominator, 'unmapped'
+                    $link,
+                    $userid,
+                    $entries,
+                    isset($evidence->joined[$userid]),
+                    $threshold,
+                    $denominator,
+                    'unmapped'
                 );
             }
         }
@@ -547,8 +566,10 @@ class manager {
             'linkid = :linkid AND state IN (:s1, :s2)',
             ['linkid' => $link->id, 's1' => self::DECISION_PREVIEW, 's2' => self::DECISION_OVERRIDDEN]
         );
-        $link = $setstate($open ? self::LINK_READY : self::LINK_APPLIED,
-            $unmapped ? get_string('linknote_unmapped', 'local_hikmahattendance', $unmapped) : null);
+        $link = $setstate(
+            $open ? self::LINK_READY : self::LINK_APPLIED,
+            $unmapped ? get_string('linknote_unmapped', 'local_hikmahattendance', $unmapped) : null
+        );
 
         if ($open && self::autowrite_enabled((int) $link->courseid)) {
             self::apply($link->id, (int) get_admin()->id, true);
@@ -617,8 +638,14 @@ class manager {
             'percent' => $percent,
             'threshold' => $threshold,
             'computedstatus' => $status,
-            'evidencehash' => calculator::evidence_hash((int) $link->sessionid, $userid, $seconds, $denominator,
-                $threshold, $status),
+            'evidencehash' => calculator::evidence_hash(
+                (int) $link->sessionid,
+                $userid,
+                $seconds,
+                $denominator,
+                $threshold,
+                $status
+            ),
             'evidence' => json_encode([
                 'intervals' => $intervals,
                 'joined' => $joined,
@@ -698,7 +725,7 @@ class manager {
         }
     }
 
-    // ---- Review ----------------------------------------------------------------------------------
+    // Review.
 
     /**
      * Current (not superseded) decisions of a link, keyed by user id.
@@ -768,8 +795,16 @@ class manager {
         $DB->update_record(self::TABLE_DECISION, $decision);
         $DB->set_field(self::TABLE_LINK, 'state', self::LINK_READY, ['id' => $decision->linkid]);
 
-        self::audit((int) $decision->linkid, (int) $decision->sessionid, (int) $decision->userid, $actorid,
-            'override', $old, $status, $reason);
+        self::audit(
+            (int) $decision->linkid,
+            (int) $decision->sessionid,
+            (int) $decision->userid,
+            $actorid,
+            'override',
+            $old,
+            $status,
+            $reason
+        );
         $link = self::get_link((int) $decision->linkid);
         event\decision_overridden::create([
             'context' => \context_course::instance($link->courseid),
@@ -822,8 +857,13 @@ class manager {
         $towrite = [];
 
         foreach (self::current_decisions($linkid) as $userid => $decision) {
-            if (!in_array($decision->state, [self::DECISION_PREVIEW, self::DECISION_OVERRIDDEN, self::DECISION_APPROVED],
-                    true)) {
+            if (
+                !in_array(
+                    $decision->state,
+                    [self::DECISION_PREVIEW, self::DECISION_OVERRIDDEN, self::DECISION_APPROVED],
+                    true
+                )
+            ) {
                 continue;
             }
             $status = self::effective_status($decision);
@@ -886,14 +926,30 @@ class manager {
                 $decision->appliedtime = $now;
                 $decision->timemodified = $now;
                 $DB->update_record(self::TABLE_DECISION, $decision);
-                self::audit($linkid, (int) $link->sessionid, $userid, $actorid, $auto ? 'autoapply' : 'apply',
-                    $decision->computedstatus, $status, (string) $decision->reason);
+                self::audit(
+                    $linkid,
+                    (int) $link->sessionid,
+                    $userid,
+                    $actorid,
+                    $auto ? 'autoapply' : 'apply',
+                    $decision->computedstatus,
+                    $status,
+                    (string) $decision->reason
+                );
                 $result['written']++;
             }
         }
 
-        self::audit($linkid, (int) $link->sessionid, null, $actorid, $auto ? 'autoapprove' : 'approve', '',
-            json_encode($result), '');
+        self::audit(
+            $linkid,
+            (int) $link->sessionid,
+            null,
+            $actorid,
+            $auto ? 'autoapprove' : 'approve',
+            '',
+            json_encode($result),
+            ''
+        );
         $open = $DB->count_records_select(
             self::TABLE_DECISION,
             'linkid = :linkid AND state IN (:s1, :s2)',
@@ -947,8 +1003,16 @@ class manager {
      * @param string $to
      * @param string $reason
      */
-    public static function audit(int $linkid, int $sessionid, ?int $userid, int $actorid, string $action, string $from,
-            string $to, string $reason): void {
+    public static function audit(
+        int $linkid,
+        int $sessionid,
+        ?int $userid,
+        int $actorid,
+        string $action,
+        string $from,
+        string $to,
+        string $reason
+    ): void {
         global $DB;
         $DB->insert_record(self::TABLE_AUDIT, (object) [
             'linkid' => $linkid,

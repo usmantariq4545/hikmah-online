@@ -79,7 +79,7 @@ final class request_test extends \advanced_testcase {
      * Put a file into the learner's draft area and return the draft item id.
      *
      * @param string $filename
-     * @param string $content
+     * @param ?string $content
      * @return int
      */
     private function draft(string $filename = 'receipt.png', ?string $content = null): int {
@@ -142,8 +142,10 @@ final class request_test extends \advanced_testcase {
         $this->assertEquals(1, $DB->count_records(request::TABLE));
         $this->assertEquals('4500.00', $first->amount);
         $this->assertEquals('PKR', $first->currency);
-        $this->assertMatchesRegularExpression('/^HKM-' . $this->course->id . '-' . $this->learner->id . '-[0-9A-F]{6}$/',
-            $first->reference);
+        $this->assertMatchesRegularExpression(
+            '/^HKM-' . $this->course->id . '-' . $this->learner->id . '-[0-9A-F]{6}$/',
+            $first->reference
+        );
     }
 
     /**
@@ -212,8 +214,12 @@ final class request_test extends \advanced_testcase {
         $again = request::get_or_create_draft('enrol_fee', 'fee', $this->instanceid, (int) $this->learner->id);
         $this->assertEquals($request->id, $again->id);
 
-        $this->assertTrue(request::submit((int) $request->id, $this->data(), $this->draft('second.png'),
-            (int) $this->learner->id));
+        $this->assertTrue(request::submit(
+            (int) $request->id,
+            $this->data(),
+            $this->draft('second.png'),
+            (int) $this->learner->id
+        ));
         $this->assertEquals('second.png', receipt::get_file((int) $request->id)->get_filename());
         $this->assertTrue(request::approve((int) $request->id, (int) $this->reviewer->id));
 
@@ -237,15 +243,23 @@ final class request_test extends \advanced_testcase {
     public function test_invalid_receipt_rejected(): void {
         $request = request::get_or_create_draft('enrol_fee', 'fee', $this->instanceid, (int) $this->learner->id);
         try {
-            request::submit((int) $request->id, $this->data(), $this->draft('fake.png', '<?php echo 1;'),
-                (int) $this->learner->id);
+            request::submit(
+                (int) $request->id,
+                $this->data(),
+                $this->draft('fake.png', '<?php echo 1;'),
+                (int) $this->learner->id
+            );
             $this->fail('A disguised file must be refused.');
         } catch (\moodle_exception $e) {
             $this->assertEquals('error:receipttype', $e->errorcode);
         }
         try {
-            request::submit((int) $request->id, $this->data(), $this->draft('notes.txt', 'hello'),
-                (int) $this->learner->id);
+            request::submit(
+                (int) $request->id,
+                $this->data(),
+                $this->draft('notes.txt', 'hello'),
+                (int) $this->learner->id
+            );
             $this->fail('A text file must be refused.');
         } catch (\moodle_exception $e) {
             $this->assertEquals('error:receipttype', $e->errorcode);

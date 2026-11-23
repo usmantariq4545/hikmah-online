@@ -92,8 +92,10 @@ class hook_callbacks {
     public static function before_course_viewed(\core_course\hook\before_course_viewed $hook): void {
         global $USER;
         $course = $hook->course;
-        if (!self::is_active() || !isloggedin() || isguestuser() || !empty($USER->editing)
-                || array_diff(array_keys($_GET + $_POST), ['id']) || !course_format_uses_sections($course->format)) {
+        if (
+            !self::is_active() || !isloggedin() || isguestuser() || !empty($USER->editing)
+                || array_diff(array_keys($_GET + $_POST), ['id']) || !course_format_uses_sections($course->format)
+        ) {
             return;
         }
         try {
@@ -119,8 +121,10 @@ class hook_callbacks {
         }
         // Staff who are not on the course (support) only get "Cannot view grades." behind the Grades tab.
         $context = \context_course::instance($PAGE->course->id);
-        if (!is_enrolled($context) && !has_capability('moodle/grade:viewall', $context)
-                && ($grades = $hook->get_secondaryview()->get('grades'))) {
+        if (
+            !is_enrolled($context) && !has_capability('moodle/grade:viewall', $context)
+                && ($grades = $hook->get_secondaryview()->get('grades'))
+        ) {
             $grades->remove();
         }
     }
@@ -139,15 +143,22 @@ class hook_callbacks {
         $view = $hook->get_primaryview();
         $isreviewer = has_capability('paygw/hikmahtransfer:review', $system);
         // Staff with no courses of their own who cannot create one (finance, support) would only find an empty "My courses".
-        if (($isreviewer || has_capability('moodle/course:view', $system)) && !has_capability('moodle/course:create', $system)
+        if (
+            ($isreviewer || has_capability('moodle/course:view', $system)) && !has_capability('moodle/course:create', $system)
                 && !enrol_get_my_courses('id', null, 1)
-                && ($mycourses = $view->find('mycourses', \navigation_node::TYPE_ROOTNODE))) {
+                && ($mycourses = $view->find('mycourses', \navigation_node::TYPE_ROOTNODE))
+        ) {
             $mycourses->remove();
         }
         // Users: everyone for administrators, managers and support; their learners for teachers (local_hikmahaccess).
         if (class_exists('\local_hikmahaccess\userlist') && \local_hikmahaccess\userlist::report_class()) {
-            $view->add(get_string('nav_users', 'theme_hikmah'), new \moodle_url('/local/hikmahaccess/users.php'),
-                \navigation_node::TYPE_CUSTOM, null, 'hkusers');
+            $view->add(
+                get_string('nav_users', 'theme_hikmah'),
+                new \moodle_url('/local/hikmahaccess/users.php'),
+                \navigation_node::TYPE_CUSTOM,
+                null,
+                'hkusers'
+            );
         }
         if ($isreviewer) {
             $view->add(
@@ -177,12 +188,14 @@ class hook_callbacks {
                 . 'var t=f.getBoundingClientRect().top;d.querySelectorAll(".drawer.drawer-left,.drawer.drawer-right")'
                 . '.forEach(function(x){x.style.height="";if(t<w.innerHeight&&w.innerWidth>=992){'
                 . 'x.style.height=Math.max(0,t-x.getBoundingClientRect().top)+"px";}});}'
-                . 'w.addEventListener("scroll",a,{passive:true});w.addEventListener("resize",a);d.addEventListener("DOMContentLoaded",a);w.addEventListener("load",a);})(document,window);</script>');
+                . 'w.addEventListener("scroll",a,{passive:true});w.addEventListener("resize",a);'
+                . 'd.addEventListener("DOMContentLoaded",a);w.addEventListener("load",a);})(document,window);</script>');
         }
         if (self::is_active() && str_starts_with($PAGE->pagetype, 'mod-attendance-')) {
-            // mod_attendance writes a bare "?" (and "? / 2.0" points) for sessions not marked yet.
+            // Note: mod_attendance writes a bare "?" (and "? / 2.0" points) for sessions not marked yet.
             $hook->add_html('<script>(function(d,t){d.querySelectorAll("table td").forEach(function(td){'
-                . 'var s=td.textContent.trim();if(s==="?"){td.textContent=t;}else if(/^\? \/ [\d.,]+$/.test(s)){td.textContent="–";}});})'
+                . 'var s=td.textContent.trim();if(s==="?"){td.textContent=t;}'
+                . 'else if(/^\? \/ [\d.,]+$/.test(s)){td.textContent="–";}});})'
                 . '(document,' . json_encode(get_string('att_notmarked', 'theme_hikmah')) . ');</script>');
         }
         if (self::is_active() && str_starts_with($PAGE->pagetype, 'mod-bigbluebuttonbn-')) {
@@ -196,9 +209,12 @@ class hook_callbacks {
                 : null;
             if ($room && $room->openingtime > 0 && $room->closingtime > $room->openingtime) {
                 $hook->add_html('<script>(function(d,h){var r=d.querySelector(\'#page-header [data-region="activity-dates"],'
-                    . ' .activity-header [data-region="activity-dates"]\');if(r){r.innerHTML=\'<div class="hk-livedates">\'+h+"</div>";}})'
-                    . '(document,' . json_encode(\theme_hikmah\local\live_classes::dates($room),
-                        JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ');</script>');
+                    . ' .activity-header [data-region="activity-dates"]\');'
+                    . 'if(r){r.innerHTML=\'<div class="hk-livedates">\'+h+"</div>";}})'
+                    . '(document,' . json_encode(
+                        \theme_hikmah\local\live_classes::dates($room),
+                        JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+                    ) . ');</script>');
             }
             return;
         }
@@ -257,8 +273,10 @@ class hook_callbacks {
      */
     private static function courseindex(\core\hook\output\before_footer_html_generation $hook): void {
         global $PAGE;
-        if (!isloggedin() || isguestuser() || empty($PAGE->course->id) || $PAGE->course->id == SITEID
-                || !preg_match('/^(course-view-|mod-)/', $PAGE->pagetype)) {
+        if (
+            !isloggedin() || isguestuser() || empty($PAGE->course->id) || $PAGE->course->id == SITEID
+                || !preg_match('/^(course-view-|mod-)/', $PAGE->pagetype)
+        ) {
             return;
         }
         $locked = [];
@@ -307,8 +325,11 @@ class hook_callbacks {
         // On BigBlueButton activity pages, "Join session" and recordings open in the in-portal
         // classroom instead of a separate window.
         if (get_config('theme_hikmah', 'embedclassroom') && str_starts_with($PAGE->pagetype, 'mod-bigbluebuttonbn-')) {
-            $PAGE->requires->js_call_amd('theme_hikmah/classroom', 'intercept',
-                [(new \moodle_url('/theme/hikmah/classroom.php'))->out(false)]);
+            $PAGE->requires->js_call_amd(
+                'theme_hikmah/classroom',
+                'intercept',
+                [(new \moodle_url('/theme/hikmah/classroom.php'))->out(false)]
+            );
         }
     }
 }

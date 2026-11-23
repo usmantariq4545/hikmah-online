@@ -43,8 +43,10 @@ class dashboard {
         require_once($CFG->libdir . '/completionlib.php');
         require_once($CFG->dirroot . '/calendar/lib.php');
 
-        $courses = enrol_get_my_courses('id, fullname, shortname, category, startdate, enablecompletion, visible',
-            'visible DESC, sortorder ASC');
+        $courses = enrol_get_my_courses(
+            'id, fullname, shortname, category, startdate, enablecompletion, visible',
+            'visible DESC, sortorder ASC'
+        );
         $dbman = $DB->get_manager();
 
         // Staff with no enrolments (managers, support) see the whole site; finance reviewers see payments.
@@ -90,9 +92,15 @@ class dashboard {
         if ($siteview && $eventcourses) {
             // Site staff: the site's live classes (the calendar hides course events from people not enrolled).
             [$insql, $params] = $DB->get_in_or_equal(array_keys($eventcourses));
-            $rooms = $DB->get_records_select('bigbluebuttonbn',
+            $rooms = $DB->get_records_select(
+                'bigbluebuttonbn',
                 "course $insql AND openingtime > 0 AND openingtime < ? AND closingtime > ?",
-                array_merge($params, [$now + 14 * DAYSECS, $now]), 'openingtime', 'id, course, openingtime', 0, self::MAX_EVENTS);
+                array_merge($params, [$now + 14 * DAYSECS, $now]),
+                'openingtime',
+                'id, course, openingtime',
+                0,
+                self::MAX_EVENTS
+            );
             foreach ($rooms as $room) {
                 $events[] = [
                     'name' => get_string('dash_liveclass', 'theme_hikmah'),
@@ -106,7 +114,15 @@ class dashboard {
                 ];
             }
         } else if ($eventcourses) {
-            $raw = calendar_get_legacy_events($now - HOURSECS, $now + 14 * DAYSECS, true, true, array_keys($eventcourses), true, true);
+            $raw = calendar_get_legacy_events(
+                $now - HOURSECS,
+                $now + 14 * DAYSECS,
+                true,
+                true,
+                array_keys($eventcourses),
+                true,
+                true
+            );
             usort($raw, static fn($a, $b): int => $a->timestart <=> $b->timestart);
             foreach ($raw as $event) {
                 if (count($events) >= self::MAX_EVENTS) {
@@ -124,12 +140,14 @@ class dashboard {
                 if ($event->modulename === 'attendance') {
                     $name = get_string('dash_liveclass', 'theme_hikmah');
                     // The class's own live room (opening at the session time), else the course's room.
-                    $rooms = array_filter(get_fast_modinfo($event->courseid)->get_instances_of('bigbluebuttonbn'),
-                        static fn($cm) => $cm->uservisible);
+                    $rooms = array_filter(
+                        get_fast_modinfo($event->courseid)->get_instances_of('bigbluebuttonbn'),
+                        static fn($cm) => $cm->uservisible
+                    );
                     $opening = $rooms ? $DB->get_records_list('bigbluebuttonbn', 'id', array_keys($rooms), '', 'id, openingtime')
                         : [];
-                    uksort($rooms, static fn($a, $b) => (int) (abs(($opening[$a]->openingtime ?: PHP_INT_MAX / 2) - $event->timestart)
-                        <=> abs(($opening[$b]->openingtime ?: PHP_INT_MAX / 2) - $event->timestart)));
+                    $gap = static fn($id) => abs(($opening[$id]->openingtime ?: PHP_INT_MAX / 2) - $event->timestart);
+                    uksort($rooms, static fn($a, $b) => (int) ($gap($a) <=> $gap($b)));
                     if ($cm = reset($rooms)) {
                         $url = new moodle_url('/mod/bigbluebuttonbn/view.php', ['id' => $cm->id]);
                         $islive = true;
@@ -142,7 +160,8 @@ class dashboard {
                 $seenlive[$key] = true;
                 $events[] = [
                     'name' => $name,
-                    'course' => isset($eventcourses[$event->courseid]) ? format_string($eventcourses[$event->courseid]->fullname) : '',
+                    'course' => isset($eventcourses[$event->courseid])
+                        ? format_string($eventcourses[$event->courseid]->fullname) : '',
                     'day' => userdate($event->timestart, '%d'),
                     'month' => userdate($event->timestart, '%b'),
                     'time' => userdate($event->timestart, get_string('strftimetime', 'langconfig')),
@@ -197,12 +216,14 @@ class dashboard {
         }
 
         // Someone who only teaches sees their teaching, not learner progress.
-        $isteacher = $courses && !array_filter($courses,
-            static fn($c): bool => !has_capability('moodle/grade:viewall', \context_course::instance($c->id)));
+        $isteacher = $courses && !array_filter(
+            $courses,
+            static fn($c): bool => !has_capability('moodle/grade:viewall', \context_course::instance($c->id))
+        );
         if ($isteacher) {
             [$stats, $rows] = self::teaching($courses);
         } else if ($siteview && $eventcourses) {
-            // shortcut: counts every course on each visit; fine for tens of courses, cache it past a few hundred.
+            // Shortcut: counts every course on each visit; fine for tens of courses, cache it past a few hundred.
             [$stats, $rows] = self::teaching($eventcourses);
         } else if ($finance) {
             $since = time() - 30 * DAYSECS;
@@ -224,13 +245,19 @@ class dashboard {
             'motif' => ['motifclass' => 'hk-dash__motif hk-motif--animate'],
             'firstname' => $USER->firstname,
             'date' => userdate(time(), get_string('strftimedaydate', 'langconfig')),
-            'greeting' => get_string($hour < 12 ? 'dash_morning' : ($hour < 17 ? 'dash_afternoon' : 'dash_evening'),
-                'theme_hikmah'),
+            'greeting' => get_string(
+                $hour < 12 ? 'dash_morning' : ($hour < 17 ? 'dash_afternoon' : 'dash_evening'),
+                'theme_hikmah'
+            ),
             'stats' => $stats,
-            'coursestitle' => get_string($siteview ? 'dash_sitecourses' : ($isteacher ? 'dash_teaching' : 'dash_continue'),
-                'theme_hikmah'),
-            'courseslink' => get_string($canmanage ? 'dash_managecourses' : ($siteview ? 'dash_sitecourseslink' : 'dash_allcourses'),
-                'theme_hikmah'),
+            'coursestitle' => get_string(
+                $siteview ? 'dash_sitecourses' : ($isteacher ? 'dash_teaching' : 'dash_continue'),
+                'theme_hikmah'
+            ),
+            'courseslink' => get_string(
+                $canmanage ? 'dash_managecourses' : ($siteview ? 'dash_sitecourseslink' : 'dash_allcourses'),
+                'theme_hikmah'
+            ),
             'showgrid' => !$finance,
             'courses' => $rows,
             'hascourses' => !empty($rows),
@@ -258,8 +285,11 @@ class dashboard {
         require_once($CFG->dirroot . '/mod/attendance/locallib.php');
         $now = time();
         [$insql, $params] = $DB->get_in_or_equal(array_keys($courses));
-        $classes = $DB->count_records_select('bigbluebuttonbn', "course $insql AND openingtime >= ? AND openingtime < ?",
-            array_merge($params, [$now, $now + 7 * DAYSECS]));
+        $classes = $DB->count_records_select(
+            'bigbluebuttonbn',
+            "course $insql AND openingtime >= ? AND openingtime < ?",
+            array_merge($params, [$now, $now + 7 * DAYSECS])
+        );
         $registers = [];
         foreach ($DB->get_records_select('attendance', "course $insql", $params, 'id DESC', 'id, course') as $att) {
             $registers[$att->course] = $att->id; // Oldest activity wins.
@@ -353,8 +383,10 @@ class dashboard {
         $dbman = $DB->get_manager();
         $system = \context_system::instance();
 
-        if (class_exists('\paygw_hikmahtransfer\request') && $dbman->table_exists('paygw_hikmahtransfer_req')
-                && has_capability('paygw/hikmahtransfer:review', $system)) {
+        if (
+            class_exists('\paygw_hikmahtransfer\request') && $dbman->table_exists('paygw_hikmahtransfer_req')
+                && has_capability('paygw/hikmahtransfer:review', $system)
+        ) {
             $pending = \paygw_hikmahtransfer\request::count_pending();
             $work[] = [
                 'value' => $pending,
@@ -375,13 +407,19 @@ class dashboard {
                     $params
                 );
                 // Open the course that has the work, else the first course.
-                $flagged = $DB->get_field_select('local_hikmahatt_link', 'MIN(courseid)',
-                    "courseid $insql AND state IN ('ready', 'missing', 'unknown')", $params);
+                $flagged = $DB->get_field_select(
+                    'local_hikmahatt_link',
+                    'MIN(courseid)',
+                    "courseid $insql AND state IN ('ready', 'missing', 'unknown')",
+                    $params
+                );
                 $work[] = [
                     'value' => $toreview,
                     'label' => get_string('work_attendance', 'theme_hikmah'),
-                    'url' => (new moodle_url('/local/hikmahattendance/index.php',
-                        ['courseid' => $flagged ?: reset($teaching)->id]))->out(false),
+                    'url' => (new moodle_url(
+                        '/local/hikmahattendance/index.php',
+                        ['courseid' => $flagged ?: reset($teaching)->id]
+                    ))->out(false),
                     'urgent' => $toreview > 0,
                 ];
 

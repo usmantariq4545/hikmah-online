@@ -38,7 +38,6 @@ class provider implements
     \core_privacy\local\request\core_userlist_provider,
     \core_privacy\local\request\plugin\provider,
     paygw_provider {
-
     /**
      * Describe stored data.
      *
@@ -131,8 +130,12 @@ class provider implements
                     'created' => \core_privacy\local\request\transform::datetime($record->timecreated),
                     'history' => $history,
                 ]);
-                writer::with_context($context)->export_area_files($subcontext, 'paygw_hikmahtransfer',
-                    request::FILEAREA, $record->id);
+                writer::with_context($context)->export_area_files(
+                    $subcontext,
+                    'paygw_hikmahtransfer',
+                    request::FILEAREA,
+                    $record->id
+                );
             }
         }
     }
@@ -159,8 +162,12 @@ class provider implements
         global $DB;
         foreach ($contextlist->get_contexts() as $context) {
             if ($context->contextlevel == CONTEXT_SYSTEM) {
-                self::delete_requests($DB->get_fieldset_select(request::TABLE, 'id', 'userid = ?',
-                    [$contextlist->get_user()->id]));
+                self::delete_requests($DB->get_fieldset_select(
+                    request::TABLE,
+                    'id',
+                    'userid = ?',
+                    [$contextlist->get_user()->id]
+                ));
             }
         }
     }
@@ -222,7 +229,11 @@ class provider implements
      */
     public static function delete_data_for_payment_sql(string $paymentsql, array $paymentparams) {
         global $DB;
-        self::delete_requests($DB->get_fieldset_select(request::TABLE, 'id', "paymentid IN ({$paymentsql})",
-            $paymentparams));
+        self::delete_requests($DB->get_fieldset_select(
+            request::TABLE,
+            'id',
+            "paymentid IN ({$paymentsql})",
+            $paymentparams
+        ));
     }
 }
