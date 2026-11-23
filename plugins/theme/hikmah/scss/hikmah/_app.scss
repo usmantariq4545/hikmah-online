@@ -213,9 +213,21 @@
     background: $hk-paper-2;
     border-inline-start: 4px solid $hk-ink;
     animation: hk-rise .5s $hk-ease-out both;
-    &--sky { background: $hk-sky-soft; border-color: $hk-sky-deep; color: darken($hk-sky-deep, 8%); }
-    &--warning { background: #fff3cd; border-color: $hk-sun-deep; color: #5f4000; }
-    &--danger { background: #fbe9e7; border-color: $hk-danger; color: $hk-danger; }
+    &--sky {
+        background: $hk-sky-soft;
+        border-color: $hk-sky-deep;
+        color: darken($hk-sky-deep, 8%);
+    }
+    &--warning {
+        background: #fff3cd;
+        border-color: $hk-sun-deep;
+        color: #5f4000;
+    }
+    &--danger {
+        background: #fbe9e7;
+        border-color: $hk-danger;
+        color: $hk-danger;
+    }
 }
 .hk-facts {
     margin: 0;
@@ -252,6 +264,7 @@
         background: $hk-paper-2;
         border-radius: $hk-radius-sm;
         padding: .8rem 1rem;
+        // stylelint-disable-next-line declaration-no-important
         color: $hk-ink !important;
     }
     .hk-btn {
@@ -356,6 +369,7 @@
             td {
                 display: block;
                 padding: 0;
+                // stylelint-disable-next-line declaration-no-important
                 border: 0 !important; // Moodle's rule for tables without .table outranks ours
             }
             td:first-child,
@@ -510,10 +524,18 @@
     height: .6rem;
     border-radius: 50%;
     background: $hk-muted;
-    &--success { background: $hk-success; }
-    &--warning { background: $hk-sun-deep; }
-    &--danger { background: $hk-danger; }
-    &--sky { background: $hk-sky; }
+    &--success {
+        background: $hk-success;
+    }
+    &--warning {
+        background: $hk-sun-deep;
+    }
+    &--danger {
+        background: $hk-danger;
+    }
+    &--sky {
+        background: $hk-sky;
+    }
 }
 .hk-tally {
     display: inline-flex;
@@ -586,9 +608,15 @@
             color: $hk-muted;
             margin: 0;
         }
-        &--valid { border-top: 5px solid $hk-success; }
-        &--pending { border-top: 5px solid $hk-sun-deep; }
-        &--invalid { border-top: 5px solid $hk-danger; }
+        &--valid {
+            border-top: 5px solid $hk-success;
+        }
+        &--pending {
+            border-top: 5px solid $hk-sun-deep;
+        }
+        &--invalid {
+            border-top: 5px solid $hk-danger;
+        }
     }
     &__facts {
         margin: 1.25rem 0 0;
@@ -668,9 +696,16 @@
             display: flex;
             flex-direction: column-reverse;
             justify-content: flex-end;
-            &:nth-child(2) { animation-delay: .08s; }
-            &:nth-child(3) { animation-delay: .16s; }
-            &:nth-child(4) { animation-delay: .24s; }
+            &:nth-child(2) {
+                // stylelint-disable-next-line time-min-milliseconds
+                animation-delay: .08s;
+            }
+            &:nth-child(3) {
+                animation-delay: .16s;
+            }
+            &:nth-child(4) {
+                animation-delay: .24s;
+            }
         }
         dt {
             font-size: .72rem;
@@ -886,8 +921,11 @@
         animation: hk-ring 1.2s $hk-ease-out both;
     }
 }
+
 @keyframes hk-ring {
-    from { stroke-dashoffset: 100; }
+    from {
+        stroke-dashoffset: 100;
+    }
 }
 .hk-date {
     flex: none;
@@ -934,6 +972,7 @@
             margin-bottom: .3rem;
         }
         #loginlogo {
+            // stylelint-disable-next-line declaration-no-important
             display: none !important;
         }
         .form-label {
@@ -964,6 +1003,7 @@
             display: flex;
             align-items: center;
             gap: 1rem;
+            // stylelint-disable-next-line declaration-no-important
             margin-block: 1.5rem !important;
             font-size: .74rem;
             letter-spacing: .22em;
@@ -1092,6 +1132,7 @@
         flex-wrap: wrap;
     }
 }
+
 @media (max-width: 575.98px) {
     .hk-facts {
         grid-template-columns: 1fr;
@@ -1171,6 +1212,7 @@
     font-size: .7em;
     margin-inline-start: 1px;
 }
+
 @media (max-width: 575.98px) {
     // The decorative tiles sat over the date and greeting; keep them in the corner and faint.
     .hk-dash__motif {
@@ -1190,8 +1232,10 @@
 .navbar.fixed-top {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
+    // stylelint-disable-next-line declaration-no-important
     background: $hk-paper !important;
     &.is-scrolled {
+        // stylelint-disable-next-line declaration-no-important
         background: $hk-paper !important;
     }
 }
@@ -1310,6 +1354,7 @@
         }
     }
     .col-form-label {
+        // stylelint-disable-next-line declaration-no-important
         display: flex !important;
         align-items: center;
         gap: .3rem;
@@ -1321,6 +1366,7 @@
         }
     }
     .form-label-addon {
+        // stylelint-disable-next-line declaration-no-important
         margin: 0 !important;
         .icon {
             font-size: .7rem;
@@ -1336,9 +1382,11 @@
     }
     // Date of transfer: day, month, year and the calendar button on one line.
     .fdate_selector {
+        // stylelint-disable-next-line declaration-no-important
         flex-wrap: nowrap !important;
         gap: .5rem;
         .fitem {
+            // stylelint-disable-next-line declaration-no-important
             margin: 0 !important;
         }
         .form-select {
@@ -1352,6 +1400,7 @@
     .fp-pathbar,
     .filetypes-descriptions-intro,
     .form-filetypes-descriptions {
+        // stylelint-disable-next-line declaration-no-important
         display: none !important;
     }
     .filemanager-toolbar {
@@ -1363,6 +1412,7 @@
     #fitem_id_receipthint {
         margin-top: -.6rem;
         .col-form-label {
+            // stylelint-disable-next-line declaration-no-important
             display: none !important;
         }
         .form-control-static,
@@ -1374,6 +1424,7 @@
     #fgroup_id_buttonar {
         margin: 1.4rem 0 0;
         .col-form-label {
+            // stylelint-disable-next-line declaration-no-important
             display: none !important;
         }
         .felement,
@@ -1383,6 +1434,7 @@
             gap: .6rem;
         }
         .fitem {
+            // stylelint-disable-next-line declaration-no-important
             margin: 0 !important;
         }
     }
@@ -1392,6 +1444,7 @@
         color: $hk-muted;
     }
 }
+
 @media (max-width: 991.98px) {
     .hk-pay--page .hk-pay__grid {
         grid-template-columns: 1fr;
@@ -1405,16 +1458,20 @@
         min-width: 0;
     }
 }
+
 @media (max-width: 991.98px) {
     .hk-pay--page .hk-pay__grid {
         grid-template-columns: minmax(0, 1fr);
     }
 }
+
 @media (max-width: 575.98px) {
     .hk-pay--page .hk-pay__form .mform .fdate_selector {
+        // stylelint-disable-next-line declaration-no-important
         flex-wrap: wrap !important;
     }
 }
+
 @media (max-width: 767.98px) {
     .hk-pay--page {
         padding-inline: .5rem;
@@ -1427,6 +1484,7 @@
 // Dashboard: the block area's wrapper adds 15px each side, so "Course overview" and "Timeline" sat
 // inside the welcome banner's edges. Line them up with the banner.
 .pagelayout-mydashboard *:has(> #block-region-content) {
+    // stylelint-disable-next-line declaration-no-important
     padding-inline: 0 !important;
 }
 
@@ -1485,6 +1543,7 @@
         .mform .ftoggler,
         .mform .collapsible-actions,
         .mform p:empty {
+            // stylelint-disable-next-line declaration-no-important
             display: none !important;
         }
         .mform fieldset {
@@ -1496,10 +1555,13 @@
         .mform,
         .mform .fitem.row,
         .mform .fcontainer {
+            // stylelint-disable-next-line declaration-no-important
             margin-inline: 0 !important;
+            // stylelint-disable-next-line declaration-no-important
             padding-inline: 0 !important;
         }
         .mform .fcontainer {
+            // stylelint-disable-next-line declaration-no-important
             display: block !important;
             padding: 0;
         }
@@ -1527,6 +1589,7 @@
         .fitem_actionbuttons {
             margin-top: .4rem;
             .col-form-label {
+                // stylelint-disable-next-line declaration-no-important
                 display: none !important;
             }
         }
@@ -1535,6 +1598,7 @@
         }
     }
 }
+
 @media (max-width: 767.98px) {
     .hk-apply {
         grid-template-columns: minmax(0, 1fr);
@@ -1555,6 +1619,7 @@
     }
     .yui3-datatable,
     .yui3-datatable-table {
+        // stylelint-disable-next-line declaration-no-important
         width: 100% !important;
     }
     .yui3-datatable-table {
@@ -1668,8 +1733,10 @@
     content: " min";
 }
 // Paging controls only when there is more than one page.
-.yui3-datatable-paginator:has(.yui3-datatable-paginator-control-first:disabled):has(.yui3-datatable-paginator-control-last:disabled) {
-    display: none;
+.yui3-datatable-paginator:has(.yui3-datatable-paginator-control-first:disabled) {
+    &:has(.yui3-datatable-paginator-control-last:disabled) {
+        display: none;
+    }
 }
 // Attendance: students see their list of sessions only (the default view is "All", 090-attendance.php).
 .hk-learner#page-mod-attendance-view [role="main"] {
@@ -1749,6 +1816,7 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
                 height: .5rem;
                 border-radius: 50%;
                 background: $hk-danger;
+                // stylelint-disable-next-line no-unknown-animations
                 animation: hk-pulse 1.6s ease-in-out infinite;
             }
         }
@@ -1765,7 +1833,12 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
 // Forum discussion list on phones: topic, replies and actions only (the discussion shows the rest).
 @media (max-width: 767.98px) {
     table.discussion-list {
-        th.group, td.group, th.author, td.author, td.author + td, th.lastpost,
+        th.group,
+        td.group,
+        th.author,
+        td.author,
+        td.author + td,
+        th.lastpost,
         tr > :nth-last-child(2) {
             display: none;
         }
@@ -1783,10 +1856,13 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
     row-gap: .5rem;
 }
 #region-main {
-    .singleselect, .urlselect, .activity-section-selector {
+    .singleselect,
+    .urlselect,
+    .activity-section-selector {
         max-width: 100%;
     }
-    .singleselect, .urlselect {
+    .singleselect,
+    .urlselect {
         select {
             max-width: 100%;
             min-width: 0;
@@ -1799,7 +1875,8 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
 }
 // The site-wide participant list ("People"): roles and groups only mean something inside a course.
 #page-course-view-participants.course-1 #participants {
-    .c3, .c4 {
+    .c3,
+    .c4 {
         display: none;
     }
 }
@@ -1890,6 +1967,7 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
 #page-user-preferences {
     #page-header .page-context-header,
     #page-header .page-header-headings {
+        // stylelint-disable-next-line declaration-no-important
         display: none !important; // Bootstrap's d-flex on it is !important too.
     }
 }
