@@ -9,6 +9,9 @@
   user list without its edit actions, plus the phone number); teachers see the students of the courses they
   teach (name, email, phone, course, enrolled on, last access). Download for administrators and managers only;
   finance reviewers and learners get no tab. Replaces support's "People" tab. Each view is logged.
+- Users page: filters match the columns on screen; administrators and managers get a "Columns" button to show
+  any detail (gender, date of birth, guardian, city, country, sign-in method, roles, number of courses, joined,
+  first and last access, last IP...), remembered per person. Support keeps name, email, phone and last access.
 - Releases: every successful deploy is tagged live-<date>-<commit> on GitHub with the backup taken before it;
   scripts/deploy-live.sh <tag> goes back to an earlier release (docs/runbooks/contabo.md).
 - Smoke test: the "cron last run" check waits up to 3 minutes for cron after a long deploy instead of failing.

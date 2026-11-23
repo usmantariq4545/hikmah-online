@@ -73,7 +73,7 @@ class my_learners extends system_report {
         $this->add_base_fields("{$u}.id");
 
         $this->add_learner_columns($u, $userentity->get_entity_name());
-        $this->add_learner_filters($enrol);
+        $this->add_learner_filters($enrol, $u, $userentity->get_entity_name());
         $this->set_downloadable(false);
     }
 
@@ -104,15 +104,19 @@ class my_learners extends system_report {
     }
 
     /**
-     * Name, email, the viewer's own courses, last access.
+     * One filter per column: name, email, phone, the viewer's own courses, enrolled on, last access.
      *
      * @param string $enrol alias of the enrol table
+     * @param string $u alias of the user table
+     * @param string $userentityname
      */
-    private function add_learner_filters(string $enrol): void {
+    private function add_learner_filters(string $enrol, string $u, string $userentityname): void {
         $this->add_filters_from_entities(['user:fullname', 'user:email']);
+        $this->add_filter(userlist::phone_filter($u, $userentityname));
         $this->add_filter((new filter(select::class, 'hkcourse', new lang_string('course'), 'course'))
             ->set_field_sql("{$enrol}.courseid")
             ->set_options($this->courses));
+        $this->add_filter_from_entity('enrolment:timestarted')->set_header(new lang_string('enrolledon', 'local_hikmahaccess'));
         $this->add_filters_from_entities(['user:lastaccess']);
     }
 }
