@@ -29,4 +29,24 @@ $callbacks = [
         'hook' => \core\hook\after_config::class,
         'callback' => [\local_hikmahaccess\hook_callbacks::class, 'after_config'],
     ],
+    [
+        'hook' => \core_course\hook\after_form_definition::class,
+        'callback' => [\local_hikmahaccess\coursevisibility::class, 'form_definition'],
+    ],
+    [
+        'hook' => \core_course\hook\after_form_definition_after_data::class,
+        'callback' => [\local_hikmahaccess\coursevisibility::class, 'form_definition_after_data'],
+    ],
+    [
+        'hook' => \core_course\hook\after_form_validation::class,
+        'callback' => [\local_hikmahaccess\coursevisibility::class, 'form_validation'],
+    ],
+    [
+        'hook' => \core_course\hook\after_form_submission::class,
+        'callback' => [\local_hikmahaccess\coursevisibility::class, 'form_submission'],
+    ],
+    [
+        'hook' => \core\hook\output\before_footer_html_generation::class,
+        'callback' => [\local_hikmahaccess\coursevisibility::class, 'before_footer'],
+    ],
 ];

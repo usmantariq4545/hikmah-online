@@ -43,10 +43,21 @@ $string['pluginname'] = 'Hikmah access rules';
 $string['privacy:metadata'] = 'The Hikmah access rules plugin stores no personal data. It sets the standard Moodle messaging privacy preference of students.';
 $string['privacy:metadata:preference:usercolumns'] = 'The columns this person chose to show on the Users page.';
 $string['privacypolicy'] = 'Privacy Policy';
+$string['publishat'] = 'Goes public on';
+$string['publishatpast'] = 'Pick a date and time in the future.';
 $string['roles'] = 'Roles';
+$string['scheduledfor'] = 'Scheduled: {$a}';
 $string['signupagree'] = 'I agree to the {$a->terms} and {$a->privacy}';
 $string['signupagree_required'] = 'Please agree to the Terms of Use and Privacy Policy to create your account.';
 $string['signupor'] = 'or sign up with email';
 $string['signupwith'] = 'Continue with {$a}';
+$string['task_publishcourses'] = 'Make scheduled courses public';
 $string['task_syncpeers'] = 'Apply the classmates messaging rule to all students';
 $string['termsofuse'] = 'Terms of Use';
+$string['visibility'] = 'Visibility';
+$string['visibility_help'] = 'Hidden: only staff can see the course; it is not in the catalog and learners cannot open it.
+Public: listed in the catalog and open to enrolled learners.
+Scheduled: hidden until the date and time below, then public by itself (checked every 5 minutes).';
+$string['visibility_hidden'] = 'Hidden (only staff)';
+$string['visibility_public'] = 'Public';
+$string['visibility_scheduled'] = 'Scheduled';

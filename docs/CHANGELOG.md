@@ -20,6 +20,9 @@
   custom-field category "Certificate rules" (060-courses.php; values kept). Presentation only: the same
   fields are saved.
 
+- Course visibility: the course form now offers Hidden (only staff), Public, or Scheduled (hidden until a
+  chosen date and time, then public by itself, checked every 5 minutes; local_hikmahaccess, table
+  local_hikmahaccess_publish). Scheduled courses show "Scheduled: <time>" on the course management page.
 - Version control: each change on its own branch, merged into main through a pull request the owner
   approves, then deployed. A pre-push hook (.githooks/pre-push) refuses pushes straight to main.
 
