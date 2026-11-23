@@ -29,7 +29,7 @@
         "submitted": "13/11/26, 10:00",
         "status": {"key": "pending", "label": "Pending verification", "class": "hk-chip--warning"},
         "ispending": true,
-        "history": [{"status": {"label": "Pending verification", "class": ""}, "time": "13/11/26, 10:00", "remarks": ""}],
+        "history": [{"status": {"label": "Pending verification", "class": ""}, "time": "13/11/26, 10:00", "datetime": "2026-11-13T05:00:00+00:00", "remarks": ""}],
         "payurl": "#",
         "successurl": "#",
         "listurl": "#"
@@ -85,7 +85,7 @@
             {{#history}}
                 <li>
                     <span class="hk-chip {{status.class}}">{{status.label}}</span>
-                    <time>{{time}}</time>
+                    <time datetime="{{datetime}}">{{time}}</time>
                     {{#remarks}}<p>{{remarks}}</p>{{/remarks}}
                 </li>
             {{/history}}

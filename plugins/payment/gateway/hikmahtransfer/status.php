@@ -86,6 +86,7 @@ foreach (request::history((int) $request->id) as $row) {
     $history[] = [
         'status' => request::status_display($row->tostatus),
         'time' => userdate($row->timecreated, $dateformat),
+        'datetime' => date('c', (int) $row->timecreated),
         'remarks' => (string) $row->remarks,
     ];
 }

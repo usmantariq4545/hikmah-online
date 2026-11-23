@@ -50,7 +50,8 @@ class pagehero {
             return null;
         }
         // Only the profile page's id is a user (on the grades page it is the course).
-        $userid = (int) ($page->pagetype === 'user-profile' && $page->url->get_param('id') ? $page->url->get_param('id') : $USER->id);
+        $profileid = $page->pagetype === 'user-profile' ? $page->url->get_param('id') : null;
+        $userid = (int) ($profileid ?: $USER->id);
         $own = $userid === (int) $USER->id;
         $stats = [];
         $title = get_string(self::PAGES[$page->pagetype] . '_title', 'theme_hikmah');
@@ -83,7 +84,8 @@ class pagehero {
                 foreach (enrol_get_users_courses($userid, true, 'id') as $course) {
                     $grade = grade_get_course_grade($userid, $course->id);
                     if ($grade && $grade->grade !== null && $grade->item->grademax > $grade->item->grademin) {
-                        $percents[] = ($grade->grade - $grade->item->grademin) / ($grade->item->grademax - $grade->item->grademin) * 100;
+                        $range = $grade->item->grademax - $grade->item->grademin;
+                        $percents[] = ($grade->grade - $grade->item->grademin) / $range * 100;
                     }
                 }
                 $stats = [self::stat(count($percents), 'hero_gradedcourses')];
@@ -94,8 +96,10 @@ class pagehero {
 
             case 'payment-gateway-hikmahtransfer-status':
                 if ($DB->get_manager()->table_exists('paygw_hikmahtransfer_req')) {
-                    $count = static fn(string $status): int => $DB->count_records('paygw_hikmahtransfer_req',
-                        ['userid' => $USER->id, 'status' => $status]);
+                    $count = static fn(string $status): int => $DB->count_records(
+                        'paygw_hikmahtransfer_req',
+                        ['userid' => $USER->id, 'status' => $status]
+                    );
                     $stats = [
                         self::stat($count('pending'), 'dash_paywaiting'),
                         self::stat($count('resubmit'), 'hero_needsaction'),

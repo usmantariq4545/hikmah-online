@@ -58,9 +58,13 @@ class course_renderer extends \core_course_renderer {
                 if (!$instance) {
                     continue;
                 }
-                if ($instance->enrol === 'apply' && $DB->record_exists_select('user_enrolments',
+                if (
+                    $instance->enrol === 'apply' && $DB->record_exists_select(
+                        'user_enrolments',
                         'enrolid = :enrolid AND userid = :userid AND status IN (1, 2)',
-                        ['enrolid' => $instance->id, 'userid' => $USER->id])) {
+                        ['enrolid' => $instance->id, 'userid' => $USER->id]
+                    )
+                ) {
                     // Already applied (or just did): the course page shows "Application sent".
                     $applied = true;
                     continue;
@@ -81,8 +85,12 @@ class course_renderer extends \core_course_renderer {
         }
 
         if (!$forms && $applied) {
-            redirect($detailurl, get_string('enrol_applicationsent', 'theme_hikmah'), null,
-                \core\output\notification::NOTIFY_SUCCESS);
+            redirect(
+                $detailurl,
+                get_string('enrol_applicationsent', 'theme_hikmah'),
+                null,
+                \core\output\notification::NOTIFY_SUCCESS
+            );
         }
         // Nothing here that the course page does not already offer: go there. Only for plain page
         // views; any form submission was handled by the enrolment plugins before this point.

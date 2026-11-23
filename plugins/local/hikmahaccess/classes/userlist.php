@@ -32,7 +32,7 @@ class userlist {
     const PREFERENCE = 'local_hikmahaccess_usercolumns';
 
     /** @var string[] columns shown by default (and always, for those who cannot choose) */
-    const DEFAULT_COLUMNS = ['email', 'phone', 'lastaccess'];
+    const DEFAULT_COLUMNS = ['email', 'phone', 'courses', 'lastaccess'];
 
     /** @var string[] columns one may add to the all-users list, in display order (report builder user columns, or ours) */
     const COLUMNS = ['email', 'phone', 'profilefield_hkgender', 'profilefield_hkdob', 'profilefield_hkguardian',

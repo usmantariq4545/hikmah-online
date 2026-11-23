@@ -71,18 +71,18 @@
                 {{#accounts}}
                     <div class="hk-account hk-account--{{key}}">
                         <div class="hk-account__name">{{name}}</div>
-                        <dl class="hk-details">
+                        <div class="hk-details">
                             {{#lines}}
                                 <div class="hk-details__row">
-                                    <div class="hk-details__text">
+                                    <dl class="hk-details__text">
                                         <dt>{{label}}</dt>
                                         <dd>{{value}}</dd>
-                                    </div>
+                                    </dl>
                                     <button type="button" class="hk-copy" data-hk-copy="{{value}}" data-hk-copied="{{#str}}copied, paygw_hikmahtransfer{{/str}}"
                                             aria-label="{{#str}}copy, paygw_hikmahtransfer{{/str}}: {{label}}">{{#str}}copy, paygw_hikmahtransfer{{/str}}</button>
                                 </div>
                             {{/lines}}
-                        </dl>
+                        </div>
                     </div>
                 {{/accounts}}
             </div>

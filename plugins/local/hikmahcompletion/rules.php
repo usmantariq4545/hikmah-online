@@ -89,14 +89,19 @@ if ($rows) {
     echo html_writer::tag('p', get_string('noitems', 'local_hikmahcompletion'));
 }
 if (has_capability('moodle/grade:manage', $context)) {
-    echo html_writer::link(new moodle_url('/grade/edit/tree/index.php', ['id' => $course->id]),
-        get_string('editweights', 'local_hikmahcompletion'), ['class' => 'btn btn-secondary mb-4']);
+    echo html_writer::link(
+        new moodle_url('/grade/edit/tree/index.php', ['id' => $course->id]),
+        get_string('editweights', 'local_hikmahcompletion'),
+        ['class' => 'btn btn-secondary mb-4']
+    );
 }
 
 // What must be completed.
 echo html_writer::tag('h3', get_string('required_title', 'local_hikmahcompletion'), ['class' => 'mt-4']);
-$list = array_map(static fn($cm) => html_writer::link($cm->url ?? new moodle_url('/course/view.php', ['id' => $course->id]),
-    $cm->get_formatted_name()), rules::required($modinfo));
+$list = array_map(static fn($cm) => html_writer::link(
+    $cm->url ?? new moodle_url('/course/view.php', ['id' => $course->id]),
+    $cm->get_formatted_name()
+), rules::required($modinfo));
 echo $list ? html_writer::alist($list) : html_writer::tag('p', '—');
 
 echo $OUTPUT->footer();

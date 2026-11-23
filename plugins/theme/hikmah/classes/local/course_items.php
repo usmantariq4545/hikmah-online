@@ -59,12 +59,20 @@ class course_items {
             && $cm->modname !== 'label');
         $quizzes = self::instances('quiz', $cms, 'id, timelimit');
         $assigns = self::instances('assign', $cms, 'id, duedate');
-        $submitted = $assigns ? $DB->get_records_select_menu('assign_submission',
+        $submitted = $assigns ? $DB->get_records_select_menu(
+            'assign_submission',
             'userid = ? AND latest = 1 AND status = ? AND assignment IN (' . implode(',', array_keys($assigns)) . ')',
-            [$userid, 'submitted'], '', 'assignment, id') : [];
-        $attempted = $quizzes ? $DB->get_records_select_menu('quiz_attempts',
+            [$userid, 'submitted'],
+            '',
+            'assignment, id'
+        ) : [];
+        $attempted = $quizzes ? $DB->get_records_select_menu(
+            'quiz_attempts',
             'userid = ? AND state = ? AND quiz IN (' . implode(',', array_keys($quizzes)) . ')',
-            [$userid, 'finished'], '', 'DISTINCT quiz, quiz AS q') : [];
+            [$userid, 'finished'],
+            '',
+            'DISTINCT quiz, quiz AS q'
+        ) : [];
         $completion = new \completion_info($course);
 
         $items = [];
@@ -81,13 +89,18 @@ class course_items {
             // The type, unless the name already says it ("Quiz 1: …", "Your certificate") or, for a live
             // class, its "Starts … · Duration …" line does.
             $type = $kind ? get_string('item_' . $kind, 'theme_hikmah') : get_string('modulename', $cm->modname);
-            $parts = $cm->modname === 'bigbluebuttonbn' || \core_text::strpos(\core_text::strtolower($cm->name),
-                \core_text::strtolower($type)) !== false ? [] : [$type];
+            $parts = $cm->modname === 'bigbluebuttonbn' || \core_text::strpos(
+                \core_text::strtolower($cm->name),
+                \core_text::strtolower($type)
+            ) !== false ? [] : [$type];
             if ($cm->modname === 'assign' && isset($submitted[$cm->instance])) {
                 $parts[] = get_string('item_submitted', 'theme_hikmah');
             } else if ($cm->modname === 'assign' && !$isdone && !empty($assigns[$cm->instance]->duedate)) {
-                $parts[] = get_string('item_due', 'theme_hikmah',
-                    userdate($assigns[$cm->instance]->duedate, get_string('item_dateformat', 'theme_hikmah')));
+                $parts[] = get_string(
+                    'item_due',
+                    'theme_hikmah',
+                    userdate($assigns[$cm->instance]->duedate, get_string('item_dateformat', 'theme_hikmah'))
+                );
             } else if ($cm->modname === 'quiz' && isset($attempted[$cm->instance])) {
                 $parts[] = get_string('item_attempted', 'theme_hikmah');
             } else if ($cm->modname === 'quiz' && !empty($quizzes[$cm->instance]->timelimit)) {
@@ -127,8 +140,10 @@ class course_items {
         require_once($CFG->libdir . '/completionlib.php');
         $now = $now ?? time();
         $modinfo = get_fast_modinfo($course);
-        $classes = array_filter($modinfo->get_section_info_all(),
-            static fn($section) => $section->section > 0 && $section->uservisible && !$section->is_delegated());
+        $classes = array_filter(
+            $modinfo->get_section_info_all(),
+            static fn($section) => $section->section > 0 && $section->uservisible && !$section->is_delegated()
+        );
         if (!$classes) {
             return null;
         }
@@ -136,8 +151,15 @@ class course_items {
         $rooms = array_filter($modinfo->get_instances_of('bigbluebuttonbn'), static fn($cm) => $cm->uservisible);
         if ($rooms) {
             [$insql, $params] = $DB->get_in_or_equal(array_keys($rooms));
-            $next = $DB->get_records_select('bigbluebuttonbn', "id $insql AND openingtime > 0 AND closingtime >= ?",
-                array_merge($params, [$now]), 'openingtime ASC', 'id', 0, 1);
+            $next = $DB->get_records_select(
+                'bigbluebuttonbn',
+                "id $insql AND openingtime > 0 AND closingtime >= ?",
+                array_merge($params, [$now]),
+                'openingtime ASC',
+                'id',
+                0,
+                1
+            );
             if ($next && ($section = $classes[$rooms[reset($next)->id]->sectionnum] ?? null)) {
                 return $section;
             }
@@ -148,8 +170,10 @@ class course_items {
             foreach ($classes as $section) {
                 foreach ($modinfo->sections[$section->section] ?? [] as $cmid) {
                     $cm = $modinfo->get_cm($cmid);
-                    if ($cm->uservisible && $completion->is_enabled($cm)
-                            && $completion->get_data($cm)->completionstate == COMPLETION_INCOMPLETE) {
+                    if (
+                        $cm->uservisible && $completion->is_enabled($cm)
+                            && $completion->get_data($cm)->completionstate == COMPLETION_INCOMPLETE
+                    ) {
                         return $section;
                     }
                 }

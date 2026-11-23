@@ -228,8 +228,10 @@ class catalog {
                     $info->state = 'notyet';
                 } else if ($info->closes && $info->closes < $now) {
                     $info->state = 'ended';
-                } else if ($type === 'self' && (int) $instance->customint3 > 0 &&
-                        $DB->count_records('user_enrolments', ['enrolid' => $instance->id]) >= (int) $instance->customint3) {
+                } else if (
+                    $type === 'self' && (int) $instance->customint3 > 0 &&
+                        $DB->count_records('user_enrolments', ['enrolid' => $instance->id]) >= (int) $instance->customint3
+                ) {
                     $info->state = 'full';
                 } else if ($type === 'self' && empty($instance->customint6)) {
                     // Self enrolment instance exists but new enrolments are switched off.
@@ -287,10 +289,13 @@ class catalog {
             'length' => (string) ($fields['length'] ?? ''),
             'teachers' => implode(', ', array_slice($teachers, 0, 2)) . (count($teachers) > 2 ? ' +' . (count($teachers) - 2) : ''),
             'hasteachers' => !empty($teachers),
-            // "Starts 1 Nov" (or "Started 1 Nov"; the year only when it is not this year) instead of "1/11/26".
-            'startdate' => $course->startdate ? get_string($course->startdate > time() ? 'card_startson' : 'card_startedon',
-                'theme_hikmah', userdate($course->startdate, userdate($course->startdate, '%Y') === userdate(time(), '%Y')
-                ? '%d %b' : '%d %b %Y')) : '',
+            // Shows "Starts 1 Nov" (or "Started 1 Nov"; the year only when it is not this year) instead of "1/11/26".
+            'startdate' => $course->startdate ? get_string(
+                $course->startdate > time() ? 'card_startson' : 'card_startedon',
+                'theme_hikmah',
+                userdate($course->startdate, userdate($course->startdate, '%Y') === userdate(time(), '%Y')
+                ? '%d %b' : '%d %b %Y')
+            ) : '',
             'startts' => (int) $course->startdate,
             'isfree' => $price['isfree'],
             'pricelabel' => $price['label'],
@@ -354,8 +359,11 @@ class catalog {
         switch ($enrol->state) {
             case 'notyet':
                 return [
-                    'label' => get_string('status_opens', 'theme_hikmah',
-                        userdate($enrol->opens, get_string('strftimedateshort', 'langconfig'))),
+                    'label' => get_string(
+                        'status_opens',
+                        'theme_hikmah',
+                        userdate($enrol->opens, get_string('strftimedateshort', 'langconfig'))
+                    ),
                     'class' => 'hk-chip--warning',
                 ];
             case 'ended':

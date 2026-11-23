@@ -36,12 +36,16 @@ class hook_callbacks {
         // Date of birth left on "Day / Month / Year" (theme_hikmah blankdates): drop it, so the profile form's
         // own "Required" check rejects it instead of saving a made-up date.
         $dob = $_POST['profile_field_hkdob'] ?? null;
-        if (is_array($dob) && in_array($SCRIPT ?? '', ['/user/edit.php', '/user/editadvanced.php'], true)
-                && in_array('', [$dob['day'] ?? '', $dob['month'] ?? '', $dob['year'] ?? ''], true)) {
+        if (
+            is_array($dob) && in_array($SCRIPT ?? '', ['/user/edit.php', '/user/editadvanced.php'], true)
+                && in_array('', [$dob['day'] ?? '', $dob['month'] ?? '', $dob['year'] ?? ''], true)
+        ) {
             unset($_POST['profile_field_hkdob']);
         }
-        if (during_initial_install() || CLI_SCRIPT || ($SCRIPT ?? '') !== '/login/signup.php' || isloggedin()
-                || ($CFG->sitepolicyhandler ?? '') !== 'tool_policy') {
+        if (
+            during_initial_install() || CLI_SCRIPT || ($SCRIPT ?? '') !== '/login/signup.php' || isloggedin()
+                || ($CFG->sitepolicyhandler ?? '') !== 'tool_policy'
+        ) {
             return;
         }
         try {

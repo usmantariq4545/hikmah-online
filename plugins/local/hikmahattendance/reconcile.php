@@ -79,8 +79,12 @@ if ($action !== '' && data_submitted()) {
             $changed += manager::override((int) $decision->id, $new, $reason, (int) $USER->id) ? 1 : 0;
         }
         if ($missing) {
-            redirect($pageurl, get_string('error:reasonmissing', 'local_hikmahattendance', $missing), null,
-                \core\output\notification::NOTIFY_ERROR);
+            redirect(
+                $pageurl,
+                get_string('error:reasonmissing', 'local_hikmahattendance', $missing),
+                null,
+                \core\output\notification::NOTIFY_ERROR
+            );
         }
         $message = get_string('overrides_saved', 'local_hikmahattendance', $changed);
 
@@ -96,7 +100,7 @@ if ($action !== '' && data_submitted()) {
     redirect($pageurl, $message, null, $notify);
 }
 
-// ---- Build the preview -----------------------------------------------------------------------------
+// Build the preview.
 $session = $DB->get_record('attendance_sessions', ['id' => $link->sessionid]);
 $registerstatuses = $session ? attendance_get_statuses($link->attendanceid, false, $session->statusset) : [];
 $register = $session ? $DB->get_records('attendance_log', ['sessionid' => $session->id], '', 'studentid, statusid, remarks') : [];
@@ -104,8 +108,10 @@ $register = $session ? $DB->get_records('attendance_log', ['sessionid' => $sessi
 $decisions = manager::current_decisions((int) $link->id);
 $users = $decisions ? $DB->get_records_list('user', 'id', array_keys($decisions)) : [];
 uasort($decisions, static function ($a, $b) use ($users) {
-    return strcmp(fullname($users[$a->userid] ?? (object) ['firstname' => '', 'lastname' => '']),
-        fullname($users[$b->userid] ?? (object) ['firstname' => '', 'lastname' => '']));
+    return strcmp(
+        fullname($users[$a->userid] ?? (object) ['firstname' => '', 'lastname' => '']),
+        fullname($users[$b->userid] ?? (object) ['firstname' => '', 'lastname' => ''])
+    );
 });
 
 $fmt = static function (int $seconds): string {
