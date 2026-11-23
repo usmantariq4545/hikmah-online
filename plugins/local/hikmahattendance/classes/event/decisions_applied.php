@@ -28,7 +28,7 @@ class decisions_applied extends \core\event\base {
      * Initialise the event.
      */
     protected function init() {
-        $this->data['objecttable'] = 'local_hikmahatt_link';
+        $this->data['objecttable'] = 'local_hikmahattendance_link';
         $this->data['crud'] = 'u';
         $this->data['edulevel'] = self::LEVEL_TEACHING;
     }
@@ -68,7 +68,7 @@ class decisions_applied extends \core\event\base {
      * @return array
      */
     public static function get_objectid_mapping() {
-        return ['db' => 'local_hikmahatt_link', 'restore' => \core\event\base::NOT_MAPPED];
+        return ['db' => 'local_hikmahattendance_link', 'restore' => \core\event\base::NOT_MAPPED];
     }
 
     /**

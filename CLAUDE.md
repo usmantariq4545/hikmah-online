@@ -234,7 +234,7 @@ Turns BBB participation into mod_attendance marks with preview, approval and aud
 Inputs
 
 - bigbluebuttonbn_logs rows for the meeting: join logs (log = 'Join'), meeting-events callback rows with the raw JSON in meta.
-- Link table local_hikmahatt_link (bbbinstanceid, attendanceid, attendance sessionid, class window start/end, threshold override). Instructors create the link from the attendance session or BBB activity page.
+- Link table local_hikmahattendance_link (bbbinstanceid, attendanceid, attendance sessionid, class window start/end, threshold override). Instructors create the link from the attendance session or BBB activity page.
 
 Processing (scheduled task every 5 min + adhoc task on callback event)
 
@@ -243,7 +243,7 @@ Processing (scheduled task every 5 min + adhoc task on callback event)
 - Clip each interval to the class window, merge overlaps and reconnects, sum seconds.
 - Percentage = attended seconds ÷ window seconds × 100, rounded down to whole percent. Status: ≥ threshold → Present; > 0 and below threshold → Late/Partial (configurable mapping); 0 with no join → Absent; any conflict or unmapped user → Pending review.
 - Exclude users with an instructor/moderator role in the course. Cancelled sessions are skipped.
-- Write results to local_hikmahatt_decision (sessionid, userid, seconds, denominator, percent, threshold, computedstatus, evidencehash, state = preview|approved|applied|overridden).
+- Write results to local_hikmahattendance_decision (sessionid, userid, seconds, denominator, percent, threshold, computedstatus, evidencehash, state = preview|approved|applied|overridden).
 
 Applying
 
@@ -252,7 +252,7 @@ Applying
 - Idempotent: an evidence hash per (session, user) means re-running with the same data does nothing; new data creates a new preview, never a silent change.
 - autowrite (per course) applies automatically. Decided 2026-11-20 by the owner: it comes on when a scheduled live class is added (manager::ensure_for_room); the course can switch it off. With autowrite on and no BBB report 2 h after class, joined learners are marked Present and the rest Absent, replaced if the report arrives later.
 
-Audit: every override, approve and apply fires an event and writes local_hikmahatt_audit (who, when, from, to, reason). Reconciliation report shows evidence vs final mark, exportable to CSV.
+Audit: every override, approve and apply fires an event and writes local_hikmahattendance_audit (who, when, from, to, reason). Reconciliation report shows evidence vs final mark, exportable to CSV.
 
 Schema safety: the analytics payload is not formally documented and can change between BBB versions. Store the BBB version seen, validate the payload against a versioned parser, send unknown shapes to the exceptions queue, and keep fixtures from each BBB version in tests/fixtures/ for a regression test.
 
