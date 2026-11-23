@@ -39,6 +39,13 @@ $capabilities = [
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => ['editingteacher' => CAP_ALLOW, 'teacher' => CAP_ALLOW, 'manager' => CAP_ALLOW],
     ],
+    // Choose which details the all-users list shows (every profile detail is available).
+    'local/hikmahaccess:choosecolumns' => [
+        'riskbitmask' => RISK_PERSONAL,
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => ['manager' => CAP_ALLOW],
+    ],
     // Download the all-users list as a spreadsheet.
     'local/hikmahaccess:exportusers' => [
         'riskbitmask' => RISK_PERSONAL,

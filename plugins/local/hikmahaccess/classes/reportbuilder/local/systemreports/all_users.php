@@ -17,11 +17,17 @@
 namespace local_hikmahaccess\reportbuilder\local\systemreports;
 
 use core\context\system;
+use core_admin\reportbuilder\local\filters\courserole;
+use core_reportbuilder\local\filters\number;
+use core_reportbuilder\local\report\column;
+use core_reportbuilder\local\report\filter;
+use lang_string;
 use local_hikmahaccess\userlist;
 
 /**
  * Every user of the site, view only: Moodle's own "Browse list of users" without its edit, suspend and delete
- * actions, plus the phone number. Download only with local/hikmahaccess:exportusers.
+ * actions. Shows the columns the viewer chose (userlist::chosen_columns), and filters for exactly those columns.
+ * Download only with local/hikmahaccess:exportusers.
  *
  * @package    local_hikmahaccess
  * @copyright  2026 Hikmah Institute
@@ -46,17 +52,102 @@ class all_users extends \core_admin\reportbuilder\local\systemreports\users {
     }
 
     /**
-     * Moodle's columns, then the phone number.
+     * The name, then the chosen columns.
      */
     public function add_columns(): void {
-        parent::add_columns();
         $user = $this->get_entity('user');
-        $this->add_column(userlist::phone_column($user->get_table_alias('user'), $user->get_entity_name()));
+        $u = $user->get_table_alias('user');
+        $this->add_column_from_entity('user:fullnamewithpicturelink')
+            ->add_fields("{$u}.suspended")
+            ->add_callback(static fn(string $fullname, \stdClass $row): string => $row->suspended
+                ? $fullname . ' ' . \html_writer::span(get_string('suspended', 'auth'), 'badge text-bg-warning ms-1')
+                : $fullname);
+
+        foreach (userlist::chosen_columns() as $key) {
+            if ($key === 'phone') {
+                $this->add_column(userlist::phone_column($u, $user->get_entity_name()));
+            } else if ($key === 'roles') {
+                $this->add_column($this->roles_column($u, $user->get_entity_name()));
+            } else if ($key === 'courses') {
+                $this->add_column((new column('hkcourses', new lang_string('courses', 'local_hikmahaccess'),
+                    $user->get_entity_name()))
+                    ->set_type(column::TYPE_INTEGER)
+                    ->add_field($this->courses_sql($u), 'hkcourses')
+                    ->set_is_sortable(true));
+            } else if ($key === 'lastaccess' || $key === 'firstaccess') {
+                // "2 days" rather than a date, as in Moodle's own user list.
+                $this->add_column_from_entity("user:$key")
+                    ->set_callback(static fn($value): string => $value ? format_time(time() - $value) : get_string('never'));
+            } else if (array_key_exists($key, $user->get_columns())) {
+                $this->add_column_from_entity("user:$key");
+            }
+        }
+        $this->set_initial_sort_column('user:fullnamewithpicturelink', SORT_ASC);
+        $this->set_default_no_results_notice(new lang_string('nousersfound', 'moodle'));
+    }
+
+    /**
+     * Filters for the name and the chosen columns only.
+     */
+    protected function add_filters(): void {
+        $user = $this->get_entity('user');
+        $u = $user->get_table_alias('user');
+        $this->add_filter_from_entity('user:fullname');
+        foreach (userlist::chosen_columns() as $key) {
+            if ($key === 'phone') {
+                $this->add_filter(userlist::phone_filter($u, $user->get_entity_name()));
+            } else if ($key === 'roles') {
+                $this->add_filter((new filter(courserole::class, 'courserole', new lang_string('roles', 'local_hikmahaccess'),
+                    $user->get_entity_name()))->set_field_sql("{$u}.id"));
+            } else if ($key === 'courses') {
+                $this->add_filter((new filter(number::class, 'hkcourses', new lang_string('courses', 'local_hikmahaccess'),
+                    $user->get_entity_name()))->set_field_sql($this->courses_sql($u)));
+            } else if (array_key_exists($key, $user->get_filters())) {
+                $this->add_filter_from_entity("user:$key");
+            }
+        }
     }
 
     /**
      * View only: no row actions (editing stays in Moodle's own user pages).
      */
     protected function add_actions(): void {
+    }
+
+    /**
+     * Every role the user holds anywhere (site or course), by name; site administrators are marked too.
+     *
+     * @param string $u alias of the user table
+     * @param string $entityname
+     * @return column
+     */
+    private function roles_column(string $u, string $entityname): column {
+        global $DB;
+        $roleids = $DB->sql_group_concat('hkr.roleid', ',', 'hkr.roleid');
+        return (new column('hkroles', new lang_string('roles', 'local_hikmahaccess'), $entityname))
+            ->set_type(column::TYPE_TEXT)
+            ->add_field("(SELECT {$roleids} FROM (SELECT DISTINCT ra.roleid FROM {role_assignments} ra
+                WHERE ra.userid = {$u}.id) hkr)", 'hkroles')
+            ->add_field("{$u}.id", 'hkuserid')
+            ->add_callback(static function ($value, \stdClass $row): string {
+                static $names = null;
+                $names ??= role_get_names(null, ROLENAME_ALIAS, true);
+                $list = array_map(fn($id) => $names[$id] ?? '', array_filter(explode(',', (string) $value)));
+                if (is_siteadmin($row->hkuserid)) {
+                    array_unshift($list, get_string('administrator'));
+                }
+                return s(implode(', ', array_filter($list)));
+            });
+    }
+
+    /**
+     * Number of courses the user is enrolled in.
+     *
+     * @param string $u alias of the user table
+     * @return string SQL
+     */
+    private function courses_sql(string $u): string {
+        return "(SELECT COUNT(DISTINCT hke.courseid) FROM {user_enrolments} hkue JOIN {enrol} hke ON hke.id = hkue.enrolid
+            WHERE hkue.userid = {$u}.id)";
     }
 }

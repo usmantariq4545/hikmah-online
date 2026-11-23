@@ -88,6 +88,37 @@ final class userlist_test extends \advanced_testcase {
     }
 
     /**
+     * Managers choose their columns (kept in display order, unknown ones dropped); support always gets the default ones.
+     */
+    public function test_choose_columns(): void {
+        global $DB;
+        $this->resetAfterTest();
+        $gen = $this->getDataGenerator();
+        $system = \context_system::instance();
+        $manager = $gen->create_user();
+        $gen->role_assign($DB->get_field('role', 'id', ['shortname' => 'manager']), $manager->id, $system->id);
+        $support = $gen->create_user();
+        $supportrole = create_role('Support', 'hksupportcols', '');
+        assign_capability('local/hikmahaccess:viewallusers', CAP_ALLOW, $supportrole, $system->id);
+        $gen->role_assign($supportrole, $support->id, $system->id);
+
+        $this->setUser($manager);
+        $this->assertTrue(userlist::can_choose_columns());
+        $this->assertSame(userlist::DEFAULT_COLUMNS, userlist::chosen_columns());
+        userlist::set_columns(['lastip', 'nosuchcolumn', 'email', 'roles']);
+        $this->assertSame(['email', 'roles', 'lastip'], userlist::chosen_columns());
+        $html = system_report_factory::create(all_users::class, $system)->output();
+        $this->assertStringContainsString(get_string('roles', 'local_hikmahaccess'), $html);
+        userlist::set_columns([]);
+        $this->assertSame(userlist::DEFAULT_COLUMNS, userlist::chosen_columns());
+
+        $this->setUser($support);
+        $this->assertFalse(userlist::can_choose_columns());
+        set_user_preference(userlist::PREFERENCE, 'lastip,city');
+        $this->assertSame(userlist::DEFAULT_COLUMNS, userlist::chosen_columns());
+    }
+
+    /**
      * Students and finance reviewers get no list.
      */
     public function test_others_get_nothing(): void {

@@ -16,20 +16,42 @@
 
 namespace local_hikmahaccess\privacy;
 
+use core_privacy\local\metadata\collection;
+use core_privacy\local\request\writer;
+use local_hikmahaccess\userlist;
+
 /**
- * Privacy API: no data of its own (it sets core's messaging preference, exported by core).
+ * Privacy API: one user preference (the columns chosen on the Users page). The messaging preference this plugin
+ * sets for students is core's own and exported by core.
  *
  * @package    local_hikmahaccess
  * @copyright  2026 Hikmah Institute
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class provider implements \core_privacy\local\metadata\null_provider {
+class provider implements
+    \core_privacy\local\metadata\provider,
+    \core_privacy\local\request\user_preference_provider {
     /**
-     * Reason for storing no data.
+     * The stored preference.
      *
-     * @return string
+     * @param collection $collection
+     * @return collection
      */
-    public static function get_reason(): string {
-        return 'privacy:metadata';
+    public static function get_metadata(collection $collection): collection {
+        $collection->add_user_preference(userlist::PREFERENCE, 'privacy:metadata:preference:usercolumns');
+        return $collection;
+    }
+
+    /**
+     * Exports the user's chosen columns.
+     *
+     * @param int $userid
+     */
+    public static function export_user_preferences(int $userid) {
+        $value = get_user_preferences(userlist::PREFERENCE, null, $userid);
+        if ($value !== null) {
+            writer::export_user_preference('local_hikmahaccess', userlist::PREFERENCE, $value,
+                get_string('privacy:metadata:preference:usercolumns', 'local_hikmahaccess'));
+        }
     }
 }
