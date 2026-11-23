@@ -1782,3 +1782,20 @@
         animation: none;
     }
 }
+
+// Users page (local_hikmahaccess): with many columns the table is wider than the page. Keep it in a box no taller
+// than the screen so its sideways scrollbar is always in view, hold the header row in place, and keep cells on one line.
+#page-local-hikmahaccess-users .reportbuilder-report .table-responsive {
+    max-height: 70vh;
+    overflow: auto;
+}
+#page-local-hikmahaccess-users .reportbuilder-report thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: #fff;
+}
+#page-local-hikmahaccess-users .reportbuilder-report th,
+#page-local-hikmahaccess-users .reportbuilder-report td {
+    white-space: nowrap;
+}
