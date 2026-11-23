@@ -61,15 +61,20 @@ class my_learners extends system_report {
             ->add_join("JOIN {user} {$u} ON {$u}.id = {$ue}.userid AND {$u}.deleted = 0"));
 
         // Only students (not co-teachers) of the viewer's own courses.
-        [$insql, $params] = $DB->get_in_or_equal(array_keys($this->courses) ?: [0], SQL_PARAMS_NAMED,
-            database::generate_param_name() . '_');
+        [$insql, $params] = $DB->get_in_or_equal(
+            array_keys($this->courses) ?: [0],
+            SQL_PARAMS_NAMED,
+            database::generate_param_name() . '_'
+        );
         $student = database::generate_param_name();
         $params[$student] = (int) $DB->get_field('role', 'id', ['shortname' => 'student']);
-        $this->add_base_condition_sql("{$enrol}.courseid {$insql} AND EXISTS (
+        $this->add_base_condition_sql(
+            "{$enrol}.courseid {$insql} AND EXISTS (
             SELECT 1 FROM {role_assignments} hkra
               JOIN {context} hkctx ON hkctx.id = hkra.contextid AND hkctx.contextlevel = " . CONTEXT_COURSE . "
              WHERE hkctx.instanceid = {$enrol}.courseid AND hkra.userid = {$ue}.userid AND hkra.roleid = :{$student})",
-            $params);
+            $params
+        );
         $this->add_base_fields("{$u}.id");
 
         $this->add_learner_columns($u, $userentity->get_entity_name());

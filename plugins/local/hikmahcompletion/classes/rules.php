@@ -121,10 +121,15 @@ class rules {
                     $attendanceitem->update('local_hikmahcompletion');
                     $changes[] = "attendance pass grade $pass";
                 }
-                $cmrow = $DB->get_record('course_modules', ['id' => $attendancecm->id],
-                    'id, completion, completionpassgrade, completiongradeitemnumber');
-                if ((int) $cmrow->completion !== COMPLETION_TRACKING_AUTOMATIC || !$cmrow->completionpassgrade
-                        || $cmrow->completiongradeitemnumber === null) {
+                $cmrow = $DB->get_record(
+                    'course_modules',
+                    ['id' => $attendancecm->id],
+                    'id, completion, completionpassgrade, completiongradeitemnumber'
+                );
+                if (
+                    (int) $cmrow->completion !== COMPLETION_TRACKING_AUTOMATIC || !$cmrow->completionpassgrade
+                        || $cmrow->completiongradeitemnumber === null
+                ) {
                     $DB->update_record('course_modules', (object) ['id' => $cmrow->id,
                         'completion' => COMPLETION_TRACKING_AUTOMATIC, 'completionpassgrade' => 1,
                         'completiongradeitemnumber' => 0]);
@@ -180,8 +185,11 @@ class rules {
      */
     private static function completion_criteria(stdClass $course, array $required, ?float $gradepass): array {
         global $DB;
-        $existing = $DB->get_records_select('course_completion_criteria', 'course = ? AND criteriatype IN (?, ?)',
-            [$course->id, COMPLETION_CRITERIA_TYPE_ACTIVITY, COMPLETION_CRITERIA_TYPE_GRADE]);
+        $existing = $DB->get_records_select(
+            'course_completion_criteria',
+            'course = ? AND criteriatype IN (?, ?)',
+            [$course->id, COMPLETION_CRITERIA_TYPE_ACTIVITY, COMPLETION_CRITERIA_TYPE_GRADE]
+        );
         $haveactivities = [];
         $havegrade = null;
         foreach ($existing as $criterion) {
@@ -205,8 +213,11 @@ class rules {
         // out again from the new ones (its completion task re-checks every learner).
         $completion = new \completion_info($course);
         $completion->delete_course_completion_data();
-        $DB->delete_records_select('course_completion_criteria', 'course = ? AND criteriatype IN (?, ?)',
-            [$course->id, COMPLETION_CRITERIA_TYPE_ACTIVITY, COMPLETION_CRITERIA_TYPE_GRADE]);
+        $DB->delete_records_select(
+            'course_completion_criteria',
+            'course = ? AND criteriatype IN (?, ?)',
+            [$course->id, COMPLETION_CRITERIA_TYPE_ACTIVITY, COMPLETION_CRITERIA_TYPE_GRADE]
+        );
         foreach ($want as $cmid => $modname) {
             $DB->insert_record('course_completion_criteria', (object) ['course' => $course->id,
                 'criteriatype' => COMPLETION_CRITERIA_TYPE_ACTIVITY, 'module' => $modname, 'moduleinstance' => $cmid]);

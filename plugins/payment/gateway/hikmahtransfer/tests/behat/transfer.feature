@@ -29,6 +29,8 @@ Feature: Pay for a course by manual transfer
     And the following "course enrolments" exist:
       | user     | course | role           |
       | teacher1 | PAID1  | editingteacher |
+    And the following config values are set as admin:
+      | paygw_plugins_sortorder | hikmahtransfer |
     And I log in as "admin"
     And I navigate to "Plugins > Enrolments > Manage enrol plugins" in site administration
     And I click on "Enable" "link" in the "Enrolment on payment" "table_row"

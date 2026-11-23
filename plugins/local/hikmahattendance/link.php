@@ -52,8 +52,12 @@ if ($link && (int) $link->courseid !== (int) $course->id) {
 if ($link && $delete && data_submitted()) {
     require_sesskey();
     manager::delete_link((int) $link->id, (int) $USER->id);
-    redirect($indexurl, get_string('link_deleted', 'local_hikmahattendance'), null,
-        \core\output\notification::NOTIFY_SUCCESS);
+    redirect(
+        $indexurl,
+        get_string('link_deleted', 'local_hikmahattendance'),
+        null,
+        \core\output\notification::NOTIFY_SUCCESS
+    );
 }
 
 $dateformat = get_string('strftimedatetimeshort', 'langconfig');
@@ -69,8 +73,14 @@ $targets = [];
 foreach ($attendances as $attendance) {
     $name = format_string($attendance->name);
     $targets['n' . $attendance->id] = get_string('form_newsession', 'local_hikmahattendance', $name);
-    $sessions = $DB->get_records('attendance_sessions', ['attendanceid' => $attendance->id], 'sessdate DESC', 'id, sessdate',
-        0, 100);
+    $sessions = $DB->get_records(
+        'attendance_sessions',
+        ['attendanceid' => $attendance->id],
+        'sessdate DESC',
+        'id, sessdate',
+        0,
+        100
+    );
     foreach ($sessions as $session) {
         if (in_array($session->id, $linked) && (!$link || (int) $link->sessionid !== (int) $session->id)) {
             continue;
@@ -108,9 +118,12 @@ if ($data = $form->get_data()) {
     if ($kind === 'n') {
         // Create the attendance session for this class window through mod_attendance.
         $attendance = $DB->get_record('attendance', ['id' => $targetid, 'course' => $course->id], '*', MUST_EXIST);
-        $sessionid = manager::create_session($attendance, (int) $data->windowstart,
+        $sessionid = manager::create_session(
+            $attendance,
+            (int) $data->windowstart,
             (int) $data->windowend - (int) $data->windowstart,
-            get_string('sessiondescription', 'local_hikmahattendance', $bbbs[$data->bbbid]));
+            get_string('sessiondescription', 'local_hikmahattendance', $bbbs[$data->bbbid])
+        );
         $attendanceid = (int) $attendance->id;
     } else {
         $session = $DB->get_record('attendance_sessions', ['id' => $targetid], '*', MUST_EXIST);
@@ -130,8 +143,12 @@ if ($data = $form->get_data()) {
         'cancelled' => $data->cancelled,
     ], (int) $USER->id);
     manager::process_link((int) $saved->id);
-    redirect($indexurl, get_string('link_saved', 'local_hikmahattendance'), null,
-        \core\output\notification::NOTIFY_SUCCESS);
+    redirect(
+        $indexurl,
+        get_string('link_saved', 'local_hikmahattendance'),
+        null,
+        \core\output\notification::NOTIFY_SUCCESS
+    );
 }
 
 if ($link) {

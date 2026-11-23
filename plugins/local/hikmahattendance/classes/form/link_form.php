@@ -51,13 +51,21 @@ class link_form extends \moodleform {
         $mform->addElement('date_time_selector', 'windowend', get_string('form_windowend', 'local_hikmahattendance'));
         $mform->addHelpButton('windowstart', 'form_windowstart', 'local_hikmahattendance');
 
-        $mform->addElement('text', 'threshold', get_string('form_threshold', 'local_hikmahattendance', $custom['default']),
-            ['size' => 4]);
+        $mform->addElement(
+            'text',
+            'threshold',
+            get_string('form_threshold', 'local_hikmahattendance', $custom['default']),
+            ['size' => 4]
+        );
         $mform->setType('threshold', PARAM_RAW_TRIMMED);
         $mform->addHelpButton('threshold', 'form_threshold', 'local_hikmahattendance');
 
-        $mform->addElement('advcheckbox', 'cancelled', get_string('form_cancelled', 'local_hikmahattendance'),
-            get_string('form_cancelled_label', 'local_hikmahattendance'));
+        $mform->addElement(
+            'advcheckbox',
+            'cancelled',
+            get_string('form_cancelled', 'local_hikmahattendance'),
+            get_string('form_cancelled_label', 'local_hikmahattendance')
+        );
 
         $this->add_action_buttons(true, get_string('form_save', 'local_hikmahattendance'));
     }
@@ -77,8 +85,10 @@ class link_form extends \moodleform {
         if ($data['windowend'] - $data['windowstart'] > DAYSECS) {
             $errors['windowend'] = get_string('error:windowlong', 'local_hikmahattendance');
         }
-        if ($data['threshold'] !== '' && (!ctype_digit((string) $data['threshold']) || $data['threshold'] < 1
-                || $data['threshold'] > 100)) {
+        if (
+            $data['threshold'] !== '' && (!ctype_digit((string) $data['threshold']) || $data['threshold'] < 1
+                || $data['threshold'] > 100)
+        ) {
             $errors['threshold'] = get_string('error:threshold', 'local_hikmahattendance');
         }
         if (empty($data['bbbid']) || !isset($this->_customdata['bbbs'][$data['bbbid']])) {

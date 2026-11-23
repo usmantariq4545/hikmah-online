@@ -196,8 +196,11 @@ class course_detail {
         }
         switch ($enrol->state) {
             case 'notyet':
-                $action['label'] = get_string('cta_notyet', 'theme_hikmah',
-                    userdate($enrol->opens, get_string('strftimedate', 'langconfig')));
+                $action['label'] = get_string(
+                    'cta_notyet',
+                    'theme_hikmah',
+                    userdate($enrol->opens, get_string('strftimedate', 'langconfig'))
+                );
                 return $action;
             case 'ended':
             case 'closed':
@@ -266,10 +269,12 @@ class course_detail {
         }
 
         if ($enrol->type === 'approval') {
-            // enrol_apply records a new application as suspended (1) and a wait-listed one as 2.
-            $waiting = $DB->record_exists_select('user_enrolments',
+            // Note: enrol_apply records a new application as suspended (1) and a wait-listed one as 2.
+            $waiting = $DB->record_exists_select(
+                'user_enrolments',
                 'enrolid = :enrolid AND userid = :userid AND status IN (1, 2)',
-                ['enrolid' => $enrol->instance->id, 'userid' => $userid]);
+                ['enrolid' => $enrol->instance->id, 'userid' => $userid]
+            );
             if ($waiting) {
                 return array_merge($action, [
                     'kind' => 'waiting',

@@ -84,8 +84,12 @@ $error = '';
 if ($data = $form->get_data()) {
     try {
         request::submit((int) $request->id, $data, (int) $data->receipt, (int) $USER->id);
-        redirect($statusurl, get_string('submitted_ok', 'paygw_hikmahtransfer'), null,
-            \core\output\notification::NOTIFY_SUCCESS);
+        redirect(
+            $statusurl,
+            get_string('submitted_ok', 'paygw_hikmahtransfer'),
+            null,
+            \core\output\notification::NOTIFY_SUCCESS
+        );
     } catch (moodle_exception $e) {
         // Invalid or infected receipt: nothing was stored and the request did not move.
         $error = $e->getMessage();

@@ -128,6 +128,10 @@
     }
     &__item {
         padding: clamp(1.2rem, 2.4vw, 2rem);
+        // The label comes first in the markup (valid <dl>); the number shows above it.
+        display: flex;
+        flex-direction: column-reverse;
+        justify-content: flex-end;
         border-inline-start: 1px solid $hk-line;
         &:first-child {
             border-inline-start: 0;

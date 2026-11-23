@@ -73,14 +73,21 @@ class layout {
         // menu item whose address matches the page exactly.
         if ($page->url->get_path(false) === '/theme/hikmah/course.php') {
             $primarymenu['moremenu']['nodearray'] = self::mark_active(
-                $primarymenu['moremenu']['nodearray'] ?? [], '/theme/hikmah/catalog.php');
+                $primarymenu['moremenu']['nodearray'] ?? [],
+                '/theme/hikmah/catalog.php'
+            );
             $primarymenu['mobileprimarynav'] = self::mark_active(
-                $primarymenu['mobileprimarynav'] ?? [], '/theme/hikmah/catalog.php');
+                $primarymenu['mobileprimarynav'] ?? [],
+                '/theme/hikmah/catalog.php'
+            );
         }
 
         return [
-            'sitename' => format_string($SITE->shortname, true,
-                ['context' => \context_course::instance(SITEID), 'escape' => false]),
+            'sitename' => format_string(
+                $SITE->shortname,
+                true,
+                ['context' => \context_course::instance(SITEID), 'escape' => false]
+            ),
             'output' => $output,
             'bodyattributes' => $output->body_attributes(array_merge(['hk-layout'], $extraclasses)),
             'primarymoremenu' => $primarymenu['moremenu'],

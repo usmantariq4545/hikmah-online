@@ -54,7 +54,7 @@ $PAGE->add_body_class('hk-paypage');
 
 $dateformat = get_string('strftimedatetime', 'langconfig');
 
-// ---- Decision ------------------------------------------------------------------------------------
+// Decision.
 if ($id && $action !== '' && data_submitted()) {
     require_sesskey();
     $remarks = trim(optional_param('remarks', '', PARAM_TEXT));
@@ -83,11 +83,15 @@ if ($id && $action !== '' && data_submitted()) {
         redirect($baseurl, get_string($message, 'paygw_hikmahtransfer'), null, \core\output\notification::NOTIFY_SUCCESS);
     }
     // Somebody else decided first: nothing was changed.
-    redirect($detailurl, get_string('decision_stale', 'paygw_hikmahtransfer'), null,
-        \core\output\notification::NOTIFY_WARNING);
+    redirect(
+        $detailurl,
+        get_string('decision_stale', 'paygw_hikmahtransfer'),
+        null,
+        \core\output\notification::NOTIFY_WARNING
+    );
 }
 
-// ---- Detail --------------------------------------------------------------------------------------
+// Detail.
 if ($id) {
     $request = request::get($id);
     $learner = core_user::get_user($request->userid);
@@ -98,6 +102,7 @@ if ($id) {
         $history[] = [
             'status' => request::status_display($row->tostatus),
             'time' => userdate($row->timecreated, $dateformat),
+            'datetime' => date('c', (int) $row->timecreated),
             'actor' => $actor ? fullname($actor) : '',
             'remarks' => (string) $row->remarks,
         ];
@@ -151,7 +156,7 @@ if ($id) {
     exit;
 }
 
-// ---- Queue ---------------------------------------------------------------------------------------
+// Queue.
 $statuses = [request::STATUS_PENDING, request::STATUS_RESUBMIT, request::STATUS_APPROVED, request::STATUS_REJECTED];
 $where = ['r.status <> :draft'];
 $sqlparams = ['draft' => request::STATUS_DRAFT];

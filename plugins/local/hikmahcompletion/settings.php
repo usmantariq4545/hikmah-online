@@ -26,11 +26,19 @@ defined('MOODLE_INTERNAL') || die();
 
 if ($hassiteconfig) {
     $settings = new admin_settingpage('local_hikmahcompletion', get_string('pluginname', 'local_hikmahcompletion'));
-    $settings->add(new admin_setting_configtext('local_hikmahcompletion/defaultgrade',
-        get_string('defaultgrade', 'local_hikmahcompletion'), get_string('defaultgrade_desc', 'local_hikmahcompletion'),
-        50, PARAM_INT));
-    $settings->add(new admin_setting_configtext('local_hikmahcompletion/defaultattendance',
+    $settings->add(new admin_setting_configtext(
+        'local_hikmahcompletion/defaultgrade',
+        get_string('defaultgrade', 'local_hikmahcompletion'),
+        get_string('defaultgrade_desc', 'local_hikmahcompletion'),
+        50,
+        PARAM_INT
+    ));
+    $settings->add(new admin_setting_configtext(
+        'local_hikmahcompletion/defaultattendance',
         get_string('defaultattendance', 'local_hikmahcompletion'),
-        get_string('defaultattendance_desc', 'local_hikmahcompletion'), 75, PARAM_INT));
+        get_string('defaultattendance_desc', 'local_hikmahcompletion'),
+        75,
+        PARAM_INT
+    ));
     $ADMIN->add('localplugins', $settings);
 }

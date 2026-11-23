@@ -38,8 +38,12 @@ class rules_form extends \moodleform {
         foreach (['grade', 'attendance'] as $key) {
             $mform->addElement('text', $key, get_string('field_' . $key, 'local_hikmahcompletion'), ['size' => 4]);
             $mform->setType($key, PARAM_RAW_TRIMMED);
-            $mform->addElement('static', $key . 'help', '',
-                get_string('field_' . $key . '_help', 'local_hikmahcompletion', $this->_customdata['defaults'][$key]));
+            $mform->addElement(
+                'static',
+                $key . 'help',
+                '',
+                get_string('field_' . $key . '_help', 'local_hikmahcompletion', $this->_customdata['defaults'][$key])
+            );
         }
         $this->add_action_buttons(false, get_string('save', 'local_hikmahcompletion'));
     }

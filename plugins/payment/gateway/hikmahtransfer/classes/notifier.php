@@ -130,8 +130,14 @@ class notifier {
      * @param stdClass $a placeholders
      * @param moodle_url $url link included with the message
      */
-    private static function send(string $provider, stdClass $to, string $subjectkey, string $bodykey, stdClass $a,
-            moodle_url $url): void {
+    private static function send(
+        string $provider,
+        stdClass $to,
+        string $subjectkey,
+        string $bodykey,
+        stdClass $a,
+        moodle_url $url
+    ): void {
         try {
             $strings = get_string_manager();
             $lang = $to->lang ?? null;

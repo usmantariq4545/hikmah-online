@@ -32,8 +32,13 @@
  * @param stdClass $course
  * @param context_course $coursecontext
  */
-function local_hikmahaccess_extend_navigation_user_settings(navigation_node $usersetting, $user, $usercontext,
-        $course, $coursecontext): void {
+function local_hikmahaccess_extend_navigation_user_settings(
+    navigation_node $usersetting,
+    $user,
+    $usercontext,
+    $course,
+    $coursecontext
+): void {
     global $USER;
     if (is_siteadmin() || !($account = $usersetting->find('useraccount', null))) {
         return;
@@ -64,24 +69,31 @@ function local_hikmahaccess_extend_signup_form(MoodleQuickForm $mform): void {
         foreach (\tool_policy\api::list_current_versions() as $version) {
             $key = (int) $version->type === \tool_policy\policy_version::TYPE_PRIVACY ? 'privacy' : 'terms';
             $url = new moodle_url('/admin/tool/policy/view.php', ['policyid' => $version->policyid]);
-            $links[$key] = html_writer::link($url, get_string($key === 'privacy' ? 'privacypolicy' : 'termsofuse',
-                'local_hikmahaccess'), ['target' => '_blank', 'rel' => 'noopener']);
+            $links[$key] = html_writer::link($url, get_string(
+                $key === 'privacy' ? 'privacypolicy' : 'termsofuse',
+                'local_hikmahaccess'
+            ), ['target' => '_blank', 'rel' => 'noopener']);
         }
     }
     // Checked on submit (validate_extend_signup_form below); no "*" marker, which would sit on a line of its own.
 
-    // "Continue with Google" (and any other sign-in service) above the form, as on the login page; such
+    // Shows "Continue with Google" (and any other sign-in service) above the form, as on the login page; such
     // accounts are created on first sign-in and asked for their profile details then.
     global $OUTPUT;
     $idps = \auth_plugin_base::prepare_identity_providers_for_output(
-        \auth_plugin_base::get_identity_providers(get_enabled_auth_plugins()), $OUTPUT);
+        \auth_plugin_base::get_identity_providers(get_enabled_auth_plugins()),
+        $OUTPUT
+    );
     if ($idps && $mform->elementExists('username')) {
         $html = '';
         foreach ($idps as $idp) {
             $icon = empty($idp['iconurl']) ? '' : html_writer::empty_tag('img', ['src' => $idp['iconurl'], 'alt' => '',
                 'width' => 20, 'height' => 20]);
-            $html .= html_writer::link($idp['url'], $icon . s(get_string('signupwith', 'local_hikmahaccess', $idp['name'])),
-                ['class' => 'btn btn-outline-secondary login-identityprovider-btn']);
+            $html .= html_writer::link(
+                $idp['url'],
+                $icon . s(get_string('signupwith', 'local_hikmahaccess', $idp['name'])),
+                ['class' => 'btn btn-outline-secondary login-identityprovider-btn']
+            );
         }
         $html .= html_writer::div(get_string('signupor', 'local_hikmahaccess'), 'login-separator');
         $mform->insertElementBefore($mform->createElement('html', html_writer::div($html, 'hk-signup-idp')), 'username');
