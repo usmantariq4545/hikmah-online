@@ -8,6 +8,7 @@
   finance reviewers and learners get no tab. Replaces support's "People" tab. Each view is logged.
 - Releases: every successful deploy is tagged live-<date>-<commit> on GitHub with the backup taken before it;
   scripts/deploy-live.sh <tag> goes back to an earlier release (docs/runbooks/contabo.md).
+- Smoke test: the "cron last run" check waits up to 3 minutes for cron after a long deploy instead of failing.
 - CI trimmed (GitHub Actions free minutes ran out, 2026-11-23): plugin checks run only when plugins/ or
   versions.lock change, a newer push cancels the older run, Behat runs weekly and on demand, jobs time out
   after 40 min; the secrets scan moved to secrets.yml (every push). local_hikmahcompletion added to the matrix.

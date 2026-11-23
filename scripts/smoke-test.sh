@@ -31,12 +31,19 @@ check "dotfile is hidden"         "$BASE/.git/config"                           
 check "receipt needs login"       "$BASE/pluginfile.php/1/paygw_hikmahtransfer/receipt/1/receipt.png" 303
 check "review queue needs login"  "$BASE/payment/gateway/hikmahtransfer/review.php" 303
 
-last="$(moodle_exec php -r '
-    define("CLI_SCRIPT", true);
-    require "/var/www/moodle/config.php";
-    echo (int) $DB->get_field_sql("SELECT MAX(lastruntime) FROM {task_scheduled}");
-' 2>/dev/null | tail -n 1)"
-now="$(date +%s)"
+# Right after a long deploy cron has been paused for a while; give it up to 3 minutes to run again.
+for attempt in $(seq 1 13); do
+    last="$(moodle_exec php -r '
+        define("CLI_SCRIPT", true);
+        require "/var/www/moodle/config.php";
+        echo (int) $DB->get_field_sql("SELECT MAX(lastruntime) FROM {task_scheduled}");
+    ' 2>/dev/null | tail -n 1)"
+    now="$(date +%s)"
+    if [ -n "$last" ] && [ "$last" -gt 0 ] && [ $((now - last)) -lt 300 ]; then
+        break
+    fi
+    [ "$attempt" = 13 ] || sleep 15
+done
 if [ -n "$last" ] && [ "$last" -gt 0 ] && [ $((now - last)) -lt 300 ]; then
     printf '  ok    %-34s %s s ago\n' "cron last run" "$((now - last))"
 else
