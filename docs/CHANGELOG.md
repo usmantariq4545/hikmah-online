@@ -14,6 +14,9 @@
 
 ## 2026-11-20 — Live classes standard; attendance marked by the platform
 
+- Course visibility: the course form now offers Hidden (only staff), Public, or Scheduled (hidden until a
+  chosen date and time, then public by itself, checked every 5 minutes; local_hikmahaccess, table
+  local_hikmahaccess_publish). Scheduled courses show "Scheduled: <time>" on the course management page.
 - Version control: each change on its own branch, merged into main through a pull request the owner
   approves, then deployed. A pre-push hook (.githooks/pre-push) refuses pushes straight to main.
 
