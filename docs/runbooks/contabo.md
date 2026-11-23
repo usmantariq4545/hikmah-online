@@ -193,6 +193,13 @@ Keeps 7 daily, 4 weekly and 6 monthly sets on the server and copies each one to 
 
 Uptime, server, cron and backup alerts: `docs/runbooks/monitoring.md`.
 
+Start every container after a reboot (2026-11-23: after a kernel reboot the moodle container stayed
+stopped although its restart policy is unless-stopped, and the site returned 502 until it was started by hand):
+
+```bash
+( crontab -l 2>/dev/null; echo "@reboot sleep 90 && cd /home/hikmah/hikmah-online && HIKMAH_ENV=prod scripts/dc.sh up -d >> /home/hikmah/boot.log 2>&1" ) | crontab -
+```
+
 ## 9. Updating the site later (branch, pull request, merge, then deploy)
 
 Every change goes on its own branch and reaches `main` only through a pull request (owner, 2026-11-23):
