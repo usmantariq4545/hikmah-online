@@ -1,0 +1,11 @@
+#!/bin/sh
+# Changes reach main only through a pull request on GitHub (docs/runbooks/contabo.md, section 9).
+# Tags (live-*) and other branches push as usual. Emergency only: HIKMAH_ALLOW_MAIN_PUSH=1 git push ...
+[ "${HIKMAH_ALLOW_MAIN_PUSH:-}" = 1 ] && exit 0
+while read -r localref localsha remoteref remotesha; do
+    if [ "$remoteref" = refs/heads/main ]; then
+        echo "Direct push to main refused: push a branch and open a pull request." >&2
+        exit 1
+    fi
+done
+exit 0
