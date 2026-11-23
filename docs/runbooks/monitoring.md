@@ -1,6 +1,6 @@
 # Monitoring and alerts
 
-What tells you, on Telegram, that something is wrong:
+What tells you, on Discord (private server "Hikmah alerts", #alerts) and by email, that something is wrong:
 
 | What | Service | Alerts when |
 | --- | --- | --- |
@@ -16,14 +16,14 @@ Failed sign-in alerts (10 in a row) are separate: they go to the main administra
 Free plans and their terms change; check each provider's pricing page. HetrixTools may disable a free
 account that nobody signs in to for a long time (reported as 90 days): sign in now and then.
 
-## 1. Telegram
+## 1. Alert channels: Discord and email
 
-Use each service's own Telegram integration: it connects through the service's bot, and you only press
-Start in Telegram. No bot token is needed.
+Discord: a private server "Hikmah alerts" with an #alerts channel; its notification setting is "All Messages"
+so alerts reach the phone. Each service connects to it from its own Integrations page; email is the backup.
 
 ## 2. Healthchecks.io (cron and backup)
 
-1. Sign up at healthchecks.io, then Integrations → Telegram → connect.
+1. Sign up at healthchecks.io, then Integrations → Discord (pick Hikmah alerts / #alerts) and Email.
 2. Add check **Hikmah cron**: Simple, period **1 minute**, grace **10 minutes** (one long task can make a run slow).
 3. Add check **Hikmah backup**: Simple, period **1 day**, grace **2 hours** (backup runs 02:15 UTC).
 4. Copy both ping URLs (`https://hc-ping.com/...`).
@@ -37,7 +37,7 @@ The ping URLs are like passwords (anyone with one can send fake "all well" signa
 
 ## 3. HetrixTools (site and server)
 
-1. Sign up at hetrixtools.com, then Contact Lists → add Telegram.
+1. Sign up at hetrixtools.com, then Contact Lists → add Discord and email.
 2. **Uptime monitor**: Website, URL `https://online.hikmahinstitute.org.pk/login/index.php`, every
    1 minute, keyword `Log in to Hikmah Online`, SSL expiry alert on (14 days). The keyword comes from
    PHP and the database, so a broken database shows as down even when the web server answers.
@@ -52,7 +52,7 @@ Monitors only read pages (GET), so the sign-in limit (20 posts a minute) and fai
 
 - Planned work longer than 10 minutes (upgrades with maintenance mode): pause "Hikmah cron" in
   Healthchecks and the uptime monitor in HetrixTools, and resume them afterwards.
-- To test alerts: `HIKMAH_ENV=prod scripts/dc.sh stop cron`, wait about 12 minutes for the Telegram alert, then
+- To test alerts: `HIKMAH_ENV=prod scripts/dc.sh stop cron`, wait about 12 minutes for the Discord and email alert, then
   `HIKMAH_ENV=prod scripts/dc.sh start cron` (a recovery message follows). For the site, change the keyword to a word
   not on the page for 2 minutes, then change it back.
 

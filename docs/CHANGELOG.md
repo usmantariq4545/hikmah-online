@@ -11,7 +11,7 @@
 
 - Monitoring (security review fix 9): the cron container pings HEALTHCHECK_CRON_URL after each successful
   cron run and backup.sh pings HEALTHCHECK_BACKUP_URL when it finishes (both optional; empty = off).
-  Uptime, server and alert setup (HetrixTools, Healthchecks.io, Telegram) in docs/runbooks/monitoring.md.
+  Uptime, server and alert setup (HetrixTools, Healthchecks.io; alerts to Discord and email) in docs/runbooks/monitoring.md.
 
 - Sign-up page: "Continue with Google" button above the form (and an "or sign up with email" divider),
   shown once Google sign-in has its keys (030-auth.php reads GOOGLE_OAUTH_CLIENT_ID/SECRET).
