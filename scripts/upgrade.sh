@@ -29,6 +29,11 @@ moodle_cli upgrade.php --non-interactive
 say "Applying settings"
 "$SCRIPTS_DIR/configure.sh"
 
+# PHP-FPM caches compiled files without re-checking them (production opcache), and it read Moodle's class
+# list before the upgrade rewrote it: new classes would stay "not found". A graceful reload drops no requests.
+say "Reloading PHP-FPM"
+dc kill -s SIGUSR2 moodle >/dev/null
+
 say "Maintenance mode off"
 moodle_cli maintenance.php --disable
 trap - EXIT
