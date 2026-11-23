@@ -838,3 +838,19 @@ section.block {
 #page-footer .hk-footer__main > .hk-container {
     padding-inline-end: 4.5rem;
 }
+
+// "Download table data as" (every downloadable table): Moodle lines the row up by its bottom edge and gives the label a
+// bottom margin, so the label sat low; centre label, format list and Download button on one line.
+.dataformatselector > div {
+    // stylelint-disable-next-line declaration-no-important
+    align-items: center !important; // Overrides Moodle's align-items-end utility class.
+    gap: .5rem;
+}
+.dataformatselector label,
+.dataformatselector .form-select {
+    // stylelint-disable-next-line declaration-no-important
+    margin: 0 !important; // Overrides the me-1 utility; the gap spaces them.
+}
+.dataformatselector .form-select {
+    width: auto;
+}
