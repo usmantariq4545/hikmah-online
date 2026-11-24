@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-24 — graphify code map for Claude sessions
+
+- Claude Code tooling: the graphify skill (project-scoped, .claude/skills/graphify) and its hooks (.claude/settings.json) so the
+  main chat, forks and subagents query a local knowledge graph before searching files. graphify-out/ is built locally with
+  `graphify update .` and git-ignored; .graphifyignore keeps .env files, backups, Moodle source and session worktrees out.
+  No effect on the site or the server.
+
 ## 2026-11-23 — Attendance tables renamed
 
 - Server: kernel 6.8.0-151 (TCP fix CVE-2026-98432) and ClamAV 1.5.5 (10 scanner CVEs) applied after a CVE

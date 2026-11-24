@@ -1,0 +1,11 @@
+﻿# Never index secrets, other sessions' checkouts, fetched Moodle source or backups.
+.env
+.env.*
+*.local.md
+.claude/
+moodle/
+backups/
+graphify-out/
+node_modules/
+*.dump
+*.tgz
