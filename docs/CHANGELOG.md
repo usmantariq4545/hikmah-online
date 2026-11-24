@@ -1,6 +1,15 @@
 # Changelog
 
 
+## 2026-11-24 — Home page v2 draft (admins only)
+
+- theme_hikmah: new draft page /theme/hikmah/home2.php built from the "Homepage Copy" doc: announcement bar, hero,
+  four promises, topic tiles, featured course spotlight (or a row of cards once there is more than one course), how it
+  works, teachers, learning formats, sample student quotes (marked as samples), free taster, FAQ, verse and closing call
+  to action. Courses and teachers come from the live catalog. Reuses the home page blocks; new styles in
+  scss/hikmah/_home2.scss. Needs moodle/site:config, so only site admins can open it. The front page is unchanged.
+- Not in the draft: the four-column footer and newsletter from the doc (the site footer is shared by every page).
+
 ## 2026-11-24 — One enrollment per learner per course
 
 - Payment: a learner who already has the course (any enrollment method) is not offered the pay page, cannot
