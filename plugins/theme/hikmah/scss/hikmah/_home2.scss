@@ -213,6 +213,17 @@
     }
 }
 
+// Moodle's default blockquote bar does not belong on the quote cards or the verse band.
+.hk-home2 blockquote {
+    border: 0;
+    padding: 0;
+}
+
+// The corner rosette would sit behind the taster's small print.
+.hk-h2-taster::after {
+    display: none;
+}
+
 .hk-h2-actions {
     position: relative;
     z-index: 1;

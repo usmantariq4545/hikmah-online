@@ -1,6 +1,11 @@
 # Changelog
 
 
+## 2026-11-24 — Home page v2 draft: visual fixes
+
+- Quote cards and the verse band no longer show Moodle's grey blockquote bar; the free taster band drops the corner
+  pattern that sat behind its small print. Draft page only; SCSS and template, no version bump.
+
 ## 2026-11-24 — Home page v2 draft (admins only)
 
 - theme_hikmah: new draft page /theme/hikmah/home2.php built from the "Homepage Copy" doc: announcement bar, hero,
