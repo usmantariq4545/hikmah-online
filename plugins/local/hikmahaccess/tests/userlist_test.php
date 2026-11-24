@@ -39,10 +39,11 @@ final class userlist_test extends \advanced_testcase {
         $gen = $this->getDataGenerator();
         $mine = $gen->create_course();
         $other = $gen->create_course();
-        $teacher = $gen->create_user();
-        $coteacher = $gen->create_user();
-        $learner = $gen->create_user();
-        $stranger = $gen->create_user();
+        // Fixed names: random ones can repeat and make the "not shown" checks fail by chance.
+        $teacher = $gen->create_user(['firstname' => 'Tariq', 'lastname' => 'Teacher']);
+        $coteacher = $gen->create_user(['firstname' => 'Cora', 'lastname' => 'Coteacher']);
+        $learner = $gen->create_user(['firstname' => 'Layla', 'lastname' => 'Learner']);
+        $stranger = $gen->create_user(['firstname' => 'Sami', 'lastname' => 'Stranger']);
         $gen->enrol_user($teacher->id, $mine->id, 'editingteacher');
         $gen->enrol_user($coteacher->id, $mine->id, 'teacher');
         $gen->enrol_user($learner->id, $mine->id, 'student');

@@ -34,11 +34,15 @@ abstract class request_event extends \core\event\base {
      * @return static
      */
     public static function create_from_request(\stdClass $request): self {
+        // Logged in the course's context (Moodle requires context and courseid to match); site level when the
+        // request has no course or the course was deleted since.
+        $courseid = (int) $request->courseid;
+        $context = $courseid ? \context_course::instance($courseid, IGNORE_MISSING) : false;
         $event = static::create([
-            'context' => \context_system::instance(),
+            'context' => $context ?: \context_system::instance(),
             'objectid' => $request->id,
             'relateduserid' => $request->userid,
-            'courseid' => (int) $request->courseid,
+            'courseid' => $context ? $courseid : 0,
             'other' => [
                 'reference' => $request->reference,
                 'status' => $request->status,
