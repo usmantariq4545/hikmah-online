@@ -50,5 +50,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "Rebuild amd/build (automatic, Moodle 5.3 grunt)"
           git push
-          gh workflow run ci.yml --ref "${GITHUB_REF_NAME}"
+          gh workflow run ci.yml --ref "${GITHUB_REF_NAME}" -f behat=false
           gh workflow run secrets.yml --ref "${GITHUB_REF_NAME}"
