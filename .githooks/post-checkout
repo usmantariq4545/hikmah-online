@@ -1,0 +1,4 @@
+#!/bin/sh
+# Only on a branch switch ($3 = 1), not when single files are checked out.
+[ "$3" = 1 ] || exit 0
+exec "$(dirname "$0")/graphify-refresh"
