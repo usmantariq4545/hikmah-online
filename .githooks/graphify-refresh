@@ -1,0 +1,10 @@
+#!/bin/sh
+# Rebuilds the local code map (graphify-out/, git-ignored) in the background after commits, merges,
+# rebases and branch switches, so Claude sessions never query a stale map. Skips if graphify is missing
+# or a rebuild is already running. Log: graphify-out/refresh.log.
+command -v graphify >/dev/null 2>&1 || PATH="${USERPROFILE:-$HOME}/.local/bin:$PATH"
+command -v graphify >/dev/null 2>&1 || exit 0
+mkdir -p graphify-out
+mkdir graphify-out/.refresh-lock 2>/dev/null || exit 0
+( graphify update . > graphify-out/refresh.log 2>&1; rmdir graphify-out/.refresh-lock ) &
+exit 0
