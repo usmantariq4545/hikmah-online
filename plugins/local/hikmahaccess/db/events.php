@@ -34,9 +34,7 @@ $observers = [
         'callback' => '\local_hikmahaccess\observer::role_assigned',
     ],
     [
-        // After the enrolment transaction, so the manual enrolment is complete before it may be removed.
         'eventname' => '\core\event\user_enrolment_created',
         'callback' => '\local_hikmahaccess\observer::user_enrolment_created',
-        'internal' => false,
     ],
 ];
