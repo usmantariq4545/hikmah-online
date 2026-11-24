@@ -242,6 +242,21 @@ class request {
     }
 
     /**
+     * Whether the learner already has active access to the course this item enrols into, by any
+     * enrollment method. Paying again would give them a second enrollment in the same course.
+     *
+     * @param string $component
+     * @param string $paymentarea
+     * @param int $itemid
+     * @param int $userid
+     * @return bool
+     */
+    public static function already_enrolled(string $component, string $paymentarea, int $itemid, int $userid): bool {
+        $courseid = self::resolve_courseid($component, $paymentarea, $itemid);
+        return $courseid && is_enrolled(\context_course::instance($courseid), $userid, '', true);
+    }
+
+    /**
      * Short description of what a request pays for.
      *
      * @param stdClass $request
@@ -279,6 +294,9 @@ class request {
             throw new \moodle_exception('error:method', 'paygw_hikmahtransfer');
         }
 
+        if (self::already_enrolled($request->component, $request->paymentarea, (int) $request->itemid, $userid)) {
+            throw new \moodle_exception('error:alreadyenrolled', 'paygw_hikmahtransfer');
+        }
         $scanstatus = receipt::validate_draft($draftitemid, $userid);
 
         $changed = self::change_status(
@@ -324,6 +342,11 @@ class request {
             $reviewerid,
             $remarks,
             static function (stdClass $request) use ($reviewerid): void {
+                // Enrolled another way since submitting: approving would enrol them twice.
+                $learner = (int) $request->userid;
+                if (self::already_enrolled($request->component, $request->paymentarea, (int) $request->itemid, $learner)) {
+                    throw new \moodle_exception('error:alreadyenrolled_review', 'paygw_hikmahtransfer');
+                }
                 $request->reviewerid = $reviewerid;
                 $request->paymentid = payment_helper::save_payment(
                     (int) $request->accountid,

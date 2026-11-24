@@ -61,6 +61,10 @@ $successurl = payment_helper::get_success_url($component, $paymentarea, $itemid)
 if (request::has_approved($component, $paymentarea, $itemid, (int) $USER->id)) {
     redirect($successurl, get_string('alreadypaid', 'paygw_hikmahtransfer'), null, \core\output\notification::NOTIFY_INFO);
 }
+if (request::already_enrolled($component, $paymentarea, $itemid, (int) $USER->id)) {
+    $notice = get_string('error:alreadyenrolled', 'paygw_hikmahtransfer');
+    redirect($successurl, $notice, null, \core\output\notification::NOTIFY_INFO);
+}
 
 $request = request::get_or_create_draft($component, $paymentarea, $itemid, (int) $USER->id);
 $statusurl = new moodle_url('/payment/gateway/hikmahtransfer/status.php', ['id' => $request->id]);

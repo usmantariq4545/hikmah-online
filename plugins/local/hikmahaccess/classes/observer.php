@@ -33,4 +33,40 @@ class observer {
     public static function role_assigned(\core\event\role_assigned $event): void {
         peers::apply_to_user((int) $event->relateduserid);
     }
+
+    /**
+     * One enrollment per learner per course: when staff enrol by hand someone who already has active
+     * access another way (paid, self, approval), the new, redundant manual enrollment is removed.
+     * Only manual: cohort sync would re-add its own, and paid ones are refused before payment.
+     *
+     * @param \core\event\user_enrolment_created $event
+     */
+    public static function user_enrolment_created(\core\event\user_enrolment_created $event): void {
+        global $DB;
+        if (($event->other['enrol'] ?? '') !== 'manual') {
+            return;
+        }
+        $ue = $DB->get_record('user_enrolments', ['id' => $event->objectid]);
+        if (!$ue) {
+            return;
+        }
+        $others = $DB->record_exists_sql(
+            "SELECT 1
+               FROM {user_enrolments} ue
+               JOIN {enrol} e ON e.id = ue.enrolid
+              WHERE e.courseid = :courseid AND ue.userid = :userid AND ue.id <> :ueid
+                AND ue.status = :active AND e.status = :enabled",
+            [
+                'courseid' => $event->courseid,
+                'userid' => $ue->userid,
+                'ueid' => $ue->id,
+                'active' => ENROL_USER_ACTIVE,
+                'enabled' => ENROL_INSTANCE_ENABLED,
+            ]
+        );
+        if ($others) {
+            $instance = $DB->get_record('enrol', ['id' => $ue->enrolid], '*', MUST_EXIST);
+            enrol_get_plugin('manual')->unenrol_user($instance, (int) $ue->userid);
+        }
+    }
 }

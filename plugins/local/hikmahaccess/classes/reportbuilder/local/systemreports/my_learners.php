@@ -60,7 +60,7 @@ class my_learners extends system_report {
         $this->add_entity($userentity->add_joins($enrolment->get_joins())
             ->add_join("JOIN {user} {$u} ON {$u}.id = {$ue}.userid AND {$u}.deleted = 0"));
 
-        // Only students (not co-teachers) of the viewer's own courses.
+        // Only students (not co-teachers) of the viewer's own courses; a learner enrolled two ways shows once (first enrollment).
         [$insql, $params] = $DB->get_in_or_equal(
             array_keys($this->courses) ?: [0],
             SQL_PARAMS_NAMED,
@@ -72,7 +72,11 @@ class my_learners extends system_report {
             "{$enrol}.courseid {$insql} AND EXISTS (
             SELECT 1 FROM {role_assignments} hkra
               JOIN {context} hkctx ON hkctx.id = hkra.contextid AND hkctx.contextlevel = " . CONTEXT_COURSE . "
-             WHERE hkctx.instanceid = {$enrol}.courseid AND hkra.userid = {$ue}.userid AND hkra.roleid = :{$student})",
+             WHERE hkctx.instanceid = {$enrol}.courseid AND hkra.userid = {$ue}.userid AND hkra.roleid = :{$student})
+            AND NOT EXISTS (
+            SELECT 1 FROM {user_enrolments} hkue2
+              JOIN {enrol} hke2 ON hke2.id = hkue2.enrolid
+             WHERE hke2.courseid = {$enrol}.courseid AND hkue2.userid = {$ue}.userid AND hkue2.id < {$ue}.id)",
             $params
         );
         $this->add_base_fields("{$u}.id");
