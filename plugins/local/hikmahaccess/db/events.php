@@ -33,4 +33,8 @@ $observers = [
         'eventname' => '\core\event\role_assigned',
         'callback' => '\local_hikmahaccess\observer::role_assigned',
     ],
+    [
+        'eventname' => '\core\event\user_enrolment_created',
+        'callback' => '\local_hikmahaccess\observer::user_enrolment_created',
+    ],
 ];

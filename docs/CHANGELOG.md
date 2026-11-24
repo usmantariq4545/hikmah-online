@@ -1,5 +1,15 @@
 # Changelog
 
+
+## 2026-11-24 — One enrollment per learner per course
+
+- Payment: a learner who already has the course (any enrollment method) is not offered the pay page, cannot
+  submit a transfer, and a reviewer cannot approve one (the approval is refused with a message, so they reject
+  it instead). This was how demo.student1 got enrolled twice in Foundations of Tajweed (manual, then fee).
+- Staff enrolling someone by hand who already has active access another way: the new manual enrollment is
+  removed at once (local_hikmahaccess observer). Cohort sync is left alone.
+- Users page (teacher view): a learner enrolled two ways shows once, with the first enrollment.
+- PHPUnit: request_test (enrolled learner cannot submit; approval refused) and new enrolment_test.
 ## 2026-11-24 — JavaScript builds on GitHub
 
 - New workflow amd-build.yml: when a branch changes a plugin's amd/src, GitHub rebuilds amd/build with

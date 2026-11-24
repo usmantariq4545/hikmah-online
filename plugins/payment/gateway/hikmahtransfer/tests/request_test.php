@@ -313,4 +313,34 @@ final class request_test extends \advanced_testcase {
         $this->assertEquals(1, request::get($request->id)->receiptdeleted);
         $this->assertNotEmpty(request::history((int) $request->id));
     }
+
+    /**
+     * A learner who already has the course another way cannot submit a payment for it.
+     */
+    public function test_enrolled_learner_cannot_submit(): void {
+        $request = request::get_or_create_draft('enrol_fee', 'fee', $this->instanceid, (int) $this->learner->id);
+        $this->getDataGenerator()->enrol_user($this->learner->id, $this->course->id, 'student', 'manual');
+        $this->assertTrue(request::already_enrolled('enrol_fee', 'fee', $this->instanceid, (int) $this->learner->id));
+
+        $this->expectException(\moodle_exception::class);
+        request::submit((int) $request->id, $this->data(), $this->draft(), (int) $this->learner->id);
+    }
+
+    /**
+     * Enrolled by hand while the payment waited: approving is refused, so there is no second enrollment.
+     */
+    public function test_approve_refused_when_enrolled_meanwhile(): void {
+        global $DB;
+        $request = $this->pending_request();
+        $this->getDataGenerator()->enrol_user($this->learner->id, $this->course->id, 'student', 'manual');
+
+        try {
+            request::approve((int) $request->id, (int) $this->reviewer->id);
+            $this->fail('Approval should be refused');
+        } catch (\moodle_exception $e) {
+            $this->assertEquals('error:alreadyenrolled_review', $e->errorcode);
+        }
+        $this->assertEquals(request::STATUS_PENDING, request::get($request->id)->status);
+        $this->assertFalse($DB->record_exists('user_enrolments', ['enrolid' => $this->instanceid, 'userid' => $this->learner->id]));
+    }
 }
