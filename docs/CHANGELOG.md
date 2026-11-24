@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-11-24 — JavaScript builds on GitHub
+
+- New workflow amd-build.yml: when a branch changes a plugin's amd/src, GitHub rebuilds amd/build with
+  Moodle 5.3's grunt, commits it to the branch and starts CI (without Behat) and the secrets scan on that
+  commit. ci.yml gains a "Run Behat too" input for manual runs (default on); no check was relaxed.
+- scripts/dev/build-amd.sh rebuilds amd/build locally with a portable Node 22 and Moodle's grunt, no Docker.
+- Payment Behat: the test payment account has an IBAN so the pay page opens. Payment events use the course
+  context; test user names fixed in local_hikmahaccess userlist_test.
+
 ## 2026-11-24 — graphify code map for Claude sessions
 
 - Claude Code tooling: the graphify skill (project-scoped, .claude/skills/graphify) and its hooks (.claude/settings.json) so the
@@ -9,6 +18,8 @@
 
 ## 2026-11-23 — Attendance tables renamed
 
+- Course form on phones: the step bar shows only the current step's name (the others their number) and a
+  smaller "Preview card" button, so all four steps fit without swiping.
 - Server: kernel 6.8.0-151 (TCP fix CVE-2026-98432) and ClamAV 1.5.5 (10 scanner CVEs) applied after a CVE
   review of every component; everything else was already on its fixed version. An @reboot job now starts all
   containers after a reboot (the moodle container stayed down once); documented in runbooks/contabo.md.

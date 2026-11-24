@@ -11,6 +11,11 @@ on:
   schedule:
     - cron: "0 3 * * 1"   # Mondays 03:00 UTC, with Behat
   workflow_dispatch:      # "Run workflow" button, with Behat
+    inputs:
+      behat:
+        description: "Run Behat too"
+        type: boolean
+        default: true     # amd-build.yml passes false: a JavaScript rebuild re-runs the plugin checks only.
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -108,6 +113,6 @@ jobs:
         run: moodle-plugin-ci phpunit --fail-on-warning
 
       - name: Behat
-        if: ${{ !cancelled() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
+        if: ${{ !cancelled() && (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.behat)) }}
         run: moodle-plugin-ci behat --profile chrome
 
