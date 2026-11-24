@@ -1878,6 +1878,31 @@
             display: none;
         }
     }
+    // Phones: only the current step keeps its name on screen (the others show their number; screen
+    // readers still hear every name), and the preview button shrinks, so all four steps fit.
+    @media (max-width: 575.98px) {
+        .hk-cf__steps {
+            gap: .4rem;
+            a {
+                padding: .3rem;
+                &.is-current {
+                    padding-right: .75rem;
+                }
+                &:not(.is-current) .hk-cf__steplabel {
+                    position: absolute;
+                    width: 1px;
+                    height: 1px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    clip-path: inset(50%);
+                }
+            }
+        }
+        .hk-cf__preview-toggle {
+            padding: .3rem .7rem;
+            font-size: .85rem;
+        }
+    }
     .hk-cf__main {
         display: grid;
         gap: 1.25rem;
