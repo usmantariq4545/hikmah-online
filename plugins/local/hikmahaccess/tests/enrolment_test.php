@@ -33,6 +33,7 @@ final class enrolment_test extends \advanced_testcase {
      * @return int
      */
     private function count_enrolments(int $userid, int $courseid): int {
+        global $DB;
         return $DB->count_records_sql(
             "SELECT COUNT(1) FROM {user_enrolments} ue JOIN {enrol} e ON e.id = ue.enrolid
               WHERE ue.userid = ? AND e.courseid = ?",
