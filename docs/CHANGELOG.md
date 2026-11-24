@@ -20,7 +20,7 @@
 
 ## 2026-11-23 — Attendance tables renamed
 
-- Course form on phones: the step bar shows only the current step's name (the others their number) and a
+- Course form on phones: the step bar shows step numbers only (the current one highlighted) and a
   smaller "Preview card" button, so all four steps fit without swiping.
 - Server: kernel 6.8.0-151 (TCP fix CVE-2026-98432) and ClamAV 1.5.5 (10 scanner CVEs) applied after a CVE
   review of every component; everything else was already on its fixed version. An @reboot job now starts all
