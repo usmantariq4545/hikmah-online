@@ -95,8 +95,3 @@ Feature: Pay for a course by manual transfer
     And I follow "Paid course 1"
     Then I should see "Please resubmit your receipt"
     And I should see "The image is unreadable"
-
-  Scenario: A teacher cannot open the review queue
-    Given I log in as "teacher1"
-    When I visit "/payment/gateway/hikmahtransfer/review.php"
-    Then I should see "Sorry, but you do not currently have permissions to do that"

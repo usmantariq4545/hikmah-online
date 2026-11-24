@@ -8,6 +8,8 @@
 - scripts/dev/build-amd.sh rebuilds amd/build locally with a portable Node 22 and Moodle's grunt, no Docker.
 - Payment Behat: the test payment account has an IBAN so the pay page opens. Payment events use the course
   context; test user names fixed in local_hikmahaccess userlist_test.
+- Payment: "a teacher is refused the review queue" moved from Behat (which fails any step that lands on an
+  error page) to PHPUnit (test_teacher_denied_review_queue). The other Behat journeys are unchanged.
 
 ## 2026-11-24 — graphify code map for Claude sessions
 
