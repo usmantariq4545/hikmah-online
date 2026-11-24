@@ -280,6 +280,22 @@ final class request_test extends \advanced_testcase {
     }
 
     /**
+     * A course teacher is refused the review queue: review.php calls require_capability() in the system context.
+     *
+     * Behat cannot check this journey, because it fails any step that lands on an error page.
+     */
+    public function test_teacher_denied_review_queue(): void {
+        $teacher = $this->getDataGenerator()->create_and_enrol($this->course, 'editingteacher');
+        $system = \context_system::instance();
+        $this->assertFalse(has_capability('paygw/hikmahtransfer:review', $system, $teacher));
+        $this->assertFalse(has_capability('paygw/hikmahtransfer:viewreceipt', $system, $teacher));
+
+        $this->setUser($teacher);
+        $this->expectException(\core\exception\required_capability_exception::class);
+        require_capability('paygw/hikmahtransfer:review', $system);
+    }
+
+    /**
      * The retention task removes old receipts but keeps the request and its history.
      */
     public function test_retention(): void {
