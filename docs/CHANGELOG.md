@@ -9,6 +9,13 @@
 - Payment Behat: the test payment account has an IBAN so the pay page opens. Payment events use the course
   context; test user names fixed in local_hikmahaccess userlist_test.
 
+## 2026-11-24 — graphify code map for Claude sessions
+
+- Claude Code tooling: the graphify skill (project-scoped, .claude/skills/graphify) and its hooks (.claude/settings.json) so the
+  main chat, forks and subagents query a local knowledge graph before searching files. graphify-out/ is built locally with
+  `graphify update .` and git-ignored; .graphifyignore keeps .env files, backups, Moodle source and session worktrees out.
+  No effect on the site or the server.
+
 ## 2026-11-23 — Attendance tables renamed
 
 - Course form on phones: the step bar shows only the current step's name (the others their number) and a

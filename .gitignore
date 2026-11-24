@@ -18,3 +18,7 @@ Thumbs.db
 
 # Local test logins sheet (contains passwords)
 *.local.md
+
+# graphify: the knowledge graph is rebuilt locally (graphify update .); other sessions' worktrees
+graphify-out/
+.claude/worktrees/
