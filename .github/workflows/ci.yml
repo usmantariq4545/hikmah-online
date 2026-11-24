@@ -4,7 +4,9 @@ name: CI
 # when plugin code changes; Behat runs weekly and on demand; a newer push cancels the older run.
 # The secrets scan runs on every push in secrets.yml.
 on:
+  # Branch work is checked once, by its pull request; pushes run only on main.
   push:
+    branches: [main]
     paths: ["plugins/**", "versions.lock", ".github/workflows/ci.yml"]
   pull_request:
     paths: ["plugins/**", "versions.lock", ".github/workflows/ci.yml"]

@@ -37,6 +37,8 @@
 
 ## 2026-11-20 — Live classes standard; attendance marked by the platform
 
+- CI: pushes run the checks only on main; branch work is checked once, by its pull request (was twice: push + pull request).
+
 - Course form ("Add a new course" / course settings): four steps (Basics, Catalog details, Certificate rules,
   Advanced settings) with a step bar, labels above fields, a save bar that stays on screen and a live
   preview of the catalog card (theme_hikmah/courseform). The two certificate fields moved to their own
