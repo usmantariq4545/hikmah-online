@@ -4,8 +4,8 @@ Step-by-step from a freshly bought Contabo server to a live HTTPS site with off-
 About an hour the first time. Commands marked **laptop** run in PowerShell on your computer;
 everything else runs on the server.
 
-Not yet executed against a real Contabo server: treat the first run as the test of this runbook
-and note anything that differed in `docs/CHANGELOG.md`.
+Live since 2026-11-18; since 2026-11-25 at **https://hikmahonline.com** behind Cloudflare (section 11).
+Note anything that differs from this runbook in `docs/CHANGELOG.md`.
 
 ## 0. What you need before starting
 
@@ -254,3 +254,52 @@ off-site copies too once `BACKUP_REMOTE` is set).
 | 500 error or blank page | `scripts/dc.sh logs --tail 100 moodle` |
 | Site slow | `docker stats --no-stream`; memory near the limit means a bigger plan |
 | Restore from backup | `docs/runbooks/backup-restore.md` |
+| Cloudflare error 525/526 | Caddy has no valid certificate for that name: `scripts/dc.sh logs caddy`; a name that is not in `SITE_HOST` (e.g. `www`) must be redirected by a Cloudflare rule |
+| Some visitors still see an old site after a DNS change | Their provider's DNS still caches the old records (up to ~2 days for a nameserver change); `nslookup <host> 1.1.1.1` shows what the world sees |
+
+## 11. Moving to another domain (done 2026-11-25: online.hikmahinstitute.org.pk → hikmahonline.com)
+
+How the move was done, with no gap for visitors on the old address. About an hour with the owner clicking.
+
+**DNS on Cloudflare (free plan).** The domain stays registered where it is (Namecheap); only its DNS moves.
+1. Cloudflare → Add a domain → Free. It imports the current records. Delete the apex/`www` A and AAAA records that
+   point at the old web host. Add `A @ <server IP>` as **DNS only** (grey) and `CNAME www → <domain>` **Proxied**.
+   Mail records (MX, SPF, DKIM CNAMEs, `autoconfig`/`autodiscover`) stay **DNS only**: proxying breaks them.
+   Keep the CAA records if they list `letsencrypt.org` and `sectigo.com` (Caddy's two CAs).
+2. SSL/TLS → **Full (strict)**; Edge Certificates → **Always Use HTTPS** on. Rocket Loader off (breaks Moodle's
+   scripts); Bot Fight Mode off (can block the uptime monitor).
+3. Rules → Redirect Rules → template **"Redirect from WWW to root"** (301, keeps path and query). Caddy has no
+   certificate for `www`, so without this rule `www` gives error 525.
+4. Caching → Cache Rules → `Moodle static`: expression
+   `starts_with(http.request.uri.path, "/theme/styles.php") or … "/theme/javascript.php" … "/theme/image.php" …
+   "/theme/font.php" … "/theme/yui_combo.php" … "/lib/javascript.php" … "/lib/requirejs.php"` (one `starts_with` per
+   path, joined with `or`), **Eligible for cache**, Edge TTL **use cache-control header if present, bypass if not**.
+   Moodle marks only revisioned URLs as cacheable, so nothing stale is kept. Without the rule Cloudflare caches
+   `.js`/`.woff2` by extension but not the CSS (`…/styles.php/…/all`) or theme images.
+5. Registrar → nameservers → the two Cloudflare names. `nslookup -type=NS <domain> 1.1.1.1` showed them within
+   minutes; some providers' DNS took longer (the owner's laptop still saw the old site afterwards).
+
+**Server, before the cutover (site keeps running on the old address).**
+6. `cp -p .env.prod ~/env.prod.bak-<date>`, then `SITE_HOST=<new host>, <old host>` (Caddy accepts a comma list) and
+   `scripts/dc.sh up -d caddy`. Caddy gets the new certificate straight away while the record is grey; Moodle
+   redirects the new name to the old wwwroot. Then turn the `A` record to **Proxied**.
+   Renewals behind the proxy: plain-http `/.well-known/acme-challenge/` requests reach Caddy (checked: Caddy, not
+   Cloudflare, answered), so HTTP-01 renewal works with Always Use HTTPS on.
+7. Owner: Google OAuth client → add `https://<new host>/admin/oauth2callback.php`; reCAPTCHA v2 checkbox keys for the
+   new domain.
+
+**Cutover (about 5 minutes of maintenance).**
+8. `HIKMAH_ENV=prod scripts/backup.sh`.
+9. Maintenance on; in `.env.prod` set `MOODLE_WWWROOT=https://<new host>` and `SITE_HOST=<new host>` (old host
+   dropped = switched off); `scripts/dc.sh up -d`; then
+   `php public/admin/tool/replace/cli/replace.php --search=https://<old host> --replace=https://<new host> --non-interactive`
+   inside the moodle container (note `public/`: Moodle 5.3 keeps the tool there; `admin/cli` stays at the top);
+   `admin/cli/purge_caches.php`; maintenance off. Run long server steps detached (`setsid nohup … &`): the laptop's
+   SSH connection dropped several times during the move.
+10. Owner: `ssh -t hikmah@<server IP> ./set-recaptcha.sh`; then `scripts/dc.sh up -d moodle cron adhoc` and
+    `scripts/configure.sh` (030-auth turns reCAPTCHA on when both keys are set).
+11. `scripts/smoke-test.sh`; HetrixTools uptime monitor URL → new address (`docs/runbooks/monitoring.md`).
+12. Afterwards (owner): remove the old host's DNS record and the old Google redirect URI.
+
+Side effects: everyone is signed out once; Moodle App users add the site again with the new address; certificates
+issued before the move carry the old verification link.

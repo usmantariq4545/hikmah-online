@@ -37,7 +37,7 @@ The ping URLs are like passwords (anyone with one can send fake "all well" signa
 ## 3. HetrixTools (site and server)
 
 1. Sign up at hetrixtools.com, then Contact Lists → add Discord and email.
-2. **Uptime monitor**: Website, URL `https://online.hikmahinstitute.org.pk/login/index.php`,
+2. **Uptime monitor**: Website, URL `https://hikmahonline.com/login/index.php` (until 2026-11-25: online.hikmahinstitute.org.pk),
    keyword `Log in to Hikmah Online` (the check interval is the plan default). No SSL alert: Caddy, later Cloudflare, renews the certificate. The keyword comes from
    PHP and the database, so a broken database shows as down even when the web server answers.
 3. **Server agent**: Server Monitor → add, copy the install command. Before running it, have the
@@ -63,5 +63,6 @@ Monitors only read pages (GET), so the sign-in limit (20 posts a minute) and fai
 
 ## 5. At the domain move
 
-- Change the uptime monitor URL to the new address.
+- Done 2026-11-25: uptime monitor URL changed to `https://hikmahonline.com/login/index.php` (contabo.md section 11).
+  The monitor now reaches the site through Cloudflare; keep Bot Fight Mode off so it is not challenged.
 - Optional: a public status page (HetrixTools status page) at `status.<domain>` with a CNAME record.
