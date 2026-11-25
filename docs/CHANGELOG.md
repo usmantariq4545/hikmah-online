@@ -22,6 +22,14 @@
 - Tested: a test email reached a Gmail inbox with SPF, DKIM and DMARC PASS. Not tested yet: a real sign-up
   confirmation and a password reset.
 
+## 2026-11-25 — Router check and HTTP/3
+
+- config.php sets `$CFG->routerconfigured = true` (Nginx already sends unknown paths to /r.php), so the
+  Environment page Router check stops reporting an error. Found in an error sweep: no PHP, cron or task errors;
+  all 5xx in the last day were during deploys.
+- Cloudflare HTTP/3 (QUIC) switched off by the owner: some networks broke it (ERR_QUIC_PROTOCOL_ERROR when
+  changing pages). Keep it off (docs/runbooks/contabo.md section 11).
+
 
 ## 2026-11-25 — Only Cloudflare reaches the web ports
 
