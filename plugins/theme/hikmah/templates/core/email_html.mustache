@@ -1,0 +1,80 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template core/email_html
+
+    Hikmah Online wrapper for every HTML email: dark header with the logo, white card on warm paper, footer.
+    Table layout and inline styles because many mail programs ignore <style> and modern CSS.
+
+    Context variables required for this template:
+    * body - HTML message body
+    * sitefullname - site name
+    * sitewwwroot - site address, used for the logo and footer link
+    * subject - email subject, used as the hidden preview text
+
+    Example context (json):
+    {
+        "body": "<p>Assalamu alaikum Aisha,</p><p>Your payment has been verified.</p>",
+        "sitefullname": "Hikmah Online",
+        "sitewwwroot": "https://hikmahonline.com",
+        "subject": "Payment approved"
+    }
+}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>{{subject}}</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Jost:wght@500&display=swap" rel="stylesheet">
+<style>
+body, td { font-kerning: normal; -webkit-font-smoothing: antialiased; }
+.hk-body a { color: #0a6a9c; font-weight: 600; }
+.hk-body a.hk-btn { display: inline-block; background: #ffe000; color: #1a1a1a !important; text-decoration: none;
+    font-size: 14px; line-height: 18px; padding: 9px 20px; border-radius: 999px; font-weight: 600; }
+.hk-body ul { padding-left: 20px; }
+.hk-body p { margin: 0 0 16px; }
+@media (max-width: 600px) { .hk-card { padding: 24px 20px !important; } }
+</style>
+</head>
+<body style="margin:0; padding:0; background:#fbfaf6;">
+<div style="display:none; max-height:0; overflow:hidden; mso-hide:all;">{{subject}}</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fbfaf6;">
+<tr><td align="center" style="padding:24px 12px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;">
+    <tr><td align="center" style="background:#1a1a1a; border-radius:20px 20px 0 0; padding:24px 24px 20px;">
+        <a href="{{sitewwwroot}}" style="text-decoration:none;"><img src="{{sitewwwroot}}/theme/hikmah/pix/logo-light.png"
+            width="150" alt="{{sitefullname}}" style="display:block; width:150px; max-width:150px; height:auto; border:0;"></a>
+    </td></tr>
+    <tr><td class="hk-card hk-body" style="background:#ffffff; border-radius:0 0 20px 20px; padding:32px 36px;
+        border:1px solid rgba(26,26,26,.1); border-top:0;
+        font-family:Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size:16px; line-height:1.6; color:#1a1a1a;">
+        {{{body}}}
+    </td></tr>
+    <tr><td align="center" style="padding:20px 24px; font-family:Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        font-size:12px; line-height:1.6; color:#5c5b55;">
+        <span style="font-family:Jost, 'Segoe UI', sans-serif; font-weight:500; color:#1a1a1a;">Seek knowledge with wisdom</span><br>
+        {{sitefullname}} · <a href="{{sitewwwroot}}" style="color:#5c5b55;">{{sitewwwroot}}</a><br>
+        This is an automatic email; replies are not read.
+        You can choose which emails you get under Preferences → Notification preferences.
+    </td></tr>
+    </table>
+</td></tr>
+</table>
+</body>
+</html>

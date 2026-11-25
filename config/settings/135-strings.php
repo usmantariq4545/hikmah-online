@@ -30,6 +30,18 @@ $overrides = [
     ],
 ];
 
+// Email wording (email-strings.php); approval-enrolment emails are plugin settings rather than strings.
+$emails = require(__DIR__ . '/email-strings.php');
+if (core_component::get_component_directory('enrol_apply')) {
+    foreach ($emails['_enrol_apply_settings'] as $name => $value) {
+        hk_set($name, $value, 'enrol_apply');
+    }
+}
+unset($emails['_enrol_apply_settings']);
+foreach ($emails as $component => $strings) {
+    $overrides[$component] = array_merge($overrides[$component] ?? [], $strings);
+}
+
 /**
  * US spelling "enroll" (owner's request, 2026-11-21): enrol → enroll, enrolment → enrollment, unenrol → unenroll.
  * Placeholders, HTML tags, addresses (/enrol/, enrol.php) and code names (enrol_fee) are left alone.
