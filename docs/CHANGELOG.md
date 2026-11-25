@@ -1,6 +1,16 @@
 # Changelog
 
 
+## 2026-11-25 — Home page v2 draft: sections from the copy doc
+
+- /theme/hikmah/home2.php (admins only) now follows the Claude Design canvas: links into the page (courses, topics,
+  teachers, FAQ, log in), the doc's featured course as fixed copy ("The World Behind an Islamic Ruling": sessions,
+  class times by region, PKR 1,500, Maulana Khizer Khalid; Enrol goes to the catalog until the course exists), the four
+  teachers from the doc, "Meet all our teachers", the doc's placeholder names on the sample quotes, a contact line
+  under the FAQ, and the doc's four-column footer with a newsletter box (not connected) and copyright line.
+- On this page only the site footer's link block is hidden so the footer shows once. Placeholder links (About us,
+  Contact, socials, app) point to # until real pages exist. Theme version 2026112500 (new strings).
+
 ## 2026-11-25 — Off-host backups follow the same retention
 
 - scripts/backup.sh now applies the 7 daily / 4 weekly / 6 monthly rule to the R2 copy too; before, R2 kept every set

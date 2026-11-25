@@ -27,28 +27,48 @@
         "liveurl": "#",
         "selfpacedurl": "#",
         "hybridurl": "#",
+        "verifyurl": "#",
+        "policiesurl": "#",
+        "loginurl": "#",
+        "signupurl": "#",
+        "logourl": "logo.png",
+        "year": "2026",
         "primaryurl": "#",
         "primarylabel": "Create your free account",
-        "announce": {"fullname": "The World Behind an Islamic Ruling", "startdate": "Starts 01 Dec", "url": "#"},
         "promises": [{"title": "Grounded in tradition", "text": "Taught by trained scholars."}],
         "topics": [{"name": "Seerah", "text": "Walk with the Prophet.", "url": "#"}],
-        "spotlight": false,
-        "grid": [],
-        "steps": [{"title": "Create your free account.", "text": "Sign up in under a minute."}],
-        "teachers": [{"name": "Khizer Khalid", "initials": "KK", "courses": "The World Behind an Islamic Ruling"}],
+        "sessions": [{"title": "Sources of Islamic Law", "text": "Tue 1 Dec"}],
+        "times": [{"title": "Pakistan (PKT)", "text": "8:00–9:30 PM"}],
+        "steps": [{"title": "Create your free account", "text": "Sign up in under a minute."}],
+        "teachers": [{"name": "Khizer Khalid", "initials": "KK", "role": "Co-founder", "courses": "Earning and Ethics"}],
         "quotes": [{"title": "This course gave me clarity.", "text": "Student, university"}],
         "faqs": [{"title": "Is it really free to join?", "text": "Yes."}]
     }
 }}
 <div class="hk-home2">
 
-    {{#announce}}
-        <a class="hk-h2-announce" href="{{url}}">
-            <span class="hk-chip hk-chip--sun">{{#str}}home2_announce_new, theme_hikmah{{/str}}</span>
-            <span class="hk-h2-announce__text">{{{fullname}}} · {{startdate}}</span>
-            <span class="hk-h2-announce__more">{{#str}}home2_enrol, theme_hikmah{{/str}} <span class="hk-btn__arrow" aria-hidden="true">→</span></span>
-        </a>
-    {{/announce}}
+    <nav class="hk-h2-subnav" aria-label="{{#str}}home2_subnav, theme_hikmah{{/str}}">
+        <div class="hk-container hk-h2-subnav__inner">
+            <ul class="hk-h2-subnav__links list-unstyled m-0">
+                <li><a href="{{catalogurl}}">{{#str}}nav_courses, theme_hikmah{{/str}}</a></li>
+                <li><a href="#hk-h2-topics">{{#str}}home2_nav_topics, theme_hikmah{{/str}}</a></li>
+                <li><a href="#hk-h2-teachers">{{#str}}home2_nav_teachers, theme_hikmah{{/str}}</a></li>
+                <li><a href="#hk-h2-faq">{{#str}}nav_faq, theme_hikmah{{/str}}</a></li>
+            </ul>
+            {{^loggedin}}
+                <div class="hk-h2-actions">
+                    <a class="hk-btn hk-btn--ghost hk-btn--sm" href="{{loginurl}}">{{#str}}home2_login, theme_hikmah{{/str}}</a>
+                    {{#cansignup}}<a class="hk-btn hk-btn--sm" href="{{signupurl}}">{{#str}}home2_cta_signup, theme_hikmah{{/str}}</a>{{/cansignup}}
+                </div>
+            {{/loggedin}}
+        </div>
+    </nav>
+
+    <a class="hk-h2-announce" href="#hk-h2-featured">
+        <span class="hk-chip hk-chip--sun">{{#str}}home2_announce_new, theme_hikmah{{/str}}</span>
+        <span class="hk-h2-announce__text">{{#str}}home2_announce_text, theme_hikmah{{/str}}</span>
+        <span class="hk-h2-announce__more">{{#str}}home2_enrol, theme_hikmah{{/str}} <span class="hk-btn__arrow" aria-hidden="true">→</span></span>
+    </a>
 
     <section class="hk-hero">
         <div class="hk-container hk-hero__grid">
@@ -89,7 +109,7 @@
         </div>
     </section>
 
-    <section class="hk-section">
+    <section class="hk-section" id="hk-h2-topics">
         <div class="hk-container">
             <header class="hk-section__head" data-hk-reveal>
                 <span class="hk-eyebrow">{{#str}}home2_topics_eyebrow, theme_hikmah{{/str}}</span>
@@ -104,79 +124,50 @@
         </div>
     </section>
 
-    {{#spotlight}}
-    <section class="hk-section hk-section--tint">
+    <section class="hk-section hk-section--tint" id="hk-h2-featured">
         <div class="hk-container hk-h2-spot">
             <div class="hk-h2-spot__copy" data-hk-reveal>
-                <span class="hk-eyebrow">{{#str}}home2_spot_eyebrow, theme_hikmah, {{category}}{{/str}}</span>
-                <h2 class="hk-section__title">{{{fullname}}}</h2>
-                {{#summary}}<p class="hk-section__lead">{{summary}}</p>{{/summary}}
+                <span class="hk-eyebrow">{{#str}}home2_spot_eyebrow, theme_hikmah{{/str}}</span>
+                <h2 class="hk-section__title">{{#str}}home2_spot_title, theme_hikmah{{/str}}</h2>
+                <p class="hk-section__lead">{{#str}}home2_spot_lead, theme_hikmah{{/str}}</p>
                 <div class="hk-detail__chips">
-                    {{#startdate}}<span class="hk-chip hk-chip--ink">{{startdate}}</span>{{/startdate}}
-                    {{#mode}}<span class="hk-chip hk-chip--sun{{#islive}} hk-chip--live{{/islive}}">{{#islive}}<span class="hk-chip__dot"></span>{{/islive}}{{mode}}</span>{{/mode}}
-                    {{#language}}<span class="hk-chip">{{language}}</span>{{/language}}
-                    {{#length}}<span class="hk-chip">{{length}}</span>{{/length}}
+                    <span class="hk-chip hk-chip--ink">{{#str}}home2_spot_dates, theme_hikmah{{/str}}</span>
+                    <span class="hk-chip hk-chip--sun hk-chip--live"><span class="hk-chip__dot"></span>{{#str}}home2_spot_live, theme_hikmah{{/str}}</span>
+                    <span class="hk-chip">{{#str}}home2_spot_sessions, theme_hikmah{{/str}}</span>
+                    <span class="hk-chip">{{#str}}home2_topic_sharia, theme_hikmah{{/str}}</span>
                 </div>
-                {{#syllabus.0}}
-                    <h3 class="hk-h2-spot__sub">{{#str}}home2_spot_cover, theme_hikmah{{/str}}</h3>
-                    <ol class="hk-h2-spot__sessions">
-                        {{#syllabus}}<li>{{{name}}}</li>{{/syllabus}}
-                    </ol>
-                {{/syllabus.0}}
-                {{#hasteacherlist}}
-                    <div class="hk-teachers mt-4">
-                        {{#teacherlist}}
-                            <div class="hk-teacher">
-                                <span class="hk-teacher__initials" aria-hidden="true">{{initials}}</span>
-                                <div><div class="hk-teacher__name">{{name}}</div><div class="hk-teacher__role">{{role}}</div></div>
-                            </div>
-                        {{/teacherlist}}
+                <h3 class="hk-h2-spot__sub">{{#str}}home2_spot_cover, theme_hikmah{{/str}}</h3>
+                <ol class="hk-h2-spot__sessions">
+                    {{#sessions}}<li><strong>{{title}}</strong> {{text}}</li>{{/sessions}}
+                </ol>
+                {{#teachers.0}}
+                    <div class="hk-teacher hk-h2-spot__teacher">
+                        <span class="hk-teacher__initials" aria-hidden="true">{{initials}}</span>
+                        <div><div class="hk-teacher__name">{{name}}</div><div class="hk-teacher__role">{{role}}</div></div>
                     </div>
-                {{/hasteacherlist}}
+                {{/teachers.0}}
             </div>
             <aside class="hk-enrol" aria-label="{{#str}}detail_enrol, theme_hikmah{{/str}}" data-hk-reveal="scale">
                 <div class="hk-enrol__media">
-                    {{#image}}<img src="{{image}}" alt="">{{/image}}
-                    {{^image}}
-                        <div class="hk-course__cover" style="--hk-hue: {{hue}}">
-                            {{> theme_hikmah/motif }}
-                            <span class="hk-course__cover-word">{{category}}</span>
-                        </div>
-                    {{/image}}
+                    <div class="hk-course__cover" style="--hk-hue: 45">
+                        {{> theme_hikmah/motif }}
+                        <span class="hk-course__cover-word">{{#str}}home2_topic_sharia, theme_hikmah{{/str}}</span>
+                    </div>
                 </div>
                 <div class="hk-enrol__body">
-                    <div class="hk-enrol__price">
-                        {{#isfree}}{{pricelabel}}{{/isfree}}
-                        {{^isfree}}<small>{{pricecurrency}}</small>{{priceamount}}{{/isfree}}
-                    </div>
-                    {{#schedule}}
-                        <p class="hk-h2-spot__schedule">{{schedule}}</p>
-                        <p class="hk-enrol__note">{{#str}}detail_timezone, theme_hikmah, {{timezone}}{{/str}}</p>
-                    {{/schedule}}
-                    <a class="hk-btn hk-btn--sun hk-btn--block" href="{{url}}">{{#str}}home2_enrol, theme_hikmah{{/str}} <span class="hk-btn__arrow" aria-hidden="true">→</span></a>
+                    <div class="hk-enrol__price"><small>PKR</small>{{#str}}home2_spot_price, theme_hikmah{{/str}}</div>
+                    <p class="hk-enrol__note">{{#str}}home2_spot_pricenote, theme_hikmah{{/str}}</p>
+                    <a class="hk-btn hk-btn--sun hk-btn--block" href="{{catalogurl}}">{{#str}}home2_enrol, theme_hikmah{{/str}} <span class="hk-btn__arrow" aria-hidden="true">→</span></a>
+                    <p class="text-center mt-3 mb-0"><a class="fw-semibold" href="{{catalogurl}}">{{#str}}home2_spot_details, theme_hikmah{{/str}} <span aria-hidden="true">→</span></a></p>
+                    <h3 class="hk-h2-spot__times">{{#str}}home2_spot_times, theme_hikmah{{/str}}</h3>
+                    <ul class="hk-enrol__facts mt-0">
+                        {{#times}}<li><span>{{title}}</span><span>{{text}}</span></li>{{/times}}
+                    </ul>
                     <p class="hk-enrol__note mt-3 mb-0">{{#str}}home2_spot_note, theme_hikmah{{/str}}</p>
                 </div>
             </aside>
         </div>
     </section>
-    {{/spotlight}}
-
-    {{#grid.0}}
-    <section class="hk-section hk-section--tint">
-        <div class="hk-container">
-            <header class="hk-section__head" data-hk-reveal>
-                <span class="hk-eyebrow">{{#str}}featured_eyebrow, theme_hikmah{{/str}}</span>
-                <h2 class="hk-section__title">{{#str}}featured_title, theme_hikmah{{/str}}</h2>
-            </header>
-            <div class="hk-courses" data-hk-stagger>
-                {{#grid}}{{> theme_hikmah/course_card }}{{/grid}}
-            </div>
-            <div class="text-center mt-5" data-hk-reveal>
-                <a class="hk-btn" href="{{catalogurl}}">{{#str}}home2_browse, theme_hikmah{{/str}} <span class="hk-btn__arrow" aria-hidden="true">→</span></a>
-            </div>
-        </div>
-    </section>
-    {{/grid.0}}
 
     <section class="hk-section">
         <div class="hk-container">
@@ -193,26 +184,29 @@
         </div>
     </section>
 
-    {{#teachers.0}}
-    <section class="hk-section hk-section--tint">
+    <section class="hk-section hk-section--tint" id="hk-h2-teachers">
         <div class="hk-container">
             <header class="hk-section__head" data-hk-reveal>
                 <span class="hk-eyebrow">{{#str}}home2_teachers_eyebrow, theme_hikmah{{/str}}</span>
                 <h2 class="hk-section__title">{{#str}}home2_teachers_title, theme_hikmah{{/str}}</h2>
                 <p class="hk-section__lead">{{#str}}home2_teachers_lead, theme_hikmah{{/str}}</p>
             </header>
-            <div class="hk-teachers" data-hk-stagger>
+            <div class="hk-h2-teachers" data-hk-stagger>
                 {{#teachers}}
-                    <div class="hk-teacher">
+                    <div class="hk-h2-teacher">
                         <span class="hk-teacher__initials" aria-hidden="true">{{initials}}</span>
-                        <div><div class="hk-teacher__name">{{name}}</div><div class="hk-teacher__role">{{{courses}}}</div></div>
+                        <div class="hk-teacher__name">{{name}}</div>
+                        <div class="hk-teacher__role">{{role}}</div>
+                        <p class="hk-h2-teacher__courses">{{#str}}home2_teaches, theme_hikmah, {{courses}}{{/str}}</p>
                     </div>
                 {{/teachers}}
             </div>
-            <p class="hk-h2-note" data-hk-reveal>{{#str}}home2_teachers_note, theme_hikmah{{/str}}</p>
+            <div class="hk-h2-note hk-h2-split" data-hk-reveal>
+                <span>{{#str}}home2_teachers_note, theme_hikmah{{/str}}</span>
+                <a class="fw-semibold" href="{{catalogurl}}">{{#str}}home2_teachers_all, theme_hikmah{{/str}} <span aria-hidden="true">→</span></a>
+            </div>
         </div>
     </section>
-    {{/teachers.0}}
 
     <section class="hk-section">
         <div class="hk-container">
@@ -288,7 +282,7 @@
         </div>
     </section>
 
-    <section class="hk-section hk-section--tint">
+    <section class="hk-section hk-section--tint" id="hk-h2-faq">
         <div class="hk-container">
             <header class="hk-section__head hk-section__head--center" data-hk-reveal>
                 <span class="hk-eyebrow hk-eyebrow--plain">{{#str}}faq_eyebrow, theme_hikmah{{/str}}</span>
@@ -302,9 +296,9 @@
                     </details>
                 {{/faqs}}
             </div>
-            <div class="text-center mt-4" data-hk-reveal>
-                <a class="hk-btn hk-btn--ghost" href="{{faqurl}}">{{#str}}faq_all, theme_hikmah{{/str}}</a>
-            </div>
+            <p class="text-center mt-4 mb-0" data-hk-reveal>
+                <a class="fw-semibold" href="{{faqurl}}">{{#str}}home2_faq_contact, theme_hikmah{{/str}} <span aria-hidden="true">→</span></a>
+            </p>
         </div>
     </section>
 
@@ -335,5 +329,62 @@
             </div>
         </div>
     </section>
+
+    <div class="hk-footer__main hk-h2-footer">
+        <div class="hk-container hk-footer__grid hk-h2-footer__grid">
+            <div class="hk-footer__brand">
+                <img src="{{logourl}}" alt="{{#str}}home2_sitename, theme_hikmah{{/str}}" class="hk-footer__logo" decoding="async">
+                <p>{{#str}}home2_footer_mission, theme_hikmah{{/str}}</p>
+            </div>
+            <nav class="hk-footer__col" aria-label="{{#str}}footer_learn, theme_hikmah{{/str}}">
+                <h2 class="hk-footer__title">{{#str}}footer_learn, theme_hikmah{{/str}}</h2>
+                <ul>
+                    <li><a href="{{catalogurl}}">{{#str}}home2_link_allcourses, theme_hikmah{{/str}}</a></li>
+                    <li><a href="#hk-h2-topics">{{#str}}home2_link_topics, theme_hikmah{{/str}}</a></li>
+                    <li><a href="{{freeurl}}">{{#str}}home2_link_free, theme_hikmah{{/str}}</a></li>
+                    <li><a href="{{liveurl}}">{{#str}}home2_link_live, theme_hikmah{{/str}}</a></li>
+                </ul>
+            </nav>
+            <nav class="hk-footer__col" aria-label="{{#str}}home2_footer_institute, theme_hikmah{{/str}}">
+                <h2 class="hk-footer__title">{{#str}}home2_footer_institute, theme_hikmah{{/str}}</h2>
+                <ul>
+                    <li><a href="#">{{#str}}home2_link_about, theme_hikmah{{/str}}</a></li>
+                    <li><a href="#hk-h2-teachers">{{#str}}home2_link_teachers, theme_hikmah{{/str}}</a></li>
+                    <li><a href="#">{{#str}}home2_link_teach, theme_hikmah{{/str}}</a></li>
+                    <li><a href="#">{{#str}}home2_link_support, theme_hikmah{{/str}}</a></li>
+                </ul>
+            </nav>
+            <nav class="hk-footer__col" aria-label="{{#str}}footer_help, theme_hikmah{{/str}}">
+                <h2 class="hk-footer__title">{{#str}}footer_help, theme_hikmah{{/str}}</h2>
+                <ul>
+                    <li><a href="{{faqurl}}">{{#str}}nav_faq, theme_hikmah{{/str}}</a></li>
+                    <li><a href="#">{{#str}}home2_link_contact, theme_hikmah{{/str}}</a></li>
+                    <li><a href="{{verifyurl}}">{{#str}}home2_link_verify, theme_hikmah{{/str}}</a></li>
+                    <li><a href="{{policiesurl}}">{{#str}}footer_privacy, theme_hikmah{{/str}}</a></li>
+                </ul>
+            </nav>
+            <nav class="hk-footer__col" aria-label="{{#str}}home2_footer_connect, theme_hikmah{{/str}}">
+                <h2 class="hk-footer__title">{{#str}}home2_footer_connect, theme_hikmah{{/str}}</h2>
+                <ul>
+                    <li><a href="#">WhatsApp</a></li>
+                    <li><a href="#">YouTube</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Facebook</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="hk-container">
+            <div class="hk-h2-news">
+                <label for="hk-h2-news-email">{{#str}}home2_news_label, theme_hikmah{{/str}}</label>
+                <input id="hk-h2-news-email" type="email" autocomplete="email" placeholder="{{#str}}home2_news_placeholder, theme_hikmah{{/str}}">
+                <button class="hk-btn hk-btn--sun" type="button">{{#str}}home2_news_button, theme_hikmah{{/str}}</button>
+                <small>{{#str}}home2_news_note, theme_hikmah{{/str}}</small>
+            </div>
+            <div class="hk-h2-split hk-h2-footer__base">
+                <span>{{#str}}home2_footer_rights, theme_hikmah, {{year}}{{/str}}</span>
+                <a href="#">{{#str}}home2_footer_app, theme_hikmah{{/str}}</a>
+            </div>
+        </div>
+    </div>
 
 </div>

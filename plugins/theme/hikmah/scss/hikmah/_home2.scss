@@ -154,11 +154,140 @@
             font-weight: 600;
         }
     }
-    &__schedule {
-        white-space: pre-line;
-        font-size: .95rem;
-        margin: 1rem 0 .3rem;
+    &__teacher {
+        max-width: 26rem;
+        margin-top: 1.8rem;
     }
+    &__times {
+        font-family: $hk-font-body;
+        font-size: .9rem;
+        font-weight: 600;
+        margin: 1.4rem 0 .2rem;
+    }
+}
+
+// Links into the page sections, under the site navbar.
+.hk-h2-subnav {
+    background: #fff;
+    border-bottom: 1px solid $hk-line;
+    &__inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: .6rem 1.5rem;
+        padding-block: .6rem;
+    }
+    &__links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .25rem 1.6rem;
+        a {
+            display: inline-block;
+            padding: .45rem 0;
+            font-weight: 500;
+            color: $hk-ink;
+            text-decoration: none;
+            &:hover,
+            &:focus-visible {
+                color: $hk-sky-deep;
+            }
+        }
+    }
+}
+
+// Teacher cards: initials, name, title line and what they teach.
+.hk-h2-teachers {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+}
+.hk-h2-teacher {
+    padding: 1.5rem;
+    background: #fff;
+    border: 1px solid $hk-line;
+    border-radius: $hk-radius;
+    .hk-teacher__initials {
+        width: 4rem;
+        height: 4rem;
+        border-radius: 50%;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+    .hk-teacher__name {
+        font-size: 1.05rem;
+    }
+    &__courses {
+        margin: .8rem 0 0;
+        font-size: .9rem;
+        color: $hk-ink-3;
+    }
+}
+
+.hk-h2-split {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+// Page footer from the home page copy; the site footer's link block is hidden on this page.
+body.hk-home2 #page-footer .hk-footer__main {
+    display: none;
+}
+@media (min-width: 992px) {
+    .hk-h2-footer__grid {
+        grid-template-columns: minmax(0, 1.4fr) repeat(4, minmax(0, 1fr));
+    }
+}
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .hk-h2-footer__grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        .hk-footer__brand {
+            grid-column: 1 / -1;
+        }
+    }
+}
+.hk-h2-news {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .8rem 1rem;
+    margin-top: 2.5rem;
+    padding-block: 1.5rem;
+    border-block: 1px solid rgba(255, 255, 255, .12);
+    label {
+        flex: 1 1 260px;
+        margin: 0;
+        color: #fff;
+    }
+    input {
+        flex: 1 1 220px;
+        min-height: 3rem;
+        padding: 0 1.1rem;
+        border-radius: 999px;
+        border: 1.5px solid rgba(255, 255, 255, .3);
+        background: transparent;
+        color: #fff;
+        &::placeholder {
+            color: rgba(255, 255, 255, .6);
+        }
+        &:focus {
+            outline: 0;
+            border-color: $hk-sun;
+        }
+    }
+    small {
+        flex-basis: 100%;
+        color: rgba(255, 255, 255, .6);
+    }
+}
+.hk-h2-footer__base {
+    position: relative;
+    padding-top: 1.5rem;
+    font-size: .9rem;
 }
 
 .hk-h2-steps {

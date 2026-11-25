@@ -35,27 +35,15 @@ class home2 {
      * @return array
      */
     public static function export(): array {
+        global $OUTPUT;
+
         $data = home::export();
         $cards = $data['courses'];
         $catalog = new moodle_url('/theme/hikmah/catalog.php');
-
-        // One course gets a spotlight with its sessions and schedule; more courses get a row of cards.
-        $data['spotlight'] = false;
-        $data['grid'] = [];
-        if ($data['coursecount'] === 1) {
-            $data['spotlight'] = course_detail::export(get_course($cards[0]['id']));
-        } else {
-            $data['grid'] = array_slice($cards, 0, 3);
-        }
-
-        // The announcement bar names the next course that has not started yet.
-        $data['announce'] = false;
-        foreach ($cards as $card) {
-            if ($card['startts'] > time()) {
-                $data['announce'] = $card;
-                break;
-            }
-        }
+        $data['loginurl'] = (new moodle_url('/login/index.php'))->out(false);
+        $data['policiesurl'] = (new moodle_url('/admin/tool/policy/viewall.php'))->out(false);
+        $data['logourl'] = $OUTPUT->hk_logo_light();
+        $data['year'] = userdate(time(), '%Y');
 
         if ($data['cansignup']) {
             $data['primaryurl'] = $data['signupurl'];
@@ -90,6 +78,8 @@ class home2 {
         }
 
         $data['teachers'] = self::teachers();
+        $data['sessions'] = self::numbered('session', 3);
+        $data['times'] = self::numbered('time', 4);
         $data['freeurl'] = (new moodle_url($catalog, ['price' => 'free']))->out(false);
         return $data;
     }
@@ -113,31 +103,26 @@ class home2 {
     }
 
     /**
-     * Everyone listed as a course contact on a visible course, with the courses they teach.
+     * The teachers named in the home page copy (to be confirmed for the new platform).
      *
-     * @return array list of {name, initials, courses}
+     * @return array list of {name, initials, role, courses}
      */
     private static function teachers(): array {
         $teachers = [];
-        foreach (catalog::get_visible_courses() as $course) {
-            foreach ($course->get_course_contacts() as $userid => $contact) {
-                if (!isset($teachers[$userid])) {
-                    $initials = '';
-                    foreach (preg_split('/\s+/', trim($contact['username'])) as $part) {
-                        $initials .= \core_text::strtoupper(\core_text::substr($part, 0, 1));
-                    }
-                    $teachers[$userid] = [
-                        'name' => $contact['username'],
-                        'initials' => \core_text::substr($initials, 0, 2),
-                        'courses' => [],
-                    ];
-                }
-                $teachers[$userid]['courses'][] = $course->get_formatted_fullname();
+        for ($i = 1; $i <= 4; $i++) {
+            $name = get_string("home2_teacher_{$i}", 'theme_hikmah');
+            // Initials from the last two words, so titles such as Maulana are skipped.
+            $initials = '';
+            foreach (array_slice(preg_split('/\s+/', $name), -2) as $part) {
+                $initials .= \core_text::strtoupper(\core_text::substr($part, 0, 1));
             }
+            $teachers[] = [
+                'name' => $name,
+                'initials' => $initials,
+                'role' => get_string("home2_teacher_{$i}_role", 'theme_hikmah'),
+                'courses' => get_string("home2_teacher_{$i}_text", 'theme_hikmah'),
+            ];
         }
-        foreach ($teachers as &$teacher) {
-            $teacher['courses'] = implode(', ', $teacher['courses']);
-        }
-        return array_values($teachers);
+        return $teachers;
     }
 }
