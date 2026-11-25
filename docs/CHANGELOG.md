@@ -1,6 +1,16 @@
 # Changelog
 
 
+## 2026-11-25 — Email sending through Amazon SES
+
+- Moodle now sends mail (sign-up confirmations, password resets, payment and enrolment notices) through Amazon SES
+  in Mumbai from no-reply@hikmahonline.com. Domain verified with Easy DKIM (three CNAMEs in Cloudflare, DNS only);
+  SMTP login set with ~/set-smtp.sh on the server (now asks for the server, so it works for SES or Brevo). Steps:
+  docs/runbooks/contabo.md section 12.
+- Tested: a test email reached a Gmail inbox with SPF, DKIM and DMARC PASS. Not tested yet: a real sign-up
+  confirmation and a password reset.
+
+
 ## 2026-11-25 — Only Cloudflare reaches the web ports
 
 - scripts/server/cloudflare-only.sh: ports 80/443 accept only Cloudflare's ranges, so the site can't be reached by

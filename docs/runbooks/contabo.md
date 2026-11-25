@@ -16,7 +16,7 @@ Note anything that differs from this runbook in `docs/CHANGELOG.md`.
 | Access to the GitHub repository | To add a read-only deploy key |
 | An email address | For Let's Encrypt certificate notices |
 | Cloudflare account with R2 (free up to 10 GB; asks for a card) | For off-site backups |
-| SMTP sender (e.g. Brevo free) | For sign-up and payment emails; can be added after launch |
+| SMTP sender (live: Amazon SES, Mumbai; Brevo free also works) | For sign-up and payment emails; section 12 |
 
 Secrets (passwords, keys) are typed by you on the server. They never go into Git.
 
@@ -311,3 +311,19 @@ How the move was done, with no gap for visitors on the old address. About an hou
 
 Side effects: everyone is signed out once; Moodle App users add the site again with the new address; certificates
 issued before the move carry the old verification link.
+
+## 12. Outgoing email: Amazon SES (done 2026-11-25)
+
+Live: SES in **Asia Pacific (Mumbai)** (`ap-south-1`, production access, 50,000 a day), sender `no-reply@hikmahonline.com`.
+
+1. SES console (Mumbai) → **Identities → Create identity → Domain** `hikmahonline.com`, Easy DKIM RSA 2048, no custom
+   MAIL FROM. Add the three `…._domainkey` CNAME records in Cloudflare as **DNS only** (an orange cloud breaks DKIM).
+   Status turns Verified within minutes.
+2. **SMTP settings** → right-hand box **IAM SMTP credentials → Create IAM credentials** (not "Mail Manager SMTP", which
+   is a separate paid service with a `…mail-manager-smtp.amazonaws.com` address). Download the .csv: SMTP user name
+   `AKIA…` (20 characters), SMTP password (about 44). An ordinary IAM access key does not work as the password.
+3. On the server, as `hikmah`: `~/set-smtp.sh` (asks server `email-smtp.ap-south-1.amazonaws.com`, user name,
+   password hidden, sender; trims pasted spaces and names the answer it refuses), then
+   `HIKMAH_ENV=prod scripts/dc.sh up -d moodle cron adhoc`.
+4. Test: `email_to_user()` from a CLI PHP snippet in the moodle container. Checked in Gmail: inbox, SPF, DKIM
+   (hikmahonline.com) and DMARC all PASS.
