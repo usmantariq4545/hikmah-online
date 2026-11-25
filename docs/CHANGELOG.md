@@ -1,6 +1,18 @@
 # Changelog
 
 
+## 2026-11-25 — Only Cloudflare reaches the web ports
+
+- scripts/server/cloudflare-only.sh: ports 80/443 accept only Cloudflare's ranges, so the site can't be reached by
+  its IP around Cloudflare. IPv4 in Docker's DOCKER-USER chain (Docker's published ports bypass ufw) with a boot
+  service; IPv6 in ufw; SSH untouched; `--off` undoes it. Applied on the live server.
+- Tested: login via Cloudflare 200; direct IPv4 and IPv6 to the server time out (200 before); ACME path still reaches
+  Caddy; boot service re-run gives no duplicate rules; smoke test passed. Not tested: a full reboot.
+- Security check the same day: gitleaks full-history run (141 commits) and a pattern search of all commits found no
+  secrets; sensitive paths (.env, .git, config, backups, scripts) not served; TLS 1.0/1.1 refused; security headers
+  and Secure/HttpOnly cookies present. Moodle's CLI security report crashed (Class "curl" not found) — use the
+  browser report (Site administration → Reports → Security checks).
+
 ## 2026-11-25 — Moved to https://hikmahonline.com behind Cloudflare
 
 - The site moved from the temporary online.hikmahinstitute.org.pk to hikmahonline.com (owner's Namecheap domain; DNS
