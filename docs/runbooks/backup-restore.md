@@ -23,7 +23,9 @@ scripts/backup.sh                 # nightly; site stays up
 scripts/backup.sh --maintenance   # consistent snapshot; use before upgrades and go-live
 ```
 
-Retention is applied on every run: 7 daily, 4 weekly, 6 monthly sets.
+Retention is applied on every run: 7 daily, 4 weekly, 6 monthly sets, on this host and on the
+off-host copy (`BACKUP_REMOTE`). Off-host sets are only pruned when the remote listing works and
+already holds the new set, so a broken connection never deletes remote copies.
 
 Off-host copy: set `BACKUP_REMOTE=<rclone remote:path>` in the env file and install `rclone`.
 Without it the script says plainly that the backup exists only on this machine.

@@ -1,6 +1,12 @@
 # Changelog
 
 
+## 2026-11-25 — Off-host backups follow the same retention
+
+- scripts/backup.sh now applies the 7 daily / 4 weekly / 6 monthly rule to the R2 copy too; before, R2 kept every set
+  forever. Remote pruning runs only when the listing succeeds and contains the new set. Tested with the real R2 set
+  list and 8 months of simulated nightly sets (keeps 16). Server: Docker build cache cleared on 2026-11-24 (disk 76% → 16%).
+
 ## 2026-11-24 — Home page v2 draft: visual fixes
 
 - Quote cards and the verse band no longer show Moodle's grey blockquote bar; the free taster band drops the corner
