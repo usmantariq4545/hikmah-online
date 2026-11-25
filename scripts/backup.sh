@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Backup: PostgreSQL dump (custom format) + moodledata (without caches, sessions, temp, trash),
 # with checksums. Archives land in ./backups/<env>/ and, when BACKUP_REMOTE is set and rclone is
-# installed, are copied off-host. Keeps 7 daily, 4 weekly and 6 monthly sets.
+# installed, are copied off-host. Keeps 7 daily, 4 weekly and 6 monthly sets, here and off-host.
 #
 #   scripts/backup.sh                 nightly, site stays up
 #   scripts/backup.sh --maintenance   consistent snapshot (before upgrades and go-live)
@@ -61,17 +61,38 @@ else
 fi
 
 # Retention: keep the newest 7, plus the first of each of the last 4 ISO weeks and 6 months.
+# Reads set names (one per line) and prints the ones to delete. The same rule runs here and on
+# the off-host copy, so both hold the same sets.
+expired_sets() {
+    local all keep weekly monthly
+    all="$(grep -E '^20[0-9]{6}-[0-9]{6}$' | sort)"
+    [ -n "$all" ] || return 0
+    keep="$(printf '%s\n' "$all" | sort -r | head -n 7)"
+    weekly="$(printf '%s\n' "$all" | awk '{ cmd = "date -u -d " substr($1,1,8) " +%G%V"; cmd | getline w; close(cmd); if (!(w in seen)) { seen[w] = 1; print $1 } }' | tail -n 4)"
+    monthly="$(printf '%s\n' "$all" | awk '{ m = substr($1,1,6); if (!(m in seen)) { seen[m] = 1; print $1 } }' | tail -n 6)"
+    printf '%s\n' "$all" | grep -vxF -f <(printf '%s\n%s\n%s\n%s\n' "$keep" "$weekly" "$monthly" "$STAMP") || true
+}
+
 say "Applying retention (7 daily, 4 weekly, 6 monthly)"
 cd "$ROOT_DIR/backups/$HIKMAH_ENV"
-keep="$(ls -1d 20* 2>/dev/null | sort -r | head -n 7)"
-weekly="$(ls -1d 20* 2>/dev/null | sort | awk '{ cmd = "date -u -d " substr($1,1,8) " +%G%V"; cmd | getline w; close(cmd); if (!(w in seen)) { seen[w] = 1; print $1 } }' | tail -n 4)"
-monthly="$(ls -1d 20* 2>/dev/null | sort | awk '{ m = substr($1,1,6); if (!(m in seen)) { seen[m] = 1; print $1 } }' | tail -n 6)"
-for dir in $(ls -1d 20* 2>/dev/null); do
-    if ! printf '%s\n%s\n%s\n' "$keep" "$weekly" "$monthly" | grep -qx "$dir"; then
-        rm -rf "$dir"
-        echo "removed old backup $dir"
-    fi
+for dir in $(ls -1d 20* 2>/dev/null | expired_sets); do
+    rm -rf "$dir"
+    echo "removed old backup $dir"
 done
+
+if [ -n "$REMOTE" ] && command -v rclone >/dev/null 2>&1; then
+    # Only prune when the listing works and still holds tonight's set; a failed or partial listing
+    # must never lead to deleting the off-host copies.
+    if remote_sets="$(rclone lsf --dirs-only "$REMOTE/$HIKMAH_ENV/" | sed 's#/$##')" \
+        && printf '%s\n' "$remote_sets" | grep -qx "$STAMP"; then
+        for dir in $(printf '%s\n' "$remote_sets" | expired_sets); do
+            rclone purge "$REMOTE/$HIKMAH_ENV/$dir"
+            echo "removed old off-host backup $dir"
+        done
+    else
+        echo "Could not list $REMOTE/$HIKMAH_ENV; off-host retention skipped." >&2
+    fi
+fi
 
 echo "Backup complete: backups/$HIKMAH_ENV/$STAMP"
 
