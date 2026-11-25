@@ -1,6 +1,20 @@
 # Changelog
 
 
+## 2026-11-25 — Moved to https://hikmahonline.com behind Cloudflare
+
+- The site moved from the temporary online.hikmahinstitute.org.pk to hikmahonline.com (owner's Namecheap domain; DNS
+  moved from Hostinger to Cloudflare free). The domain's old Hostinger courses site is replaced (its files at Hostinger
+  are untouched); no mailboxes were in use, mail records kept as DNS only. The old Moodle address is switched off.
+- Cloudflare: proxied, Full (strict), Always Use HTTPS, www → root redirect (301), cache rule for Moodle's theme/JS
+  URLs. Caddy keeps its own Let's Encrypt certificate (HTTP-01 reaches Caddy through the proxy).
+- Server: `.env.prod` MOODLE_WWWROOT/SITE_HOST changed (backup copy `~/env.prod.bak-20261125`), backup
+  20261125-105821 taken first, `tool_replace` rewrote old links in the database, caches purged. reCAPTCHA v2 on
+  sign-up turned on with keys for the new domain (030-auth). Steps: docs/runbooks/contabo.md section 11.
+- Verified: login page 200 through Cloudflare with "Log in to Hikmah Online" and the Google button, www 301, old host
+  no longer answers, smoke test passed (twice), CSS and JS cached by Cloudflare (MISS then HIT), reCAPTCHA on the
+  sign-up page. Owner to confirm: password and Google sign-in in a browser, HetrixTools green on the new URL.
+
 ## 2026-11-25 — Off-host backups follow the same retention
 
 - scripts/backup.sh now applies the 7 daily / 4 weekly / 6 monthly rule to the R2 copy too; before, R2 kept every set
