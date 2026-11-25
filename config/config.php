@@ -32,6 +32,8 @@ $CFG->dataroot      = '/var/moodledata';
 $CFG->localcachedir = '/var/localcache';
 $CFG->directorypermissions = 02770;
 $CFG->admin = 'admin';
+// Nginx sends unknown paths to /r.php (docker/nginx/default.conf.template), so Moodle's router is set up.
+$CFG->routerconfigured = true;
 
 // Sessions in Redis.
 $CFG->session_handler_class = '\core\session\redis';

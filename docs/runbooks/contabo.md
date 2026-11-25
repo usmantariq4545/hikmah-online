@@ -266,7 +266,8 @@ How the move was done, with no gap for visitors on the old address. About an hou
    point at the old web host. Add `A @ <server IP>` as **DNS only** (grey) and `CNAME www → <domain>` **Proxied**.
    Mail records (MX, SPF, DKIM CNAMEs, `autoconfig`/`autodiscover`) stay **DNS only**: proxying breaks them.
    Keep the CAA records if they list `letsencrypt.org` and `sectigo.com` (Caddy's two CAs).
-2. SSL/TLS → **Full (strict)**; Edge Certificates → **Always Use HTTPS** on. Rocket Loader off (breaks Moodle's
+2. SSL/TLS → **Full (strict)**; Edge Certificates → **Always Use HTTPS** on; Speed → Protocol Optimization →
+   **HTTP/3 (with QUIC) off** (some networks break QUIC: ERR_QUIC_PROTOCOL_ERROR between pages). Rocket Loader off (breaks Moodle's
    scripts); Bot Fight Mode off (can block the uptime monitor).
 3. Rules → Redirect Rules → template **"Redirect from WWW to root"** (301, keeps path and query). Caddy has no
    certificate for `www`, so without this rule `www` gives error 525.
