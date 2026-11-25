@@ -115,9 +115,11 @@ class notifier {
             'fullname' => fullname($learner),
             'item' => request::describe($request),
             'reference' => $request->reference,
-            // "PKR 1,500" (design guide): no decimals when the amount is whole.
-            'amount' => $request->currency . ' ' . number_format((float) $request->amount,
-                floor((float) $request->amount) == (float) $request->amount ? 0 : 2),
+            // Written like "PKR 1,500" (design guide): no decimals when the amount is whole.
+            'amount' => $request->currency . ' ' . number_format(
+                (float) $request->amount,
+                floor((float) $request->amount) == (float) $request->amount ? 0 : 2
+            ),
             'remarks' => '',
         ];
     }
@@ -218,8 +220,15 @@ class notifier {
      * @param string|null $lang
      * @return string
      */
-    public static function html(string $body, array $rows, stdClass $a, moodle_url $url, string $link, ?stdClass $request,
-            ?string $lang): string {
+    public static function html(
+        string $body,
+        array $rows,
+        stdClass $a,
+        moodle_url $url,
+        string $link,
+        ?stdClass $request,
+        ?string $lang
+    ): string {
         $sm = get_string_manager();
         $str = fn(string $id) => $sm->get_string($id, 'paygw_hikmahtransfer', null, $lang);
         $html = '<p>' . nl2br(s($body)) . '</p>';
