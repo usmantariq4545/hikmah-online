@@ -13,7 +13,8 @@
   sign-up turned on with keys for the new domain (030-auth). Steps: docs/runbooks/contabo.md section 11.
 - Verified: login page 200 through Cloudflare with "Log in to Hikmah Online" and the Google button, www 301, old host
   no longer answers, smoke test passed (twice), CSS and JS cached by Cloudflare (MISS then HIT), reCAPTCHA on the
-  sign-up page. Owner to confirm: password and Google sign-in in a browser, HetrixTools green on the new URL.
+  sign-up page. Owner confirmed password and Google sign-in on the new address. Some providers' DNS still showed the
+  old Hostinger site for a while after the nameserver change (Chrome secure DNS or mobile data showed the new site).
 
 ## 2026-11-25 — Off-host backups follow the same retention
 
