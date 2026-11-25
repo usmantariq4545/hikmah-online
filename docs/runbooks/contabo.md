@@ -301,5 +301,13 @@ How the move was done, with no gap for visitors on the old address. About an hou
 11. `scripts/smoke-test.sh`; HetrixTools uptime monitor URL → new address (`docs/runbooks/monitoring.md`).
 12. Afterwards (owner): remove the old host's DNS record and the old Google redirect URI.
 
+13. Lock the web ports to Cloudflare (done 2026-11-25), so nobody can skip Cloudflare by calling the server's IP.
+    As `ubuntu`: `sudo bash ~/hikmah-online/scripts/server/cloudflare-only.sh` (`--off` undoes it). IPv4 goes in
+    Docker's `DOCKER-USER` chain, because Docker's published ports bypass ufw; a boot service
+    (`hikmah-cloudflare-only.service`) restores it. IPv6 is limited in ufw. SSH is untouched. Re-run it after
+    `bootstrap.sh` (which opens 80/443 to everyone) and when Cloudflare's list at cloudflare.com/ips changes (also
+    update `docker/caddy/Caddyfile`). Checked: login through Cloudflare 200, direct IPv4/IPv6 to the server time out,
+    `/.well-known/acme-challenge/` still reaches Caddy, smoke test passed.
+
 Side effects: everyone is signed out once; Moodle App users add the site again with the new address; certificates
 issued before the move carry the old verification link.
