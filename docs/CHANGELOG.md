@@ -1,6 +1,27 @@
 # Changelog
 
 
+## 2026-11-25 — Branded email templates
+
+- New email layout (theme_hikmah templates/core/email_html.mustache): ink header with logo, white card, yellow pill
+  buttons with inline styles, "Seek knowledge with wisdom" footer. New wording for sign-up, password reset/change,
+  staff-created accounts, new sign-in alerts, assignment feedback, certificates and enrol_apply notices
+  (config/settings/email-strings.php, installed by 135-strings.php).
+- Payment emails (paygw_hikmahtransfer notifier) now show a status badge, an order-style payment summary table with
+  total, the reviewer's reason, and a course card. Amounts read "PKR 5,000".
+- scripts/dev/email-preview.sh mails a sample of every email from the checkout without changing the site. Owner
+  approved the second preview round.
+
+
+## 2026-11-25 — Email sending through Amazon SES
+
+- Moodle now sends mail (sign-up confirmations, password resets, payment and enrolment notices) through Amazon SES
+  in Mumbai from no-reply@hikmahonline.com. Domain verified with Easy DKIM (three CNAMEs in Cloudflare, DNS only);
+  SMTP login set with ~/set-smtp.sh on the server (now asks for the server, so it works for SES or Brevo). Steps:
+  docs/runbooks/contabo.md section 12.
+- Tested: a test email reached a Gmail inbox with SPF, DKIM and DMARC PASS. Not tested yet: a real sign-up
+  confirmation and a password reset.
+
 ## 2026-11-25 — Router check and HTTP/3
 
 - config.php sets `$CFG->routerconfigured = true` (Nginx already sends unknown paths to /r.php), so the
