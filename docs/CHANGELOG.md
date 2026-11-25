@@ -1,6 +1,18 @@
 # Changelog
 
 
+## 2026-11-25 — Branded email templates
+
+- New email layout (theme_hikmah templates/core/email_html.mustache): ink header with logo, white card, yellow pill
+  buttons with inline styles, "Seek knowledge with wisdom" footer. New wording for sign-up, password reset/change,
+  staff-created accounts, new sign-in alerts, assignment feedback, certificates and enrol_apply notices
+  (config/settings/email-strings.php, installed by 135-strings.php).
+- Payment emails (paygw_hikmahtransfer notifier) now show a status badge, an order-style payment summary table with
+  total, the reviewer's reason, and a course card. Amounts read "PKR 5,000".
+- scripts/dev/email-preview.sh mails a sample of every email from the checkout without changing the site. Owner
+  approved the second preview round.
+
+
 ## 2026-11-25 — Email sending through Amazon SES
 
 - Moodle now sends mail (sign-up confirmations, password resets, payment and enrolment notices) through Amazon SES
