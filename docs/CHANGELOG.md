@@ -1,6 +1,14 @@
 # Changelog
 
 
+## 2026-11-26 — Home page v2: motion and hero light, matching the current home page
+
+- The hero gets the same soft blue and yellow light behind the rosette; the eyebrow, title, text and buttons rise in
+  turn, the rosette blooms in and then turns slowly, and "حكمة" pops in.
+- Section headings, promises, spotlight, enroll card, topics, steps, teachers row, ways, video, FAQs, verse and closing
+  banner reveal on scroll through the existing motion module (off under reduced motion).
+- Theme version 2026112600.
+
 ## 2026-11-25 — Home page v2 draft rebuilt from the design canvas (admins only)
 
 - /theme/hikmah/home2.php now follows the "Hikmah Online homepage v2" Claude Design canvas: announcement bar, hero with the

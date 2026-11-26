@@ -54,7 +54,7 @@
     <section class="hk2-hero">
         <div class="hk2-wrap hk2-hero__grid">
             <div>
-                <span class="hk2-eyebrow hk2-eyebrow--light">{{#str}}home2_hero_eyebrow, theme_hikmah{{/str}}</span>
+                <span class="hk2-eyebrow hk2-eyebrow--light hk2-hero__eyebrow">{{#str}}home2_hero_eyebrow, theme_hikmah{{/str}}</span>
                 <h1 class="hk2-hero__title">{{#str}}home2_hero_line1, theme_hikmah{{/str}} {{#str}}home2_hero_line2, theme_hikmah{{/str}} <span class="hk2-mark">{{#str}}home2_hero_mark, theme_hikmah{{/str}}</span></h1>
                 <p class="hk2-hero__lead">{{#str}}home2_hero_lead, theme_hikmah{{/str}}</p>
                 <div class="hk2-actions">
@@ -72,7 +72,7 @@
 
     <section class="hk2-promises-band" aria-label="{{#str}}home2_promises_label, theme_hikmah{{/str}}">
         <div class="hk2-wrap">
-            <ul class="hk2-promises">
+            <ul class="hk2-promises" data-hk-stagger>
                 {{#promises}}
                     <li>
                         <span class="hk2-icon" aria-hidden="true"><svg viewBox="0 0 24 24">{{#icon}}<path d="{{.}}"/>{{/icon}}</svg></span>
@@ -86,7 +86,7 @@
 
     <section class="hk2-section" id="hk2-featured">
         <div class="hk2-wrap hk2-spot">
-            <div>
+            <div data-hk-reveal="left">
                 <span class="hk2-eyebrow">{{#str}}home2_spot_eyebrow, theme_hikmah{{/str}}</span>
                 <h2 class="hk2-title">{{#str}}home2_spot_title, theme_hikmah{{/str}}</h2>
                 <p class="hk2-lead">{{#str}}home2_spot_lead, theme_hikmah{{/str}}</p>
@@ -108,7 +108,7 @@
                     </div>
                 </div>
             </div>
-            <aside class="hk2-enroll" aria-label="{{#str}}detail_enrol, theme_hikmah{{/str}}">
+            <aside class="hk2-enroll" data-hk-reveal="right" aria-label="{{#str}}detail_enrol, theme_hikmah{{/str}}">
                 <div class="hk2-enroll__media">
                     <img src="{{pix}}rosette.svg" alt="">
                     <span>{{#str}}home2_topic_sharia, theme_hikmah{{/str}}</span>
@@ -137,7 +137,7 @@
     {{#courses.0}}
     <section class="hk2-section hk2-section--tint">
         <div class="hk2-wrap">
-            <header class="hk2-head">
+            <header class="hk2-head" data-hk-reveal>
                 <span class="hk2-eyebrow">{{#str}}home2_courses_eyebrow, theme_hikmah{{/str}}</span>
                 <h2 class="hk2-title">{{#str}}home2_courses_title, theme_hikmah{{/str}}</h2>
                 <p class="hk2-lead">{{#str}}home2_courses_lead, theme_hikmah{{/str}}</p>
@@ -154,7 +154,7 @@
 
     <section class="hk2-section" id="hk2-topics">
         <div class="hk2-wrap">
-            <header class="hk2-head hk2-head--split">
+            <header class="hk2-head hk2-head--split" data-hk-reveal>
                 <div>
                     <span class="hk2-eyebrow">{{#str}}home2_topics_eyebrow, theme_hikmah{{/str}}</span>
                     <h2 class="hk2-title">{{#str}}home2_topics_title, theme_hikmah{{/str}}</h2>
@@ -165,7 +165,7 @@
                     <button type="button" class="hk2-nav__btn" data-hk2-next="topics" aria-label="{{#str}}home2_topics_next, theme_hikmah{{/str}}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
                 </div>
             </header>
-            <div class="hk2-topics" data-hk2-track="topics" data-hk2-every="4000" role="region" aria-label="{{#str}}home2_topics_label, theme_hikmah{{/str}}">
+            <div class="hk2-topics" data-hk-stagger data-hk2-track="topics" data-hk2-every="4000" role="region" aria-label="{{#str}}home2_topics_label, theme_hikmah{{/str}}">
                 {{#topics}}
                     <article class="hk2-topic">
                         <div class="hk2-topic__tags"><span>{{tag1}}</span><span>{{tag2}}</span></div>
@@ -183,14 +183,14 @@
 
     <section class="hk2-section hk2-section--tint hk2-section--tight">
         <div class="hk2-wrap">
-            <header class="hk2-head hk2-head--split">
+            <header class="hk2-head hk2-head--split" data-hk-reveal>
                 <div>
                     <span class="hk2-eyebrow">{{#str}}home2_steps_eyebrow, theme_hikmah{{/str}}</span>
                     <h2 class="hk2-title hk2-title--sm">{{#str}}home2_steps_title, theme_hikmah{{/str}}</h2>
                 </div>
                 <a class="hk2-btn" href="{{catalogurl}}">{{#str}}home2_explore, theme_hikmah{{/str}}{{> theme_hikmah/home2_arrow }}</a>
             </header>
-            <ol class="hk2-steps">
+            <ol class="hk2-steps" data-hk-stagger>
                 {{#steps}}
                     <li><span class="hk2-steps__num" aria-hidden="true"></span><div><h3>{{title}}</h3><p>{{text}}</p></div></li>
                 {{/steps}}
@@ -200,12 +200,12 @@
 
     <section class="hk2-section hk2-section--clip" id="hk2-teachers">
         <div class="hk2-wrap">
-            <header class="hk2-head hk2-head--center">
+            <header class="hk2-head hk2-head--center" data-hk-reveal>
                 <span class="hk2-eyebrow hk2-eyebrow--plain">{{#str}}home2_teachers_eyebrow, theme_hikmah{{/str}}</span>
                 <h2 class="hk2-title">{{#str}}home2_teachers_title, theme_hikmah{{/str}}</h2>
                 <p class="hk2-lead">{{#str}}home2_teachers_lead, theme_hikmah{{/str}}</p>
             </header>
-            <div class="hk2-team" data-hk2-track="teachers" data-hk2-every="3000">
+            <div class="hk2-team" data-hk-reveal data-hk2-track="teachers" data-hk2-every="3000">
                 {{#teachers}}
                     <article class="hk2-person{{#big}} hk2-person--big{{/big}}" style="--hk2-lift: {{lift}}px">
                         <div class="hk2-person__photo">
@@ -228,11 +228,11 @@
 
     <section class="hk2-section hk2-section--tint hk2-section--tight">
         <div class="hk2-wrap">
-            <header class="hk2-head">
+            <header class="hk2-head" data-hk-reveal>
                 <span class="hk2-eyebrow">{{#str}}home2_ways_eyebrow, theme_hikmah{{/str}}</span>
                 <h2 class="hk2-title hk2-title--sm">{{#str}}home2_ways_title, theme_hikmah{{/str}}</h2>
             </header>
-            <ul class="hk2-ways">
+            <ul class="hk2-ways" data-hk-stagger>
                 {{#ways}}
                     <li><span class="hk2-icon hk2-icon--sm" aria-hidden="true"><svg viewBox="0 0 24 24">{{#icon}}<path d="{{.}}"/>{{/icon}}</svg></span><div><h3>{{title}}</h3><p>{{text}}</p></div></li>
                 {{/ways}}
@@ -242,7 +242,7 @@
 
     <section class="hk2-start">
         <div class="hk2-wrap hk2-start__grid">
-            <div>
+            <div data-hk-reveal="left">
                 <span class="hk2-eyebrow hk2-eyebrow--light">{{#str}}home2_start_eyebrow, theme_hikmah{{/str}}</span>
                 <h2 class="hk2-title">{{#str}}home2_start_title, theme_hikmah{{/str}}</h2>
                 <p class="hk2-start__lead">{{#str}}home2_start_lead, theme_hikmah{{/str}}</p>
@@ -250,7 +250,7 @@
                     {{#points}}<li><span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 4.5 4.5L19 7"/></svg></span>{{title}}</li>{{/points}}
                 </ul>
             </div>
-            <a class="hk2-video" href="#" aria-label="{{#str}}home2_start_play, theme_hikmah{{/str}}">
+            <a class="hk2-video" data-hk-reveal="scale" href="#" aria-label="{{#str}}home2_start_play, theme_hikmah{{/str}}">
                 <img src="{{pix}}rosette.svg" alt="">
                 <span class="hk2-video__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg></span>
                 <span class="hk2-video__label">{{#str}}home2_start_watch, theme_hikmah{{/str}}</span>
@@ -261,11 +261,11 @@
 
     <section class="hk2-section hk2-section--tint" id="hk2-faq">
         <div class="hk2-wrap">
-            <header class="hk2-head hk2-head--center">
+            <header class="hk2-head hk2-head--center" data-hk-reveal>
                 <span class="hk2-eyebrow hk2-eyebrow--plain">{{#str}}home2_faq_eyebrow, theme_hikmah{{/str}}</span>
                 <h2 class="hk2-title">{{#str}}home2_faq_title, theme_hikmah{{/str}}</h2>
             </header>
-            <div class="hk2-faq">
+            <div class="hk2-faq" data-hk-stagger>
                 {{#faqs}}
                     <details{{#open}} open{{/open}}><summary>{{title}}<span class="hk2-faq__icon" aria-hidden="true"></span></summary><p>{{text}}</p></details>
                 {{/faqs}}
@@ -277,7 +277,7 @@
     <section class="hk2-verse">
         <img src="{{pix}}rosette.svg" alt="">
         <figure class="hk2-wrap">
-            <blockquote>
+            <blockquote data-hk-reveal>
                 <p class="hk2-verse__arabic" lang="ar" dir="rtl">وَقُل رَّبِّ زِدْنِي عِلْمًا</p>
                 <p class="hk2-verse__text">{{#str}}home2_verse_text, theme_hikmah{{/str}}</p>
             </blockquote>
@@ -287,7 +287,7 @@
 
     <section class="hk2-section">
         <div class="hk2-wrap">
-            <div class="hk2-cta">
+            <div class="hk2-cta" data-hk-reveal="scale">
                 <img src="{{pix}}rosette-ink.svg" alt="">
                 <div>
                     <h2>{{#str}}home2_cta_title, theme_hikmah{{/str}}</h2>
