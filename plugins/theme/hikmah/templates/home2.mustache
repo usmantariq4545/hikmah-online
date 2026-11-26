@@ -27,8 +27,6 @@
         "catalogurl": "#",
         "primaryurl": "#",
         "faqurl": "#",
-        "homeurl": "#",
-        "whatsappurl": "#",
         "freeurl": "#",
         "liveurl": "#",
         "verifyurl": "#",
@@ -254,7 +252,7 @@
                     {{#points}}<li><span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 4.5 4.5L19 7"/></svg></span>{{title}}</li>{{/points}}
                 </ul>
             </div>
-            <a class="hk2-video" data-hk-reveal="scale" href="{{homeurl}}" aria-label="{{#str}}home2_start_play, theme_hikmah{{/str}}">
+            <a class="hk2-video" data-hk-reveal="scale" href="#" aria-label="{{#str}}home2_start_play, theme_hikmah{{/str}}">
                 {{> theme_hikmah/home2_rosette }}
                 <span class="hk2-video__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg></span>
                 <span class="hk2-video__label">{{#str}}home2_start_watch, theme_hikmah{{/str}}</span>
@@ -274,7 +272,7 @@
                     <details{{#open}} open{{/open}}><summary>{{title}}<span class="hk2-faq__icon" aria-hidden="true"></span></summary><p>{{text}}</p></details>
                 {{/faqs}}
             </div>
-            <p class="hk2-center"><a class="hk2-link" href="{{whatsappurl}}" target="_blank" rel="noopener">{{#str}}home2_faq_contact, theme_hikmah{{/str}}{{> theme_hikmah/home2_arrow }}</a></p>
+            <p class="hk2-center"><a class="hk2-link" href="{{faqurl}}">{{#str}}home2_faq_contact, theme_hikmah{{/str}}{{> theme_hikmah/home2_arrow }}</a></p>
         </div>
     </section>
 
@@ -326,15 +324,16 @@
                 <nav aria-label="{{#str}}footer_help, theme_hikmah{{/str}}">
                     <h2>{{#str}}footer_help, theme_hikmah{{/str}}</h2>
                     <a href="{{faqurl}}">{{#str}}nav_faq, theme_hikmah{{/str}}</a>
-                    <a href="{{whatsappurl}}" target="_blank" rel="noopener">{{#str}}home2_link_contact, theme_hikmah{{/str}}</a>
+                    <a href="#">{{#str}}home2_link_contact, theme_hikmah{{/str}}</a>
                     <a href="{{verifyurl}}">{{#str}}home2_link_verify, theme_hikmah{{/str}}</a>
                     <a href="{{policiesurl}}">{{#str}}footer_privacy, theme_hikmah{{/str}}</a>
                 </nav>
                 <nav aria-label="{{#str}}home2_footer_connect, theme_hikmah{{/str}}">
                     <h2>{{#str}}home2_footer_connect, theme_hikmah{{/str}}</h2>
-                    <a href="{{whatsappurl}}" target="_blank" rel="noopener">WhatsApp</a>
-                    <a href="https://www.instagram.com/online.hikmah/" target="_blank" rel="noopener">Instagram</a>
-                    <a href="https://www.facebook.com/online.hikmah/" target="_blank" rel="noopener">Facebook</a>
+                    <a href="#">WhatsApp</a>
+                    <a href="#">YouTube</a>
+                    <a href="#">Instagram</a>
+                    <a href="#">Facebook</a>
                 </nav>
             </div>
             <div class="hk2-news">
@@ -345,6 +344,7 @@
             </div>
             <div class="hk2-footer__base">
                 <span>{{#str}}home2_footer_rights, theme_hikmah, {{year}}{{/str}}</span>
+                <a href="#">{{#str}}home2_footer_app, theme_hikmah{{/str}}</a>
             </div>
         </div>
     </footer>
