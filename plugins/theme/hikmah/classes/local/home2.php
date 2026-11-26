@@ -19,8 +19,8 @@ namespace theme_hikmah\local;
 use moodle_url;
 
 /**
- * Template context for the draft home page v2 (/theme/hikmah/home2.php), built from the
- * "Hikmah Online homepage v2" design canvas.
+ * Template context for the home page (v2, from the "Hikmah Online homepage v2" design canvas), used by
+ * the front page layout and the admin preview at /theme/hikmah/home2.php.
  *
  * @package    theme_hikmah
  * @copyright  2026 Hikmah Institute
@@ -42,6 +42,9 @@ class home2 {
         'jawwad' => ['jawwad-mehmood.webp', 2, false, 12],
         'faaiz' => ['faaiz-hassan.jpg', 1, false, 36],
     ];
+
+    /** @var string WhatsApp chat link for Hikmah Online (+92 331 2755374). */
+    private const WHATSAPP = 'https://wa.me/923312755374';
 
     /** @var array Line icons as SVG path data on a 24px grid. */
     private const ICONS = [
@@ -79,6 +82,9 @@ class home2 {
         $data['logo'] = $OUTPUT->image_url('logo-light', 'theme_hikmah')->out(false);
         $data['sitename'] = format_string($SITE->fullname, true, ['context' => \context_system::instance()]);
         $data['khizerphoto'] = self::photo_url('khizer');
+        // Until the guide video is ready, its card leads back to the home page.
+        $data['homeurl'] = (new moodle_url('/', ['redirect' => 0]))->out(false);
+        $data['whatsappurl'] = self::WHATSAPP;
 
         $data['promises'] = self::with_icons(self::numbered('promise', 4), ['book', 'bulb', 'globe', 'award']);
         $data['sessions'] = self::numbered('session', 3);
