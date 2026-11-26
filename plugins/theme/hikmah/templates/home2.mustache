@@ -22,6 +22,8 @@
     Example context (json):
     {
         "pix": "/theme/hikmah/pix/home2/",
+        "logo": "/theme/hikmah/pix/logo-light.png",
+        "sitename": "Hikmah Online",
         "catalogurl": "#",
         "primaryurl": "#",
         "faqurl": "#",
@@ -142,7 +144,7 @@
                 <h2 class="hk2-title">{{#str}}home2_courses_title, theme_hikmah{{/str}}</h2>
                 <p class="hk2-lead">{{#str}}home2_courses_lead, theme_hikmah{{/str}}</p>
             </header>
-            <div class="hk2-courses" data-hk2-track="courses" data-hk2-every="3500">
+            <div class="hk2-courses" data-hk2-track="courses" data-hk2-every="2800">
                 {{#courses}}{{> theme_hikmah/course_card }}{{/courses}}
             </div>
             <div class="hk2-center">
@@ -165,7 +167,7 @@
                     <button type="button" class="hk2-nav__btn" data-hk2-next="topics" aria-label="{{#str}}home2_topics_next, theme_hikmah{{/str}}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
                 </div>
             </header>
-            <div class="hk2-topics" data-hk-stagger data-hk2-track="topics" data-hk2-every="4000" role="region" aria-label="{{#str}}home2_topics_label, theme_hikmah{{/str}}">
+            <div class="hk2-topics" data-hk-stagger data-hk2-track="topics" data-hk2-every="2500" role="region" aria-label="{{#str}}home2_topics_label, theme_hikmah{{/str}}">
                 {{#topics}}
                     <article class="hk2-topic">
                         <div class="hk2-topic__tags"><span>{{tag1}}</span><span>{{tag2}}</span></div>
@@ -205,7 +207,7 @@
                 <h2 class="hk2-title">{{#str}}home2_teachers_title, theme_hikmah{{/str}}</h2>
                 <p class="hk2-lead">{{#str}}home2_teachers_lead, theme_hikmah{{/str}}</p>
             </header>
-            <div class="hk2-team" data-hk-reveal data-hk2-track="teachers" data-hk2-every="3000">
+            <div class="hk2-team" data-hk-reveal data-hk2-track="teachers" data-hk2-every="2500">
                 {{#teachers}}
                     <article class="hk2-person{{#big}} hk2-person--big{{/big}}" style="--hk2-lift: {{lift}}px">
                         <div class="hk2-person__photo">
@@ -304,7 +306,7 @@
     <footer class="hk2-footer">
         <div class="hk2-wrap">
             <div class="hk2-footer__grid">
-                <div class="hk2-footer__brand"><p>{{#str}}home2_footer_mission, theme_hikmah{{/str}}</p></div>
+                <div class="hk2-footer__brand"><img class="hk2-footer__logo" src="{{logo}}" alt="{{sitename}}" decoding="async"><p>{{#str}}home2_footer_mission, theme_hikmah{{/str}}</p></div>
                 <nav aria-label="{{#str}}footer_learn, theme_hikmah{{/str}}">
                     <h2>{{#str}}footer_learn, theme_hikmah{{/str}}</h2>
                     <a href="{{catalogurl}}">{{#str}}home2_link_allcourses, theme_hikmah{{/str}}</a>

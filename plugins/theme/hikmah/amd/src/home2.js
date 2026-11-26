@@ -26,6 +26,37 @@
 const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /**
+ * Ease a row to a scroll position. Scroll snapping is paused while it moves, so the glide is one
+ * continuous motion instead of the browser's stop-start smooth scroll.
+ *
+ * @param {HTMLElement} track
+ * @param {number} target scrollLeft to end at
+ */
+const glide = (track, target) => {
+    if (reduced()) {
+        track.scrollLeft = target;
+        return;
+    }
+    window.cancelAnimationFrame(track.hk2Frame);
+    const from = track.scrollLeft;
+    const distance = target - from;
+    const duration = Math.min(1100, 650 + Math.abs(distance) / 4);
+    const started = performance.now();
+    const ease = (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+    track.style.scrollSnapType = 'none';
+    const tick = (now) => {
+        const progress = Math.min(1, (now - started) / duration);
+        track.scrollLeft = from + distance * ease(progress);
+        if (progress < 1) {
+            track.hk2Frame = window.requestAnimationFrame(tick);
+        } else {
+            track.style.scrollSnapType = '';
+        }
+    };
+    track.hk2Frame = window.requestAnimationFrame(tick);
+};
+
+/**
  * Scroll a row by one item, wrapping round at either end.
  *
  * @param {HTMLElement} track
@@ -39,14 +70,16 @@ const step = (track, direction) => {
     const first = track.firstElementChild;
     const gap = parseFloat(window.getComputedStyle(track).columnGap) || 0;
     const width = first ? first.getBoundingClientRect().width + gap : track.clientWidth;
-    const behavior = reduced() ? 'auto' : 'smooth';
+    let target;
     if (direction > 0 && track.scrollLeft >= max - 4) {
-        track.scrollTo({left: 0, behavior});
+        target = 0;
     } else if (direction < 0 && track.scrollLeft <= 4) {
-        track.scrollTo({left: max, behavior});
+        target = max;
     } else {
-        track.scrollBy({left: direction * width, behavior});
+        // Land exactly on a card edge, never half way through one.
+        target = Math.min(max, Math.max(0, (Math.round(track.scrollLeft / width) + direction) * width));
     }
+    glide(track, target);
 };
 
 /**

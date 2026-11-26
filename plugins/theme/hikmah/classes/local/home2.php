@@ -67,6 +67,7 @@ class home2 {
      * @return array
      */
     public static function export(): array {
+        global $OUTPUT, $SITE;
         $data = home::export();
         $catalog = $data['catalogurl'];
         $pix = (new moodle_url('/theme/hikmah/pix/home2/'))->out(false);
@@ -75,6 +76,8 @@ class home2 {
         $data['primaryurl'] = $data['cansignup'] ? $data['signupurl'] : $catalog;
         $data['policiesurl'] = (new moodle_url('/admin/tool/policy/viewall.php'))->out(false);
         $data['year'] = userdate(time(), '%Y');
+        $data['logo'] = $OUTPUT->image_url('logo-light', 'theme_hikmah')->out(false);
+        $data['sitename'] = format_string($SITE->fullname, true, ['context' => \context_system::instance()]);
         $data['khizerphoto'] = self::photo_url('khizer');
 
         $data['promises'] = self::with_icons(self::numbered('promise', 4), ['book', 'bulb', 'globe', 'award']);
