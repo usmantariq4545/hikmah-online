@@ -1,0 +1,214 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_hikmah/home1
+
+    The previous home page, kept as an admin-only draft at /theme/hikmah/home1.php after the v2
+    design became the public home page. Context comes from \theme_hikmah\local\home::export().
+
+    Example context (json):
+    {
+        "catalogurl": "#",
+        "verifyurl": "#",
+        "stats": [{"value": 12, "label": "Courses"}],
+        "courses": [],
+        "faqs": [{"question": "How do I enrol?", "answer": "Choose a course."}]
+    }
+}}
+
+    <section class="hk-hero">
+        <div class="hk-container hk-hero__grid">
+            <div class="hk-hero__copy">
+                <span class="hk-eyebrow hk-eyebrow--light hk-hero__eyebrow">{{#str}}hero_eyebrow, theme_hikmah{{/str}}</span>
+                <h1 class="hk-hero__title">
+                    <span class="hk-hero__line"><span>{{#str}}hero_line1, theme_hikmah{{/str}}</span></span>
+                    <span class="hk-hero__line"><span>{{#str}}hero_line2, theme_hikmah{{/str}} <span class="hk-mark">{{#str}}hero_mark, theme_hikmah{{/str}}</span></span></span>
+                </h1>
+                <p class="hk-hero__lead">{{#str}}hero_lead, theme_hikmah{{/str}}</p>
+                <div class="hk-hero__actions">
+                    <a class="hk-btn hk-btn--sun" href="{{catalogurl}}">
+                        {{#str}}hero_cta_courses, theme_hikmah{{/str}} <span class="hk-btn__arrow" aria-hidden="true">→</span>
+                    </a>
+                    {{#loggedin}}
+                        <a class="hk-btn hk-btn--ghost-light" href="{{dashboardurl}}">{{#str}}hero_cta_dashboard, theme_hikmah{{/str}}</a>
+                    {{/loggedin}}
+                    {{^loggedin}}
+                        <a class="hk-btn hk-btn--ghost-light" href="{{verifyurl}}">{{#str}}hero_cta_verify, theme_hikmah{{/str}}</a>
+                    {{/loggedin}}
+                </div>
+            </div>
+            <div class="hk-hero__art" aria-hidden="true">
+                {{#heromotif}}{{> theme_hikmah/motif }}{{/heromotif}}
+                <div class="hk-hero__word" lang="ar">حكمة</div>
+            </div>
+        </div>
+        <svg class="hk-hero__curve" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true"><path d="M0 90h1440V38C1180 4 880 0 720 0S260 4 0 38z"/></svg>
+    </section>
+
+    <section class="hk-stats" aria-label="{{#str}}stats_label, theme_hikmah{{/str}}">
+        <div class="hk-container">
+            <dl class="hk-stats__grid" data-hk-reveal="scale">
+                {{#stats}}
+                    <div class="hk-stats__item">
+                        <dt class="hk-stats__label fw-normal">{{label}}</dt>
+                        <dd class="hk-stats__num m-0" data-hk-count="{{value}}">{{value}}</dd>
+                    </div>
+                {{/stats}}
+            </dl>
+        </div>
+    </section>
+
+    <section class="hk-section">
+        <div class="hk-container">
+            <header class="hk-section__head" data-hk-reveal>
+                <span class="hk-eyebrow">{{#str}}modes_eyebrow, theme_hikmah{{/str}}</span>
+                <h2 class="hk-section__title">{{#str}}modes_title, theme_hikmah{{/str}}</h2>
+                <p class="hk-section__lead">{{#str}}modes_lead, theme_hikmah{{/str}}</p>
+            </header>
+            <div class="hk-modes" data-hk-stagger>
+                <a class="hk-mode" href="{{liveurl}}">
+                    <div class="hk-mode__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="12" height="12" rx="3"/><path d="m15 10 6-3v10l-6-3"/></svg>
+                    </div>
+                    <h3 class="hk-mode__title">{{#str}}mode_live, theme_hikmah{{/str}}</h3>
+                    <p class="hk-mode__text">{{#str}}mode_live_text, theme_hikmah{{/str}}</p>
+                    <span class="hk-mode__more">{{#str}}mode_browse, theme_hikmah{{/str}} <span aria-hidden="true">→</span></span>
+                </a>
+                <a class="hk-mode" href="{{selfpacedurl}}">
+                    <div class="hk-mode__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                    </div>
+                    <h3 class="hk-mode__title">{{#str}}mode_selfpaced, theme_hikmah{{/str}}</h3>
+                    <p class="hk-mode__text">{{#str}}mode_selfpaced_text, theme_hikmah{{/str}}</p>
+                    <span class="hk-mode__more">{{#str}}mode_browse, theme_hikmah{{/str}} <span aria-hidden="true">→</span></span>
+                </a>
+                <a class="hk-mode" href="{{hybridurl}}">
+                    <div class="hk-mode__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5 9-5z"/><path d="m3 13 9 5 9-5"/></svg>
+                    </div>
+                    <h3 class="hk-mode__title">{{#str}}mode_hybrid, theme_hikmah{{/str}}</h3>
+                    <p class="hk-mode__text">{{#str}}mode_hybrid_text, theme_hikmah{{/str}}</p>
+                    <span class="hk-mode__more">{{#str}}mode_browse, theme_hikmah{{/str}} <span aria-hidden="true">→</span></span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    {{#hascourses}}
+    <section class="hk-section hk-section--tint">
+        <div class="hk-container">
+            <header class="hk-section__head" data-hk-reveal>
+                <span class="hk-eyebrow">{{#str}}featured_eyebrow, theme_hikmah{{/str}}</span>
+                <h2 class="hk-section__title">{{#str}}featured_title, theme_hikmah{{/str}}</h2>
+                <p class="hk-section__lead">{{#str}}featured_lead, theme_hikmah{{/str}}</p>
+            </header>
+            <div class="hk-courses" data-hk-stagger>
+                {{#courses}}{{> theme_hikmah/course_card }}{{/courses}}
+            </div>
+            <div class="text-center mt-5" data-hk-reveal>
+                <a class="hk-btn" href="{{catalogurl}}">
+                    {{#str}}featured_all, theme_hikmah, {{coursecount}}{{/str}} <span class="hk-btn__arrow" aria-hidden="true">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+    {{/hascourses}}
+
+    <section class="hk-section">
+        <div class="hk-container">
+            <header class="hk-section__head hk-section__head--center" data-hk-reveal>
+                <span class="hk-eyebrow hk-eyebrow--plain">{{#str}}journey_eyebrow, theme_hikmah{{/str}}</span>
+                <h2 class="hk-section__title">{{#str}}journey_title, theme_hikmah{{/str}}</h2>
+                <p class="hk-section__lead">{{#str}}journey_lead, theme_hikmah{{/str}}</p>
+            </header>
+            <ol class="hk-journey list-unstyled m-0 p-0" data-hk-stagger>
+                <li class="hk-journey__step"><h3>{{#str}}journey_1, theme_hikmah{{/str}}</h3><p>{{#str}}journey_1_text, theme_hikmah{{/str}}</p></li>
+                <li class="hk-journey__step"><h3>{{#str}}journey_2, theme_hikmah{{/str}}</h3><p>{{#str}}journey_2_text, theme_hikmah{{/str}}</p></li>
+                <li class="hk-journey__step"><h3>{{#str}}journey_3, theme_hikmah{{/str}}</h3><p>{{#str}}journey_3_text, theme_hikmah{{/str}}</p></li>
+                <li class="hk-journey__step"><h3>{{#str}}journey_4, theme_hikmah{{/str}}</h3><p>{{#str}}journey_4_text, theme_hikmah{{/str}}</p></li>
+                <li class="hk-journey__step"><h3>{{#str}}journey_5, theme_hikmah{{/str}}</h3><p>{{#str}}journey_5_text, theme_hikmah{{/str}}</p></li>
+            </ol>
+        </div>
+    </section>
+
+    <section class="hk-section hk-section--ink hk-quote">
+        {{#quotemotif}}{{> theme_hikmah/motif }}{{/quotemotif}}
+        <div class="hk-container">
+            <figure class="hk-quote__inner m-0" data-hk-reveal>
+                <blockquote class="m-0">
+                    <p class="hk-quote__arabic" lang="ar" dir="rtl">{{#str}}quote_arabic, theme_hikmah{{/str}}</p>
+                    <p class="hk-quote__text">{{#str}}quote_text, theme_hikmah{{/str}}</p>
+                </blockquote>
+                <figcaption class="hk-quote__source">{{#str}}quote_source, theme_hikmah{{/str}}</figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <section class="hk-section">
+        <div class="hk-container">
+            <div class="hk-verify" data-hk-reveal>
+                <div>
+                    <span class="hk-eyebrow">{{#str}}verify_eyebrow, theme_hikmah{{/str}}</span>
+                    <h2 class="hk-section__title">{{#str}}verify_title, theme_hikmah{{/str}}</h2>
+                    <p class="hk-section__lead">{{#str}}verify_lead, theme_hikmah{{/str}}</p>
+                </div>
+                <div>
+                    <form class="hk-verify__form" action="{{verifyurl}}" method="get" role="search">
+                        <label class="visually-hidden" for="hk-verify-code">{{#str}}verify_label, theme_hikmah{{/str}}</label>
+                        <input id="hk-verify-code" type="text" name="code" placeholder="{{#str}}verify_placeholder, theme_hikmah{{/str}}" autocomplete="off" spellcheck="false" maxlength="40" required>
+                        <button class="hk-btn" type="submit">{{#str}}verify_button, theme_hikmah{{/str}}</button>
+                    </form>
+                    <p class="hk-verify__hint">{{#str}}verify_hint, theme_hikmah{{/str}}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="hk-section hk-section--tint">
+        <div class="hk-container">
+            <header class="hk-section__head hk-section__head--center" data-hk-reveal>
+                <span class="hk-eyebrow hk-eyebrow--plain">{{#str}}faq_eyebrow, theme_hikmah{{/str}}</span>
+                <h2 class="hk-section__title">{{#str}}faq_title, theme_hikmah{{/str}}</h2>
+            </header>
+            <div class="hk-faq" data-hk-reveal>
+                {{#faqs}}
+                    <details class="hk-faq__item" data-hk-acc>
+                        <summary>{{question}}<span class="hk-faq__icon" aria-hidden="true"></span></summary>
+                        <div class="hk-faq__answer" data-hk-acc-body><div><p>{{answer}}</p></div></div>
+                    </details>
+                {{/faqs}}
+            </div>
+            <div class="text-center mt-4" data-hk-reveal>
+                <a class="hk-btn hk-btn--ghost" href="{{faqurl}}">{{#str}}faq_all, theme_hikmah{{/str}}</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="hk-section">
+        <div class="hk-container">
+            <div class="hk-cta" data-hk-reveal="scale">
+                <h2 class="hk-cta__title">{{#str}}cta_title, theme_hikmah{{/str}}</h2>
+                {{#cansignup}}
+                    <a class="hk-btn" href="{{signupurl}}">{{#str}}cta_button, theme_hikmah{{/str}} <span class="hk-btn__arrow" aria-hidden="true">→</span></a>
+                {{/cansignup}}
+                {{^cansignup}}
+                    <a class="hk-btn" href="{{catalogurl}}">{{#str}}hero_cta_courses, theme_hikmah{{/str}} <span class="hk-btn__arrow" aria-hidden="true">→</span></a>
+                {{/cansignup}}
+            </div>
+        </div>
+    </section>
+

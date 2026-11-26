@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-26 — Previous home page kept as an admin draft
+
+- The home page that v2 replaced is kept at /theme/hikmah/home1.php for site administrators only (templates/home1.mustache,
+  the same markup, with home::export()). Theme version 2026112602.
+
 ## 2026-11-26 — Home page v2 is now the public home page
 
 - The front page (/) shows the v2 design for everyone; the old home markup is removed from layout_frontpage.mustache.
