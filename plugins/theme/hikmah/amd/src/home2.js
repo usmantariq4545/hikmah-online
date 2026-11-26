@@ -26,6 +26,37 @@
 const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /**
+ * Ease a row to a scroll position. Scroll snapping is paused while it moves, so the glide is one
+ * continuous motion instead of the browser's stop-start smooth scroll.
+ *
+ * @param {HTMLElement} track
+ * @param {number} target scrollLeft to end at
+ */
+const glide = (track, target) => {
+    if (reduced()) {
+        track.scrollLeft = target;
+        return;
+    }
+    window.cancelAnimationFrame(track.hk2Frame);
+    const from = track.scrollLeft;
+    const distance = target - from;
+    const duration = Math.min(1100, 650 + Math.abs(distance) / 4);
+    const started = performance.now();
+    const ease = (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+    track.style.scrollSnapType = 'none';
+    const tick = (now) => {
+        const progress = Math.min(1, (now - started) / duration);
+        track.scrollLeft = from + distance * ease(progress);
+        if (progress < 1) {
+            track.hk2Frame = window.requestAnimationFrame(tick);
+        } else {
+            track.style.scrollSnapType = '';
+        }
+    };
+    track.hk2Frame = window.requestAnimationFrame(tick);
+};
+
+/**
  * Scroll a row by one item, wrapping round at either end.
  *
  * @param {HTMLElement} track
@@ -39,14 +70,16 @@ const step = (track, direction) => {
     const first = track.firstElementChild;
     const gap = parseFloat(window.getComputedStyle(track).columnGap) || 0;
     const width = first ? first.getBoundingClientRect().width + gap : track.clientWidth;
-    const behavior = reduced() ? 'auto' : 'smooth';
+    let target;
     if (direction > 0 && track.scrollLeft >= max - 4) {
-        track.scrollTo({left: 0, behavior});
+        target = 0;
     } else if (direction < 0 && track.scrollLeft <= 4) {
-        track.scrollTo({left: max, behavior});
+        target = max;
     } else {
-        track.scrollBy({left: direction * width, behavior});
+        // Land exactly on a card edge, never half way through one.
+        target = Math.min(max, Math.max(0, (Math.round(track.scrollLeft / width) + direction) * width));
     }
+    glide(track, target);
 };
 
 /**
@@ -85,6 +118,36 @@ const setupTrack = (track, root) => {
 };
 
 /**
+ * The hero rosette leans gently toward the pointer, as on the home page.
+ *
+ * @param {ParentNode} root
+ */
+const setupHero = (root) => {
+    const hero = root.querySelector('.hk2-hero');
+    const art = hero ? hero.querySelector('.hk2-hero__art') : null;
+    if (!art || reduced() || !window.matchMedia('(pointer: fine)').matches) {
+        return;
+    }
+    let frame = null;
+    art.style.transition = 'transform .6s cubic-bezier(.16, 1, .3, 1)';
+    hero.addEventListener('pointermove', (e) => {
+        if (frame) {
+            return;
+        }
+        frame = window.requestAnimationFrame(() => {
+            const rect = hero.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+            art.style.transform = `translate3d(${(x * 18).toFixed(1)}px, ${(y * 14).toFixed(1)}px, 0)`;
+            frame = null;
+        });
+    });
+    hero.addEventListener('pointerleave', () => {
+        art.style.transform = '';
+    });
+};
+
+/**
  * Initialise every scrolling row on the page.
  */
 export const init = () => {
@@ -93,4 +156,5 @@ export const init = () => {
         return;
     }
     root.querySelectorAll('[data-hk2-track]').forEach((track) => setupTrack(track, root));
+    setupHero(root);
 };

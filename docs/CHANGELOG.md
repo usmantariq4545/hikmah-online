@@ -1,6 +1,21 @@
 # Changelog
 
 
+## 2026-11-26 — Home page v2: motion and hero light, matching the current home page
+
+- The hero gets the same soft blue and yellow light behind the rosette; the eyebrow, title, text and buttons rise in
+  turn; the rosette is now inline so its tiles assemble one by one and the ring turns slowly, leaning toward the pointer
+  like the home page hero; "حكمة" pops in. New template home2_rosette.mustache.
+- Section headings, promises, spotlight, enroll card, topics, steps, teachers row, ways, video, FAQs, verse and closing
+  banner reveal on scroll through the existing motion module (off under reduced motion).
+- Featured course card: lit cover, and on hover it lifts, the cover grows and the rosette turns, like the course cards. Class
+  times table has no box or column lines, only soft lines between rows.
+- Topic, course and teacher rows glide in one smooth eased motion and land on a card edge; they move every 2.5s
+  (courses 2.8s) instead of 3–4s.
+- Footer: Hikmah Online logo and the paper rosette in the top corner, as in the site footer.
+- Verse band: Arabic in white Noto Naskh with the home page sizes; Moodle's grey blockquote colour and left bar removed.
+- Theme version 2026112600.
+
 ## 2026-11-25 — Home page v2 draft rebuilt from the design canvas (admins only)
 
 - /theme/hikmah/home2.php now follows the "Hikmah Online homepage v2" Claude Design canvas: announcement bar, hero with the

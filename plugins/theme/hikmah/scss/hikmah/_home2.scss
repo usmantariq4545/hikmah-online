@@ -305,6 +305,26 @@ body.hk-home2 #page-footer .hk-footer__main {
     background: $hk-ink;
     color: #fff;
     padding: 104px 0 150px;
+    isolation: isolate;
+    &::before {
+        // Soft light pooled behind the rosette, as on the current home page.
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(60rem 36rem at 82% 40%, rgba(21, 151, 213, .2), transparent 62%),
+            radial-gradient(40rem 26rem at 88% 58%, rgba(255, 224, 0, .1), transparent 60%);
+        z-index: -1;
+    }
+    // Entrance: copy rises in turn, the rosette blooms and then turns slowly.
+    &__eyebrow {
+        // stylelint-disable-next-line no-unknown-animations
+        animation: hk-fade 1s ease .1s both;
+    }
+    .hk2-actions {
+        // stylelint-disable-next-line no-unknown-animations
+        animation: hk-rise .9s $hk-ease-out .6s both;
+    }
     &__grid {
         display: grid;
         grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
@@ -319,6 +339,8 @@ body.hk-home2 #page-footer .hk-footer__main {
         letter-spacing: -.02em;
         margin: 24px 0;
         color: #fff;
+        // stylelint-disable-next-line no-unknown-animations
+        animation: hk-rise 1s $hk-ease-out .2s both;
     }
     &__lead {
         font-size: 19px;
@@ -326,6 +348,8 @@ body.hk-home2 #page-footer .hk-footer__main {
         color: rgba(255, 255, 255, .78);
         max-width: 30rem;
         margin: 0 0 32px;
+        // stylelint-disable-next-line no-unknown-animations
+        animation: hk-rise .9s $hk-ease-out .45s both;
     }
     &__art {
         position: relative;
@@ -333,7 +357,8 @@ body.hk-home2 #page-footer .hk-footer__main {
         max-width: 480px;
         width: 100%;
         justify-self: end;
-        img {
+        // Inline rosette: .hk-motif--animate assembles the tiles one by one, then turns the ring, as on the home page.
+        .hk2-rosette {
             position: absolute;
             inset: 0;
             width: 100%;
@@ -347,6 +372,8 @@ body.hk-home2 #page-footer .hk-footer__main {
             font-family: $hk-font-brand-arabic;
             font-size: 52px;
             font-weight: 700;
+            // stylelint-disable-next-line no-unknown-animations
+            animation: hk-pop 1s $hk-ease-out 1.1s both;
         }
     }
     &__curve {
@@ -469,13 +496,18 @@ body.hk-home2 #page-footer .hk-footer__main {
     &__media {
         position: relative;
         aspect-ratio: 16 / 9;
-        background: $hk-ink;
+        // Same lit ink cover as the course cards.
+        background:
+            radial-gradient(120% 120% at 85% 10%, rgba(21, 151, 213, .34), transparent 55%),
+            $hk-ink;
         overflow: hidden;
+        transition: transform .9s $hk-ease-out;
         img {
             position: absolute;
             width: 120%;
             right: -35%;
             top: -30%;
+            transition: transform 1.4s $hk-ease-out;
         }
         span {
             position: absolute;
@@ -487,6 +519,16 @@ body.hk-home2 #page-footer .hk-footer__main {
             font-weight: 600;
             letter-spacing: .3em;
             text-transform: uppercase;
+        }
+    }
+    // Hover, as on the course cards: the card lifts, the cover grows and the rosette turns.
+    &:hover,
+    &:focus-within {
+        .hk2-enroll__media {
+            transform: scale(1.06);
+        }
+        .hk2-enroll__media img {
+            transform: rotate(24deg);
         }
     }
     &__body {
@@ -521,14 +563,23 @@ body.hk-home2 #page-footer .hk-footer__main {
             color: $hk-ink;
             padding: 0 0 8px;
         }
+        // No box or column lines (Moodle's table styles add them); just a soft line between rows.
+        th,
+        td {
+            border: 0;
+            background: none;
+            padding: 9px 0;
+        }
         tr {
+            border: 0;
+        }
+        tr + tr {
             border-top: 1px solid $hk-line;
         }
         th {
             text-align: left;
             font-weight: 400;
             color: $hk-muted;
-            padding: 9px 0;
         }
         td {
             text-align: right;
@@ -1065,23 +1116,31 @@ body.hk-home2 #page-footer .hk-footer__main {
         max-width: 52rem;
     }
     blockquote {
+        // Moodle greys blockquotes and gives them a left bar; the verse is plain white, as on the home page.
         margin: 0 0 16px;
+        padding: 0;
+        border: 0;
+        color: #fff;
     }
     &__arabic {
         font-family: $hk-font-arabic-body;
         // stylelint-disable-next-line csstree/validator
-        font-size: clamp(30px, 5vw, 44px);
+        font-size: clamp(1.7rem, 4vw, 2.8rem);
         line-height: 1.9;
-        margin: 0 0 16px;
+        color: #fff;
+        margin: 0 0 1.2rem;
     }
     &__text {
         margin: 0;
         font-family: $hk-font-display;
-        font-size: 24px;
+        // stylelint-disable-next-line csstree/validator
+        font-size: clamp(1.15rem, 2vw, 1.5rem);
         font-weight: 300;
-        color: rgba(255, 255, 255, .88);
+        line-height: 1.5;
+        color: rgba(255, 255, 255, .86);
     }
     figcaption {
+        font-family: $hk-font-body;
         font-size: 12px;
         letter-spacing: .3em;
         text-transform: uppercase;
@@ -1126,10 +1185,31 @@ body.hk-home2 #page-footer .hk-footer__main {
 
 // Footer.
 .hk2-footer {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
     background: $hk-ink;
     color: rgba(255, 255, 255, .75);
     padding: 72px 0 32px;
     font-size: 15px;
+    &::before {
+        // The paper rosette in the top corner, as in the site footer.
+        content: "";
+        position: absolute;
+        width: 520px;
+        height: 520px;
+        right: -180px;
+        top: -260px;
+        background: url([[pix:theme|motif-paper]]) center / contain no-repeat;
+        pointer-events: none;
+        z-index: -1;
+    }
+    &__logo {
+        display: block;
+        height: 84px;
+        width: auto;
+        margin-bottom: 18px;
+    }
     a {
         color: #fff;
         text-decoration: none;
@@ -1466,4 +1546,10 @@ body.hk-home2 #page-footer .hk-footer__main {
     .hk2-video__play {
         transition: none;
     }
+}
+
+// The enroll card lifts on hover. Written against the scroll-reveal rule, which otherwise holds its transform at none.
+.hk-js .hk2 .hk2-enroll.is-in:hover,
+.hk-js .hk2 .hk2-enroll.is-in:focus-within {
+    transform: translateY(-6px);
 }
