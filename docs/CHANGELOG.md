@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-26 — Cloudflare ECH turned off
+
+- The owner's laptop and phone got ERR_CONNECTION_RESET on hikmahonline.com while curl and the in-app browser worked:
+  their provider resets Cloudflare's Encrypted Client Hello (outer name cloudflare-ech.com), which browsers use when
+  secure DNS or Private DNS is on. ECH turned off for the zone through the API (Free plans have no switch); the HTTPS
+  DNS record no longer carries `ech=`, and both devices load the site. Runbook: contabo.md section 11, step 2.
+
 ## 2026-11-26 — Home page v2 draft: latest canvas changes
 
 - Announcement bar stays on one line (the course name shortens on phones).
