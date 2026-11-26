@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-11-26 — Home page v2 is now the public home page
+
+- The front page (/) shows the v2 design for everyone; the old home markup is removed from layout_frontpage.mustache.
+  /theme/hikmah/home2.php stays as an admin preview.
+- Teacher photos are served publicly by home2_photo.php (still kept in moodledata, not in the repository).
+- Links: WhatsApp +92 331 2755374 (FAQ line, footer Contact us and Connect), Instagram and Facebook
+  (online.hikmah). YouTube and the mobile app link removed. The guide video card leads to the home page until the
+  video is ready. About us, Become a teacher, Support our work and the newsletter box stay as placeholders.
+- Theme version 2026112601.
 
 ## 2026-11-26 — Home page v2: motion and hero light, matching the current home page
 
