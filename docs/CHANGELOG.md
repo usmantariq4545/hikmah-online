@@ -1,6 +1,18 @@
 # Changelog
 
 
+## 2026-11-25 — Home page v2 draft rebuilt from the design canvas (admins only)
+
+- /theme/hikmah/home2.php now follows the "Hikmah Online homepage v2" Claude Design canvas: announcement bar, hero with the
+  logo rosette, promises strip, featured course (fixed copy), live course grid, topic carousel with photos and arrows,
+  how it works, teachers with photos, ways to learn, "where to start" guide video, five platform FAQs, verse band,
+  closing banner and its own footer with newsletter box (not connected). Still needs moodle/site:config.
+- Responsive for widescreen, desktop, tablet and phone (portrait and landscape): fewer courses and a swiping course
+  row on phones, compact topic cards, two teachers at a time, promises hidden on phones, notch-safe side margins.
+- New: templates/home2_arrow.mustache, amd/src/home2.js (row scrolling; pauses on hover/touch, off for reduced
+  motion), pix/home2/ (rosette traced from the logo, topic photos from Unsplash, teacher photos served from moodledata/hikmah-media/teachers by the admin-only home2_photo.php, kept out of the
+  public repo). Rewritten home2 strings. Theme version 2026112501.
+
 ## 2026-11-25 — Branded email templates
 
 - New email layout (theme_hikmah templates/core/email_html.mustache): ink header with logo, white card, yellow pill
