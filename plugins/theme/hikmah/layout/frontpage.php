@@ -24,8 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$templatecontext = \theme_hikmah\local\layout::base_context($PAGE, $OUTPUT, ['hk-home', 'hk-home2']);
-$templatecontext['home2'] = \theme_hikmah\local\home2::export();
+$templatecontext = \theme_hikmah\local\layout::base_context($PAGE, $OUTPUT, ['hk-home']);
+$templatecontext['home'] = \theme_hikmah\local\home::export();
 $templatecontext['editing'] = $PAGE->user_is_editing();
 
 echo $OUTPUT->render_from_template('theme_hikmah/layout_frontpage', $templatecontext);

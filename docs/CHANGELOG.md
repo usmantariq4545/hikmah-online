@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-26 — Rolled back: the previous home page is the public home page again
+
+- Undoes "Home page v2 is now the public home page" (PR #26) at the owner's request, without restoring the database:
+  / shows the previous home page again, v2 is back to the admin-only draft at /theme/hikmah/home2.php, teacher photos
+  are admin-only again, and v2's links are back to their earlier placeholders. Theme version 2026112603 (newer, so
+  no downgrade).
+
 ## 2026-11-26 — Home page v2 is now the public home page
 
 - The front page (/) shows the v2 design for everyone; the old home markup is removed from layout_frontpage.mustache.
