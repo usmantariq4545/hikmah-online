@@ -255,6 +255,7 @@ off-site copies too once `BACKUP_REMOTE` is set).
 | Site slow | `docker stats --no-stream`; memory near the limit means a bigger plan |
 | Restore from backup | `docs/runbooks/backup-restore.md` |
 | Cloudflare error 525/526 | Caddy has no valid certificate for that name: `scripts/dc.sh logs caddy`; a name that is not in `SITE_HOST` (e.g. `www`) must be redirected by a Cloudflare rule |
+| ERR_CONNECTION_RESET in some browsers only (curl works) | The provider blocks Cloudflare's ECH; check ECH is still off (section 11, step 2) |
 | Some visitors still see an old site after a DNS change | Their provider's DNS still caches the old records (up to ~2 days for a nameserver change); `nslookup <host> 1.1.1.1` shows what the world sees |
 
 ## 11. Moving to another domain (done 2026-11-25: online.hikmahinstitute.org.pk → hikmahonline.com)
@@ -269,6 +270,12 @@ How the move was done, with no gap for visitors on the old address. About an hou
 2. SSL/TLS → **Full (strict)**; Edge Certificates → **Always Use HTTPS** on; Speed → Protocol Optimization →
    **HTTP/3 (with QUIC) off** (some networks break QUIC: ERR_QUIC_PROTOCOL_ERROR between pages). Rocket Loader off (breaks Moodle's
    scripts); Bot Fight Mode off (can block the uptime monitor).
+   **Encrypted Client Hello (ECH) off**: some Pakistani providers reset ECH connections, so browsers that use it
+   (secure DNS / Private DNS on) get ERR_CONNECTION_RESET while everything else works. Free plans have no switch for it;
+   turn it off through the API: a token limited to the zone with *Zone Settings: Edit* and *Zone: Read*, then
+   `PATCH /client/v4/zones/<zone id>/settings/ech` with `{"value":"off"}` (done 2026-11-26; delete the token after).
+   Check: `https://cloudflare-dns.com/dns-query?name=<domain>&type=HTTPS` (header `accept: application/dns-json`)
+   shows no `ech=`.
 3. Rules → Redirect Rules → template **"Redirect from WWW to root"** (301, keeps path and query). Caddy has no
    certificate for `www`, so without this rule `www` gives error 525.
 4. Caching → Cache Rules → `Moodle static`: expression
