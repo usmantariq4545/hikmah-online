@@ -31,16 +31,17 @@ class home2 {
     private const TOPICS = ['seerah', 'faith', 'sharia', 'self', 'politics', 'psychology', 'history', 'science', 'family'];
 
     /**
-     * @var array Teachers in display order: key => [photo file or '' for the outline, credential lines, big card, lift px].
-     * The two co-founders sit in the middle of the arc.
+     * @var array Teachers in reading order (phones show them in this order): key => [photo file or '' for the outline,
+     * credential lines, big card, lift px]. On wider screens the SCSS reorders the arc so the two co-founders sit in
+     * the middle: Faheem, Faaiz, Khizer, Shahzaib, Jawwad, Maaz.
      */
     private const TEACHERS = [
-        'maaz' => ['', 1, false, 36],
-        'faheem' => ['faheem-vohra.webp', 1, false, 12],
-        'shahzaib' => ['shahzaib-aijaz.webp', 2, true, 0],
         'khizer' => ['khizer-khalid.webp', 2, true, 0],
+        'faaiz' => ['faaiz-hassan.jpg', 1, false, 12],
+        'shahzaib' => ['shahzaib-aijaz.webp', 2, true, 0],
         'jawwad' => ['jawwad-mehmood.webp', 2, false, 12],
-        'faaiz' => ['faaiz-hassan.jpg', 1, false, 36],
+        'faheem' => ['faheem-vohra.webp', 1, false, 36],
+        'maaz' => ['', 1, false, 36],
     ];
 
     /** @var array Line icons as SVG path data on a 24px grid. */

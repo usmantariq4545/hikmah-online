@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-11-26 — Home page v2 draft: latest canvas changes
+
+- Announcement bar stays on one line (the course name shortens on phones).
+- Hero: no curve at the bottom; the eyebrow stays on one line on phones; on tablet portrait and phones the rosette sits
+  behind the text, half off the right edge, without the Arabic word (like the current home page).
+- Featured course: yellow "New course" chip with a blue dot, "Foundations of Fiqh" above a larger title with
+  "Islamic Ruling" highlighted (new string home2_spot_title_mark).
+- Topic carousel: the arrow buttons move from beside the heading to quiet frosted circles on the carousel's edges.
+- Teachers: Khizer Khalid, Faaiz Hassan, Shahzaib Aijaz, Jawwad Mehmood, then the others; on wider screens Khizer and
+  Shahzaib are the two large cards in the middle. Theme version 2026112604.
+
 ## 2026-11-26 — Rolled back: the previous home page is the public home page again
 
 - Undoes "Home page v2 is now the public home page" (PR #26) at the owner's request, without restoring the database:
