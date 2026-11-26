@@ -1119,23 +1119,31 @@ body.hk-home2 #page-footer .hk-footer__main {
         max-width: 52rem;
     }
     blockquote {
+        // Moodle greys blockquotes and gives them a left bar; the verse is plain white, as on the home page.
         margin: 0 0 16px;
+        padding: 0;
+        border: 0;
+        color: #fff;
     }
     &__arabic {
         font-family: $hk-font-arabic-body;
         // stylelint-disable-next-line csstree/validator
-        font-size: clamp(30px, 5vw, 44px);
+        font-size: clamp(1.7rem, 4vw, 2.8rem);
         line-height: 1.9;
-        margin: 0 0 16px;
+        color: #fff;
+        margin: 0 0 1.2rem;
     }
     &__text {
         margin: 0;
         font-family: $hk-font-display;
-        font-size: 24px;
+        // stylelint-disable-next-line csstree/validator
+        font-size: clamp(1.15rem, 2vw, 1.5rem);
         font-weight: 300;
-        color: rgba(255, 255, 255, .88);
+        line-height: 1.5;
+        color: rgba(255, 255, 255, .86);
     }
     figcaption {
+        font-family: $hk-font-body;
         font-size: 12px;
         letter-spacing: .3em;
         text-transform: uppercase;

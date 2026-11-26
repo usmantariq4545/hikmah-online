@@ -12,6 +12,7 @@
 - Topic, course and teacher rows glide in one smooth eased motion and land on a card edge; they move every 2.5s
   (courses 2.8s) instead of 3–4s.
 - Footer: Hikmah Online logo and the paper rosette in the top corner, as in the site footer.
+- Verse band: Arabic in white Noto Naskh with the home page sizes; Moodle's grey blockquote colour and left bar removed.
 - Theme version 2026112600.
 
 ## 2026-11-25 — Home page v2 draft rebuilt from the design canvas (admins only)
