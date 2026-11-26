@@ -4,7 +4,8 @@
 ## 2026-11-26 — Home page v2: motion and hero light, matching the current home page
 
 - The hero gets the same soft blue and yellow light behind the rosette; the eyebrow, title, text and buttons rise in
-  turn, the rosette blooms in and then turns slowly, and "حكمة" pops in.
+  turn; the rosette is now inline so its tiles assemble one by one and the ring turns slowly, leaning toward the pointer
+  like the home page hero; "حكمة" pops in. New template home2_rosette.mustache.
 - Section headings, promises, spotlight, enroll card, topics, steps, teachers row, ways, video, FAQs, verse and closing
   banner reveal on scroll through the existing motion module (off under reduced motion).
 - Featured course card: lit cover, and on hover it lifts, the cover grows and the rosette turns, like the course cards. Class

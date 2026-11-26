@@ -118,6 +118,36 @@ const setupTrack = (track, root) => {
 };
 
 /**
+ * The hero rosette leans gently toward the pointer, as on the home page.
+ *
+ * @param {ParentNode} root
+ */
+const setupHero = (root) => {
+    const hero = root.querySelector('.hk2-hero');
+    const art = hero ? hero.querySelector('.hk2-hero__art') : null;
+    if (!art || reduced() || !window.matchMedia('(pointer: fine)').matches) {
+        return;
+    }
+    let frame = null;
+    art.style.transition = 'transform .6s cubic-bezier(.16, 1, .3, 1)';
+    hero.addEventListener('pointermove', (e) => {
+        if (frame) {
+            return;
+        }
+        frame = window.requestAnimationFrame(() => {
+            const rect = hero.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+            art.style.transform = `translate3d(${(x * 18).toFixed(1)}px, ${(y * 14).toFixed(1)}px, 0)`;
+            frame = null;
+        });
+    });
+    hero.addEventListener('pointerleave', () => {
+        art.style.transform = '';
+    });
+};
+
+/**
  * Initialise every scrolling row on the page.
  */
 export const init = () => {
@@ -126,4 +156,5 @@ export const init = () => {
         return;
     }
     root.querySelectorAll('[data-hk2-track]').forEach((track) => setupTrack(track, root));
+    setupHero(root);
 };

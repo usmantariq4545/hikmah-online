@@ -357,15 +357,12 @@ body.hk-home2 #page-footer .hk-footer__main {
         max-width: 480px;
         width: 100%;
         justify-self: end;
-        img {
+        // Inline rosette: .hk-motif--animate assembles the tiles one by one, then turns the ring, as on the home page.
+        .hk2-rosette {
             position: absolute;
             inset: 0;
             width: 100%;
             height: 100%;
-            // Blooms in, then turns slowly (GPU transform only).
-            // stylelint-disable-next-line no-unknown-animations
-            animation: hk2-bloom 1.4s $hk-ease-out .15s both, hk-spin 140s linear 1.6s infinite;
-            will-change: transform;
         }
         span {
             position: absolute;
@@ -1548,17 +1545,6 @@ body.hk-home2 #page-footer .hk-footer__main {
     .hk2-person,
     .hk2-video__play {
         transition: none;
-    }
-}
-
-@keyframes hk2-bloom {
-    from {
-        opacity: 0;
-        transform: scale(.6) rotate(-40deg);
-    }
-    to {
-        opacity: 1;
-        transform: none;
     }
 }
 
