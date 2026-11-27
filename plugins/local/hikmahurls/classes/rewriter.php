@@ -23,7 +23,7 @@ use moodle_url;
  *
  *   /course/view.php?id=5           -> /course/foundations-of-fiqh
  *   /theme/hikmah/course.php?id=5   -> /courses/foundations-of-fiqh
- *   /theme/hikmah/catalog.php       -> /courses        (also /faq, /verify, /classroom, /privacy-policy, ...)
+ *   /theme/hikmah/catalog.php       -> /courses        (also /about, /contact, /faq, /verify, /classroom, /privacy-policy, ...)
  *   /mod/quiz/view.php?id=9         -> /mod/quiz/view?id=9
  *   /my/index.php                   -> /my/
  *
@@ -39,6 +39,8 @@ class rewriter implements \core\output\url_rewriter {
     /** @var string[] Theme pages with short names: script => path. */
     public const ALIASES = [
         '/theme/hikmah/catalog.php' => '/courses',
+        '/theme/hikmah/about.php' => '/about',
+        '/theme/hikmah/contact.php' => '/contact',
         '/theme/hikmah/faq.php' => '/faq',
         '/theme/hikmah/verify.php' => '/verify',
         '/theme/hikmah/classroom.php' => '/classroom',

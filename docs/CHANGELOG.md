@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-11-27 — About us and Contact us pages
+
+- New public pages /about (about.php) and /contact (contact.php), built from the home page v2 blocks and the
+  owner's canvas designs. Where the canvas and the live site differ, the live site wins: the site's own header and
+  footer, no breadcrumbs.
+- About: hero with the rosette, four values, our story beside a "Hikmah, noun" card, mission and vision, the
+  teachers row from the home page (co-founders labelled as on the home page), ways to learn, Qur'an 2:269, and a
+  call to action.
+- Contact: WhatsApp, email (info@hikmahonline.com), Instagram and Facebook cards, Moodle's own "Contact site
+  support" form (reCAPTCHA for visitors, sent to supportemail) and five quick answers. 110-messaging.php sets
+  supportavailability = 2 so visitors can use the form.
+- Footer: "About us" and "Contact us" now open these pages (Contact used to open WhatsApp).
+- Teachers: Khizer Khalid and Shahzaib Aijaz show "LUMS · Aalimiyyah Graduate" (home page too); a credential still
+  in [brackets] is no longer shown.
+- Clean links /about and /contact (rewriter, Nginx, smoke test). Theme version 2026112702.
 ## 2026-11-27 — Privacy Policy, Terms of Use and Refund Policy live
 
 - The owner approved the texts. They are in config/settings/policies/*.html, and 130-privacy.php publishes them as
