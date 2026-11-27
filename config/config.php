@@ -34,6 +34,11 @@ $CFG->directorypermissions = 02770;
 $CFG->admin = 'admin';
 // Nginx sends unknown paths to /r.php (docker/nginx/default.conf.template), so Moodle's router is set up.
 $CFG->routerconfigured = true;
+// Clean links: local_hikmahurls prints links without ".php" and courses by name; Nginx maps them back.
+// CLEAN_URLS=0 switches it off (every ".php" link keeps working either way).
+if ($hikmahenv('CLEAN_URLS', '1') !== '0' && is_file(__DIR__ . '/public/local/hikmahurls/classes/rewriter.php')) {
+    $CFG->urlrewriteclass = '\local_hikmahurls\rewriter';
+}
 
 // Sessions in Redis.
 $CFG->session_handler_class = '\core\session\redis';
