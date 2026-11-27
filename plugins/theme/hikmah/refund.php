@@ -22,6 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// phpcs:ignore moodle.Files.RequireLogin.Missing -- Site policies are public.
 require_once(__DIR__ . '/../../config.php');
 
 \theme_hikmah\local\policypage::output('refund');

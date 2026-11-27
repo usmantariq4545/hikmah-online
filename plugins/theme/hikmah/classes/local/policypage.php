@@ -82,13 +82,14 @@ class policypage {
             'pagemotif' => ['motifclass' => 'hk-pagehead__motif hk-motif--animate'],
             'homeurl' => (new moodle_url('/', ['redirect' => 0]))->out(false),
             'title' => $title,
-            'lead' => $version ? format_string(strip_tags($version->summary), true, ['context' => $context]) : '',
-            'updated' => $version ? get_string('policy_updated', 'theme_hikmah',
-                userdate($version->timecreated, get_string('strftimedate', 'langconfig'))) : '',
-            'content' => $version ? format_text($version->content, $version->contentformat,
-                ['context' => $context]) : '',
             'others' => $others,
         ];
+        if ($version) {
+            $date = userdate($version->timecreated, get_string('strftimedate', 'langconfig'));
+            $data['lead'] = format_string(strip_tags($version->summary), true, ['context' => $context]);
+            $data['updated'] = get_string('policy_updated', 'theme_hikmah', $date);
+            $data['content'] = format_text($version->content, $version->contentformat, ['context' => $context]);
+        }
 
         echo $OUTPUT->header();
         echo $OUTPUT->render_from_template('theme_hikmah/policy', $data);
