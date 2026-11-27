@@ -144,7 +144,7 @@ function local_hikmahaccess_extend_signup_form(MoodleQuickForm $mform): void {
         }
     }
 
-    // "or" and Continue with Google (and any other sign-in service). Printed here, above the buttons that Moodle adds
+    // The "or" line and Continue with Google (and any other sign-in service). Printed here, above the buttons that Moodle adds
     // after this hook; signup.js moves it under Create account. Such accounts answer the profile questions later.
     $idps = \auth_plugin_base::prepare_identity_providers_for_output(
         \auth_plugin_base::get_identity_providers(get_enabled_auth_plugins()),
