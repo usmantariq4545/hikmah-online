@@ -49,6 +49,7 @@ $string['roles'] = 'Roles';
 $string['scheduledfor'] = 'Scheduled: {$a}';
 $string['signupagree'] = 'I agree to the {$a->terms} and {$a->privacy}';
 $string['signupagree_required'] = 'Please agree to the Terms of Use and Privacy Policy to create your account.';
+$string['signupmarketing'] = 'Send me news about new courses and offers by email (optional, change it any time in your profile)';
 $string['signupor'] = 'or sign up with email';
 $string['signupwith'] = 'Continue with {$a}';
 $string['task_publishcourses'] = 'Make scheduled courses public';
