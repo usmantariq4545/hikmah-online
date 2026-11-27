@@ -437,3 +437,23 @@
         padding-bottom: 104px;
     }
 }
+
+// Phones: one value per row on About, and the Contact rosette kept clear of the title.
+@media (max-width: 600px) {
+    .hk2-promises-band--keep .hk2-promises {
+        grid-template-columns: minmax(0, 1fr);
+        li + li {
+            border-left: 0;
+            border-top: 1px solid $hk-line;
+        }
+        li {
+            padding: 22px;
+        }
+    }
+    .hk2-pagehero__art {
+        width: 280px;
+        right: -170px;
+        top: -130px;
+        opacity: .35;
+    }
+}
