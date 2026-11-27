@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-11-27 — Marketing opt-in on sign-up
+
+- The sign-up form has a second, optional checkbox under "I agree to the Terms of Use and Privacy Policy":
+  "Send me news about new courses and offers by email". It is unticked by default and saved to the profile field
+  hkconsentcomms, which learners can change in their profile. That field is renamed to the same words
+  (040-profile.php now also syncs field names). local_hikmahaccess version 2026112700.
+- The terms checkbox and its record were already in place: each new account gets a versioned acceptance of every
+  compulsory policy (Site administration > Users > Privacy and policies > User agreements, with download).
+
 ## 2026-11-27 — Home page v2 footer on every page
 
 - The site footer is now the v2 footer (templates/footer_site.mustache, class local/footer.php, renderer

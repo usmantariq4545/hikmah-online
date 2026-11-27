@@ -100,6 +100,14 @@ function local_hikmahaccess_extend_signup_form(MoodleQuickForm $mform): void {
     }
 
     $mform->addElement('checkbox', 'hkagree', '', get_string('signupagree', 'local_hikmahaccess', (object) $links));
+
+    // Optional marketing opt-in, unticked. Named after the profile field so auth_email's profile_save_data() stores
+    // it on the new account; the field itself stays off the sign-up form, where it would add a section of its own.
+    global $DB;
+    if ($DB->record_exists('user_info_field', ['shortname' => 'hkconsentcomms'])) {
+        $label = get_string('signupmarketing', 'local_hikmahaccess');
+        $mform->addElement('checkbox', 'profile_field_hkconsentcomms', '', $label);
+    }
 }
 
 /**
