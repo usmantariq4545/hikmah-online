@@ -71,6 +71,8 @@ server {
         rewrite ^/courses/?$ /theme/hikmah/catalog.php last;
         rewrite ^/courses/([a-z0-9-]+)/?$ /local/hikmahurls/course.php?hkslug=$1&hkpage=info last;
         rewrite ^/(faq|verify|classroom)/?$ /theme/hikmah/$1.php last;
+        rewrite ^/(privacy|refund)-policy/?$ /theme/hikmah/$1.php last;
+        rewrite ^/terms-of-use/?$ /theme/hikmah/terms.php last;
         rewrite ^ /r.php last;
     }
     # moodledata, reachable only through Moodle's X-Accel-Redirect after an access check.
