@@ -11,7 +11,7 @@
   People sign in with their email address (authloginviaemail).
 - Checkbox rows have no id in Moodle's markup, so their styles now match `.fitem:has(> .checkbox)`; the old
   `#fitem_id_hkagree` rule never applied.
-- local_hikmahaccess and theme_hikmah version 2026112703.
+- local_hikmahaccess version 2026112702, theme_hikmah 2026112703.
 
 ## 2026-11-27 — About us and Contact us pages
 
