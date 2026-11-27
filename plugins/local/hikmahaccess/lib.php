@@ -47,21 +47,72 @@ function local_hikmahaccess_extend_navigation_user_settings(
 }
 
 /**
- * Sign-up form: only the basic details. The Hikmah profile details (and city and country) are asked
- * after the first sign-in; the password rules sit under the password box; one checkbox records
- * agreement to the Terms of Use, Privacy Policy and Refund Policy (owner's decisions, 2026-11-20 and 2026-11-27).
+ * Sign-up form, in the order most sites use (owner, 2026-11-27): first and last name, email, password with a
+ * live checklist of the password rules, confirm password, "I'm not a robot", the agreement to the Terms of Use,
+ * Privacy Policy and Refund Policy, the optional news opt-in, Create account, then "or" and Continue with Google.
+ * No username and no "Email (again)": the hook in classes/hook_callbacks.php fills both from the email address
+ * when the form is sent. City, country and the Hikmah profile questions are asked after the first sign-in.
  *
  * @param MoodleQuickForm $mform
  */
 function local_hikmahaccess_extend_signup_form(MoodleQuickForm $mform): void {
-    foreach (['city', 'country'] as $name) {
+    global $CFG, $DB, $OUTPUT, $PAGE;
+
+    foreach (['city', 'country', 'passwordpolicyinfo'] as $name) {
         if ($mform->elementExists($name)) {
             $mform->removeElement($name);
         }
     }
-    if ($mform->elementExists('passwordpolicyinfo') && $mform->elementExists('email')) {
-        $mform->insertElementBefore($mform->removeElement('passwordpolicyinfo', false), 'email');
+    foreach (['username', 'email2'] as $name) {
+        if ($mform->elementExists($name)) {
+            $mform->removeElement($name);
+            $mform->addElement('hidden', $name);
+            $mform->setType($name, PARAM_RAW);
+        }
     }
+    if ($mform->elementExists('recaptcha_element')) {
+        // The box speaks for itself: no "Security question" heading or help icon.
+        $captcha = $mform->getElement('recaptcha_element');
+        $captcha->setLabel('');
+        $captcha->_helpbutton = '';
+    }
+
+    // Password rules as a checklist that ticks itself while typing (signup.js below); the server still checks them.
+    $rules = [];
+    if (!empty($CFG->passwordpolicy)) {
+        $rules['length'] = get_string('signuprule_length', 'local_hikmahaccess', max(1, (int) $CFG->minpasswordlength));
+        foreach (['upper' => 'minpasswordupper', 'lower' => 'minpasswordlower', 'digit' => 'minpassworddigits'] as $rule => $setting) {
+            if (!empty($CFG->$setting)) {
+                $rules[$rule] = get_string('signuprule_' . $rule, 'local_hikmahaccess');
+            }
+        }
+    }
+    $items = '';
+    foreach ($rules as $rule => $text) {
+        $items .= html_writer::tag('li', s($text), ['data-rule' => $rule]);
+    }
+    $meter = html_writer::div(html_writer::div('', 'hk-pwmeter__bar'), 'hk-pwmeter', ['aria-hidden' => 'true']) .
+        html_writer::div('', 'hk-pwmeter__label', ['aria-live' => 'polite']);
+    $mform->addElement('static', 'hkpasswordrules', '', html_writer::div(
+        $meter . ($items ? html_writer::tag('ul', $items, ['class' => 'hk-pwrules']) : ''),
+        'hk-pwcheck',
+        [
+            'data-minlength' => (int) ($CFG->minpasswordlength ?? 0),
+            'data-words' => implode('|', array_map(
+                fn($w) => get_string('signupstrength_' . $w, 'local_hikmahaccess'),
+                ['weak', 'fair', 'strong']
+            )),
+            'data-match' => get_string('signuppasswordmatch', 'local_hikmahaccess'),
+            'data-nomatch' => get_string('signuppasswordmismatch', 'local_hikmahaccess'),
+        ]
+    ));
+
+    $mform->addElement('password', 'hkpassword2', get_string('signupconfirmpassword', 'local_hikmahaccess'), [
+        'maxlength' => MAX_PASSWORD_CHARACTERS,
+        'autocomplete' => 'new-password',
+    ]);
+    $mform->setType('hkpassword2', PARAM_RAW);
+    $mform->addRule('hkpassword2', get_string('missingpassword'), 'required', null, 'client');
 
     // Links open the theme's policy pages, which show the current tool_policy versions that the account accepts.
     $links = [];
@@ -74,16 +125,32 @@ function local_hikmahaccess_extend_signup_form(MoodleQuickForm $mform): void {
         ) : $name;
     }
     // Checked on submit (validate_extend_signup_form below); no "*" marker, which would sit on a line of its own.
+    $mform->addElement('checkbox', 'hkagree', '', get_string('signupagree', 'local_hikmahaccess', (object) $links));
 
-    // Shows "Continue with Google" (and any other sign-in service) above the form, as on the login page; such
-    // accounts are created on first sign-in and asked for their profile details then.
-    global $OUTPUT;
+    // Optional marketing opt-in, unticked. Named after the profile field so auth_email's profile_save_data() stores
+    // it on the new account; the field itself stays off the sign-up form, where it would add a section of its own.
+    if ($DB->record_exists('user_info_field', ['shortname' => 'hkconsentcomms'])) {
+        $label = get_string('signupmarketing', 'local_hikmahaccess');
+        $mform->addElement('checkbox', 'profile_field_hkconsentcomms', '', $label);
+    }
+
+    // The fields in the owner's order; anything not listed (hidden fields) keeps its place.
+    $order = ['firstname', 'lastname', 'email', 'password', 'hkpasswordrules', 'hkpassword2', 'recaptcha_element', 'hkagree',
+        'profile_field_hkconsentcomms'];
+    foreach ($order as $name) {
+        if ($mform->elementExists($name)) {
+            $mform->addElement($mform->removeElement($name, false));
+        }
+    }
+
+    // "or" and Continue with Google (and any other sign-in service). Printed here, above the buttons that Moodle adds
+    // after this hook; signup.js moves it under Create account. Such accounts answer the profile questions later.
     $idps = \auth_plugin_base::prepare_identity_providers_for_output(
         \auth_plugin_base::get_identity_providers(get_enabled_auth_plugins()),
         $OUTPUT
     );
-    if ($idps && $mform->elementExists('username')) {
-        $html = '';
+    if ($idps) {
+        $html = html_writer::div(get_string('signupor', 'local_hikmahaccess'), 'login-separator');
         foreach ($idps as $idp) {
             $icon = empty($idp['iconurl']) ? '' : html_writer::empty_tag('img', ['src' => $idp['iconurl'], 'alt' => '',
                 'width' => 20, 'height' => 20]);
@@ -93,27 +160,25 @@ function local_hikmahaccess_extend_signup_form(MoodleQuickForm $mform): void {
                 ['class' => 'btn btn-outline-secondary login-identityprovider-btn']
             );
         }
-        $html .= html_writer::div(get_string('signupor', 'local_hikmahaccess'), 'login-separator');
-        $mform->insertElementBefore($mform->createElement('html', html_writer::div($html, 'hk-signup-idp')), 'username');
+        $mform->addElement('html', html_writer::div($html, 'hk-signup-idp'));
     }
 
-    $mform->addElement('checkbox', 'hkagree', '', get_string('signupagree', 'local_hikmahaccess', (object) $links));
-
-    // Optional marketing opt-in, unticked. Named after the profile field so auth_email's profile_save_data() stores
-    // it on the new account; the field itself stays off the sign-up form, where it would add a section of its own.
-    global $DB;
-    if ($DB->record_exists('user_info_field', ['shortname' => 'hkconsentcomms'])) {
-        $label = get_string('signupmarketing', 'local_hikmahaccess');
-        $mform->addElement('checkbox', 'profile_field_hkconsentcomms', '', $label);
-    }
+    $PAGE->requires->js_init_code(file_get_contents(__DIR__ . '/signup.js'), true);
 }
 
 /**
- * The agreement checkbox must be ticked.
+ * The agreement checkbox must be ticked and both passwords must match.
  *
  * @param array $data
  * @return array errors
  */
 function local_hikmahaccess_validate_extend_signup_form(array $data): array {
-    return empty($data['hkagree']) ? ['hkagree' => get_string('signupagree_required', 'local_hikmahaccess')] : [];
+    $errors = [];
+    if (empty($data['hkagree'])) {
+        $errors['hkagree'] = get_string('signupagree_required', 'local_hikmahaccess');
+    }
+    if (($data['hkpassword2'] ?? '') !== ($data['password'] ?? '')) {
+        $errors['hkpassword2'] = get_string('signuppasswordmismatch', 'local_hikmahaccess');
+    }
+    return $errors;
 }
