@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-11-27 — Sign-up form in the usual order
+
+- Owner's request: first and last name side by side, email, password with a live checklist (10+ characters, upper
+  case, lower case, a number) and a Weak / Fair / Strong bar, confirm password (checked on submit), "I'm not a
+  robot" with no heading, the agreement checkbox, the optional news opt-in, Create account, then "or" and Continue
+  with Google below the button (moved there by signup.js; above it without JavaScript).
+- No username or "Email (again)" boxes: on submit, after_config fills email2 from the email and the username from
+  it (lower case, allowed characters only, "-2" etc. when taken; hook_callbacks::signup_username, tested).
+  People sign in with their email address (authloginviaemail).
+- Checkbox rows have no id in Moodle's markup, so their styles now match `.fitem:has(> .checkbox)`; the old
+  `#fitem_id_hkagree` rule never applied.
+- local_hikmahaccess and theme_hikmah version 2026112702.
+
 ## 2026-11-27 — Privacy Policy, Terms of Use and Refund Policy live
 
 - The owner approved the texts. They are in config/settings/policies/*.html, and 130-privacy.php publishes them as

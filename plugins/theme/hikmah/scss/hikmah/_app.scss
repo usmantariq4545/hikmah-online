@@ -1040,9 +1040,8 @@
             color: $hk-muted;
         }
     }
-    // Sign-up page: "Continue with Google" above the form (local_hikmahaccess), styled like the login page's.
+    // Sign-up page: "or" and "Continue with Google" under Create account (local_hikmahaccess), like the login page's.
     .hk-signup-idp {
-        margin-bottom: 1.5rem;
         .login-identityprovider-btn {
             width: 100%;
             display: flex;
@@ -1058,7 +1057,7 @@
             display: flex;
             align-items: center;
             gap: 1rem;
-            margin-top: 1.25rem;
+            margin-block: 1.25rem;
             font-size: .74rem;
             letter-spacing: .22em;
             text-transform: uppercase;
@@ -1910,21 +1909,104 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
     padding-top: 1.5rem;
     border-top: 1px solid $hk-line;
 }
-// Help text under its field (moved there on the sign-up form): small and grey, close to the box above.
-.hk-authpage #fitem_id_passwordpolicyinfo {
+// Sign-up form (local_hikmahaccess): first and last name side by side, everything else full width.
+#page-login-signup form.mform {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 1rem;
+    > * {
+        grid-column: 1 / -1;
+    }
+    > #fitem_id_firstname,
+    > #fitem_id_lastname {
+        grid-column: auto;
+    }
+}
+// Password checklist and strength bar under the password box; the rules tick green as they are met.
+.hk-authpage #fitem_id_hkpasswordrules {
     margin-top: -.6rem;
     .col-md-3 {
         display: none;
     }
-    .form-control-static,
-    [data-fieldtype="static"] {
-        font-size: .82rem;
-        line-height: 1.45;
-        color: $hk-muted;
+}
+.hk-pwcheck {
+    width: 100%;
+    font-size: .82rem;
+    line-height: 1.45;
+    color: $hk-muted;
+}
+.hk-pwmeter {
+    height: 4px;
+    border-radius: 999px;
+    background: $hk-line;
+    overflow: hidden;
+    &__bar {
+        width: 0;
+        height: 100%;
+        background: $hk-danger;
+        transition: width .25s ease, background-color .25s ease;
+    }
+    &__label {
+        min-height: 1.2em;
+        margin-top: .3rem;
+        font-weight: 600;
     }
 }
-// The agreement checkbox: its text wraps beside the box; links stand out.
-.hk-authpage #fitem_id_hkagree {
+.hk-pwcheck[data-level="1"] .hk-pwmeter__bar {
+    width: 33%;
+}
+.hk-pwcheck[data-level="2"] .hk-pwmeter__bar {
+    width: 66%;
+    background: $hk-warning;
+}
+.hk-pwcheck[data-level="3"] .hk-pwmeter__bar {
+    width: 100%;
+    background: $hk-success;
+}
+.hk-pwcheck[data-level="1"] .hk-pwmeter__label {
+    color: $hk-danger;
+}
+.hk-pwcheck[data-level="2"] .hk-pwmeter__label {
+    color: $hk-warning;
+}
+.hk-pwcheck[data-level="3"] .hk-pwmeter__label {
+    color: $hk-success;
+}
+.hk-pwrules {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .2rem 1rem;
+    margin: .3rem 0 0;
+    padding: 0;
+    list-style: none;
+    li::before {
+        content: "\2022";
+        display: inline-block;
+        width: 1.1em;
+    }
+    li.is-met {
+        color: $hk-success;
+        &::before {
+            content: "\2713";
+        }
+    }
+}
+.hk-pwmatch {
+    width: 100%;
+    margin-top: .3rem;
+    font-size: .82rem;
+    color: $hk-danger;
+    &.is-met {
+        color: $hk-success;
+    }
+}
+// "I'm not a robot" has no heading: drop the empty label column.
+.hk-authpage #fitem_id_recaptcha_element .col-md-3 {
+    display: none;
+}
+// The agreement and news checkboxes (checkbox rows carry no id): text wraps beside the box; links stand out.
+.hk-authpage .fitem:has(> .checkbox) {
+    margin-bottom: .6rem;
     .col-md-3 {
         display: none;
     }

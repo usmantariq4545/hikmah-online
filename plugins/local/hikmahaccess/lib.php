@@ -81,7 +81,8 @@ function local_hikmahaccess_extend_signup_form(MoodleQuickForm $mform): void {
     $rules = [];
     if (!empty($CFG->passwordpolicy)) {
         $rules['length'] = get_string('signuprule_length', 'local_hikmahaccess', max(1, (int) $CFG->minpasswordlength));
-        foreach (['upper' => 'minpasswordupper', 'lower' => 'minpasswordlower', 'digit' => 'minpassworddigits'] as $rule => $setting) {
+        $settings = ['upper' => 'minpasswordupper', 'lower' => 'minpasswordlower', 'digit' => 'minpassworddigits'];
+        foreach ($settings as $rule => $setting) {
             if (!empty($CFG->$setting)) {
                 $rules[$rule] = get_string('signuprule_' . $rule, 'local_hikmahaccess');
             }

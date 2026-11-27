@@ -42,6 +42,11 @@ class hook_callbacks {
         ) {
             unset($_POST['profile_field_hkdob']);
         }
+        // The sign-up form asks for the email once and has no username box (lib.php): fill both from the email.
+        if (!CLI_SCRIPT && ($SCRIPT ?? '') === '/login/signup.php' && is_string($_POST['email'] ?? null)) {
+            $_POST['email2'] = trim($_POST['email']);
+            $_POST['username'] = self::signup_username($_POST['email2']);
+        }
         if (
             during_initial_install() || CLI_SCRIPT || ($SCRIPT ?? '') !== '/login/signup.php' || isloggedin()
                 || ($CFG->sitepolicyhandler ?? '') !== 'tool_policy'
@@ -54,5 +59,23 @@ class hook_callbacks {
             // Never break a page over this: the policy tool then simply shows its own pages first.
             debugging('Hikmah sign-up: ' . $e->getMessage(), DEBUG_DEVELOPER);
         }
+    }
+
+    /**
+     * A free username made from an email address: lower case, only the characters Moodle allows, and "-2", "-3" ...
+     * added when it is taken. People sign in with their email address, so they never need to know it.
+     *
+     * @param string $email
+     * @return string
+     */
+    public static function signup_username(string $email): string {
+        global $CFG, $DB;
+        $base = \core_user::clean_field(\core_text::strtolower(trim($email)), 'username');
+        $username = $base;
+        $suffix = 2;
+        while ($base !== '' && $DB->record_exists('user', ['username' => $username, 'mnethostid' => $CFG->mnet_localhost_id])) {
+            $username = $base . '-' . $suffix++;
+        }
+        return $username;
     }
 }
