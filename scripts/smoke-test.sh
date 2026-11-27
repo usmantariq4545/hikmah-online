@@ -26,6 +26,10 @@ check "certificate verification"  "$BASE/theme/hikmah/verify.php"               
 check "FAQ"                       "$BASE/theme/hikmah/faq.php"                      200
 check "static asset (favicon)"    "$BASE/theme/hikmah/pix/favicon.svg"              200
 check "theme CSS via Router"      "$BASE/theme/styles.php/hikmah/1/all"             200
+check "clean link: login"         "$BASE/login/"                                   200
+check "clean link: catalog"       "$BASE/courses"                                  200
+check "clean link: FAQ"           "$BASE/faq"                                      200
+check "clean link: script"        "$BASE/login/forgot_password"                    200
 check "dotfile is hidden"         "$BASE/.git/config"                               404
 # A receipt URL must never be served to an anonymous visitor (redirects to login).
 check "receipt needs login"       "$BASE/pluginfile.php/1/paygw_hikmahtransfer/receipt/1/receipt.png" 303

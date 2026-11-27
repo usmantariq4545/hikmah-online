@@ -35,6 +35,7 @@ jobs:
           - { name: theme_hikmah, path: plugins/theme/hikmah, extra: "" }
           - { name: local_hikmahaccess, path: plugins/local/hikmahaccess, extra: "" }
           - { name: local_hikmahcompletion, path: plugins/local/hikmahcompletion, extra: "" }
+          - { name: local_hikmahurls, path: plugins/local/hikmahurls, extra: "" }
           - { name: bbbext_hikmah, path: plugins/mod/bigbluebuttonbn/extension/hikmah, extra: "" }
 
     services:

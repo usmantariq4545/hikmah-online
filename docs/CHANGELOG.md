@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-11-27 — Clean links: no ".php", courses by name
+
+- New plugin local_hikmahurls ($CFG->urlrewriteclass) prints every Moodle link without ".php":
+  /mod/quiz/view?id=9, /my/, /login/. Courses go by name: /course/<name> for the course itself and
+  /courses/<name> for its catalog page, made from the course title (table local_hikmahurls_slug, kept up to date
+  by course observers). A renamed course keeps its old name, which sends a permanent redirect to the new one.
+  The theme pages get short names: /courses (catalog), /faq, /verify, /classroom.
+- Nginx maps clean links back to the scripts (location @hkclean). Every ".php" link still works, so old links,
+  emails and certificate QR codes are unaffected. Links that other systems call keep ".php": Google sign-in
+  callback, BigBlueButton, the Moodle App, web services, AJAX, file and theme asset links.
+- Kill switch: CLEAN_URLS=0 in the env file (then recreate the moodle container) prints ".php" links again.
+- Links that core JavaScript or templates build as plain text still show ".php" and keep working.
+
 ## 2026-11-26 — Cloudflare ECH turned off
 
 - The owner's laptop and phone got ERR_CONNECTION_RESET on hikmahonline.com while curl and the in-app browser worked:

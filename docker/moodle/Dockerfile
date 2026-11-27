@@ -65,6 +65,7 @@ COPY plugins/payment/gateway/hikmahtransfer/ /var/www/moodle/public/payment/gate
 COPY plugins/local/hikmahattendance/ /var/www/moodle/public/local/hikmahattendance/
 COPY plugins/local/hikmahaccess/ /var/www/moodle/public/local/hikmahaccess/
 COPY plugins/local/hikmahcompletion/ /var/www/moodle/public/local/hikmahcompletion/
+COPY plugins/local/hikmahurls/ /var/www/moodle/public/local/hikmahurls/
 COPY plugins/theme/hikmah/ /var/www/moodle/public/theme/hikmah/
 COPY plugins/mod/bigbluebuttonbn/extension/hikmah/ /var/www/moodle/public/mod/bigbluebuttonbn/extension/hikmah/
 COPY config/config.php /var/www/moodle/config.php

@@ -50,7 +50,28 @@ server {
     }
 
     location / {
-        try_files $uri $uri/ /r.php;
+        try_files $uri @hkclean;
+    }
+
+    # Clean links (local_hikmahurls prints them): /course/<name>, /courses/<name>, the theme's short pages,
+    # and any script without ".php" (/mod/quiz/view?id=9). Real files and every ".php" link keep working;
+    # everything else still goes to the Moodle Router.
+    location @hkclean {
+        if (-f $document_root${uri}index.php) {
+            rewrite ^ ${uri}index.php last;
+        }
+        if (-f $document_root$uri.php) {
+            rewrite ^ $uri.php last;
+        }
+        # A folder asked for without its slash (/course): add it, as Nginx did before.
+        if (-d $document_root$uri) {
+            rewrite ^(.*[^/])$ $1/ permanent;
+        }
+        rewrite ^/course/([a-z0-9-]+)/?$ /local/hikmahurls/course.php?hkslug=$1&hkpage=view last;
+        rewrite ^/courses/?$ /theme/hikmah/catalog.php last;
+        rewrite ^/courses/([a-z0-9-]+)/?$ /local/hikmahurls/course.php?hkslug=$1&hkpage=info last;
+        rewrite ^/(faq|verify|classroom)/?$ /theme/hikmah/$1.php last;
+        rewrite ^ /r.php last;
     }
     # moodledata, reachable only through Moodle's X-Accel-Redirect after an access check.
     location /dataroot/ {
