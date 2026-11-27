@@ -54,6 +54,7 @@ final class rewriter_test extends \advanced_testcase {
         $this->assertSame('/course/view?id=999', $this->clean(new moodle_url('/course/view.php', ['id' => 999])));
         $this->assertSame('/courses?mode=live', $this->clean(new moodle_url('/theme/hikmah/catalog.php', ['mode' => 'live'])));
         $this->assertSame('/faq', $this->clean(new moodle_url('/theme/hikmah/faq.php')));
+        $this->assertSame('/terms-of-use', $this->clean(new moodle_url('/theme/hikmah/terms.php')));
         $this->assertSame('/mod/quiz/view?id=9', $this->clean(new moodle_url('/mod/quiz/view.php', ['id' => 9])));
         $this->assertSame('/my/', $this->clean(new moodle_url('/my/index.php')));
         $this->assertSame('/', $this->clean(new moodle_url('/index.php', [])));

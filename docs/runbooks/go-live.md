@@ -33,8 +33,7 @@ All through `.env.prod`, then `scripts/configure.sh`:
 - Production BBB (`BBB_SERVER_URL`, `BBB_SHARED_SECRET`) if not staying on the free tier.
 - Real transfer account details (`HIKMAH_BANK_*`, `HIKMAH_JAZZCASH`, `HIKMAH_EASYPAISA`, `HIKMAH_RAAST`).
 - No `STAGING_MAIL_*` variables: production sends real mail.
-- Replace the draft privacy notice and terms with the approved texts (Site administration >
-  Users > Privacy and policies > Manage policies).
+- Policies: done 2026-11-27 (Privacy Policy, Terms of Use, Refund Policy from config/settings/policies/).
 
 ## 4. Point DNS and check
 
