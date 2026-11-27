@@ -28,6 +28,8 @@ check "static asset (favicon)"    "$BASE/theme/hikmah/pix/favicon.svg"          
 check "theme CSS via Router"      "$BASE/theme/styles.php/hikmah/1/all"             200
 check "clean link: login"         "$BASE/login/"                                   200
 check "clean link: catalog"       "$BASE/courses"                                  200
+check "clean link: About us"      "$BASE/about"                                    200
+check "clean link: Contact us"    "$BASE/contact"                                  200
 check "clean link: FAQ"           "$BASE/faq"                                      200
 check "clean link: script"        "$BASE/login/forgot_password"                    200
 check "dotfile is hidden"         "$BASE/.git/config"                               404

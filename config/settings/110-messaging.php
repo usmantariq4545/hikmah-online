@@ -11,6 +11,10 @@ hk_set('emailsubjectprefix', '');
 hk_set('mailnewline', 'LF');
 hk_set('messagingallowemailoverride', 0);
 
+// Contact us page (/contact): Moodle's contact form is open to visitors too, behind reCAPTCHA, and goes to
+// supportemail. 2 = CONTACT_SUPPORT_ANYONE.
+hk_set('supportavailability', 2);
+
 // Email and web notifications are on; each provider's defaults come from its db/messages.php.
 foreach (['email', 'popup'] as $processor) {
     $record = $DB->get_record('message_processors', ['name' => $processor]);

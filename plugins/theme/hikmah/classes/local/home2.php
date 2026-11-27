@@ -60,6 +60,7 @@ class home2 {
         'video' => ['M6 6h6a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V9a3 3 0 0 1 3-3z', 'm15 10 6-3v10l-6-3'],
         'clock' => ['M12 3a9 9 0 1 0 0 18 9 9 0 1 0 0-18z', 'M12 7v5l3 2'],
         'layers' => ['m12 3 9 5-9 5-9-5 9-5z', 'm3 13 9 5 9-5'],
+        'heart' => ['M12 21s-7-4.4-7-10.2A4.8 4.8 0 0 1 12 7a4.8 4.8 0 0 1 7 3.8C19 16.6 12 21 12 21z'],
     ];
 
     /**
@@ -101,7 +102,18 @@ class home2 {
             ];
         }
 
-        $data['teachers'] = [];
+        $data['teachers'] = self::teachers();
+        return $data;
+    }
+
+    /**
+     * Teachers in reading order, with their photo (or none, for the outline) and credential lines. A credential
+     * still in square brackets is a placeholder waiting for real text, so it is left out.
+     *
+     * @return array list of {name, photo, big, lift, creds}
+     */
+    public static function teachers(): array {
+        $teachers = [];
         foreach (self::TEACHERS as $key => [, $creds, $big, $lift]) {
             $teacher = [
                 'name' => get_string("home2_teacher_{$key}", 'theme_hikmah'),
@@ -111,11 +123,14 @@ class home2 {
                 'creds' => [],
             ];
             for ($i = 1; $i <= $creds; $i++) {
-                $teacher['creds'][] = ['text' => get_string("home2_teacher_{$key}_cred{$i}", 'theme_hikmah')];
+                $text = get_string("home2_teacher_{$key}_cred{$i}", 'theme_hikmah');
+                if (!str_starts_with($text, '[')) {
+                    $teacher['creds'][] = ['text' => $text];
+                }
             }
-            $data['teachers'][] = $teacher;
+            $teachers[] = $teacher;
         }
-        return $data;
+        return $teachers;
     }
 
     /**
@@ -149,7 +164,7 @@ class home2 {
      * @param string[] $names keys of ICONS
      * @return array
      */
-    private static function with_icons(array $items, array $names): array {
+    public static function with_icons(array $items, array $names): array {
         foreach ($items as $i => &$item) {
             $item['icon'] = self::ICONS[$names[$i]];
         }
@@ -163,7 +178,7 @@ class home2 {
      * @param int $count
      * @return array list of {title, text}
      */
-    private static function numbered(string $prefix, int $count): array {
+    public static function numbered(string $prefix, int $count): array {
         $items = [];
         for ($i = 1; $i <= $count; $i++) {
             $items[] = [

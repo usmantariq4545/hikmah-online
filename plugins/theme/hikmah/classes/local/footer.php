@@ -53,6 +53,8 @@ class footer {
             'liveurl' => (new moodle_url($catalog, ['mode' => 'live']))->out(false),
             'topicsurl' => $home->out(false) . '#hk2-topics',
             'teachersurl' => $home->out(false) . '#hk2-teachers',
+            'abouturl' => (new moodle_url('/theme/hikmah/about.php'))->out(false),
+            'contacturl' => (new moodle_url('/theme/hikmah/contact.php'))->out(false),
             'faqurl' => (new moodle_url('/theme/hikmah/faq.php'))->out(false),
             'verifyurl' => (new moodle_url('/theme/hikmah/verify.php'))->out(false),
             'privacyurl' => policypage::url('privacy')->out(false),
