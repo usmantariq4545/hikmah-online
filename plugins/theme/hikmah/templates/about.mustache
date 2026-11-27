@@ -1,0 +1,167 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_hikmah/about
+
+    About us page, built from the home page v2 blocks.
+
+    Context variables required for this template: see \theme_hikmah\local\pages::about().
+
+    Example context (json):
+    {
+        "pix": "/theme/hikmah/pix/home2/",
+        "catalogurl": "#",
+        "contacturl": "#",
+        "values": [{"title": "Grounded in tradition", "text": "Taught by trained scholars.", "icon": ["M2 4h6"]}],
+        "teachers": [{"name": "Khizer Khalid", "photo": "", "big": true, "lift": 0, "creds": [{"text": "LUMS Graduate"}]}],
+        "ways": [{"title": "Live", "text": "Evening classes.", "icon": ["M2 4h6"]}]
+    }
+}}
+<div class="hk2">
+
+    <section class="hk2-hero">
+        <div class="hk2-wrap hk2-hero__grid">
+            <div>
+                <span class="hk2-eyebrow hk2-eyebrow--light hk2-hero__eyebrow">{{#str}}about_eyebrow, theme_hikmah{{/str}}</span>
+                <h1 class="hk2-hero__title">{{#str}}about_hero_title, theme_hikmah{{/str}} <span class="hk2-mark">{{#str}}about_hero_mark, theme_hikmah{{/str}}</span> {{#str}}about_hero_title2, theme_hikmah{{/str}}</h1>
+                <p class="hk2-hero__lead">{{#str}}about_hero_lead, theme_hikmah{{/str}}</p>
+            </div>
+            <div class="hk2-hero__art" aria-hidden="true">
+                {{> theme_hikmah/home2_rosette }}
+                <span lang="ar">حكمة</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="hk2-promises-band hk2-promises-band--keep" aria-label="{{#str}}about_values_label, theme_hikmah{{/str}}">
+        <div class="hk2-wrap">
+            <ul class="hk2-promises" data-hk-stagger>
+                {{#values}}
+                    <li>
+                        <span class="hk2-icon" aria-hidden="true"><svg viewBox="0 0 24 24">{{#icon}}<path d="{{.}}"/>{{/icon}}</svg></span>
+                        <h2>{{title}}</h2>
+                        <p>{{text}}</p>
+                    </li>
+                {{/values}}
+            </ul>
+        </div>
+    </section>
+
+    <section class="hk2-section">
+        <div class="hk2-wrap hk2-story">
+            <div data-hk-reveal="left">
+                <span class="hk2-eyebrow">{{#str}}about_story_eyebrow, theme_hikmah{{/str}}</span>
+                <h2 class="hk2-title">{{#str}}about_story_title, theme_hikmah{{/str}}</h2>
+                <p class="hk2-lead">{{#str}}about_story_1, theme_hikmah{{/str}}</p>
+                <p class="hk2-lead">{{#str}}about_story_2, theme_hikmah{{/str}}</p>
+            </div>
+            <figure class="hk2-define" data-hk-reveal="scale">
+                <img src="{{pix}}rosette.svg" alt="">
+                <div class="hk2-define__word" lang="ar" dir="rtl">حكمة</div>
+                <div class="hk2-define__kind">{{#str}}about_define_kind, theme_hikmah{{/str}}</div>
+                <p class="hk2-define__meaning">{{#str}}about_define_meaning, theme_hikmah{{/str}}</p>
+                <figcaption>{{#str}}about_define_note, theme_hikmah{{/str}}</figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <section class="hk2-section hk2-section--tint">
+        <div class="hk2-wrap hk2-pillars" data-hk-stagger>
+            <article class="hk2-pillar">
+                <span class="hk2-eyebrow hk2-eyebrow--plain">{{#str}}about_mission_eyebrow, theme_hikmah{{/str}}</span>
+                <h2>{{#str}}about_mission_title, theme_hikmah{{/str}}</h2>
+                <p>{{#str}}about_mission_text, theme_hikmah{{/str}}</p>
+            </article>
+            <article class="hk2-pillar hk2-pillar--ink">
+                <span class="hk2-eyebrow hk2-eyebrow--plain">{{#str}}about_vision_eyebrow, theme_hikmah{{/str}}</span>
+                <h2>{{#str}}about_vision_title, theme_hikmah{{/str}}</h2>
+                <p>{{#str}}about_vision_text, theme_hikmah{{/str}}</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="hk2-section hk2-section--clip">
+        <div class="hk2-wrap">
+            <header class="hk2-head hk2-head--center" data-hk-reveal>
+                <span class="hk2-eyebrow hk2-eyebrow--plain">{{#str}}about_teachers_eyebrow, theme_hikmah{{/str}}</span>
+                <h2 class="hk2-title">{{#str}}about_teachers_title, theme_hikmah{{/str}}</h2>
+                <p class="hk2-lead">{{#str}}about_teachers_lead, theme_hikmah{{/str}}</p>
+            </header>
+            <div class="hk2-team" data-hk-reveal data-hk2-track="teachers" data-hk2-every="2500">
+                {{#teachers}}
+                    <article class="hk2-person{{#big}} hk2-person--big{{/big}}" style="--hk2-lift: {{lift}}px">
+                        <div class="hk2-person__photo">
+                            {{#photo}}<img src="{{photo}}" alt="{{name}}" loading="lazy">{{/photo}}
+                            {{^photo}}<svg class="hk2-person__outline" viewBox="0 0 200 240" aria-hidden="true"><circle cx="100" cy="86" r="40"/><path d="M24 240c0-48 34-84 76-84s76 36 76 84"/></svg>{{/photo}}
+                        </div>
+                        <div class="hk2-person__label">
+                            <div class="hk2-person__name">{{name}}</div>
+                            {{#creds}}<div class="hk2-person__cred">{{text}}</div>{{/creds}}
+                        </div>
+                    </article>
+                {{/teachers}}
+            </div>
+        </div>
+    </section>
+
+    <section class="hk2-section hk2-section--tint hk2-section--tight">
+        <div class="hk2-wrap">
+            <header class="hk2-head" data-hk-reveal>
+                <span class="hk2-eyebrow">{{#str}}about_ways_eyebrow, theme_hikmah{{/str}}</span>
+                <h2 class="hk2-title hk2-title--sm">{{#str}}about_ways_title, theme_hikmah{{/str}}</h2>
+            </header>
+            <ul class="hk2-ways" data-hk-stagger>
+                {{#ways}}
+                    <li><span class="hk2-icon hk2-icon--sm" aria-hidden="true"><svg viewBox="0 0 24 24">{{#icon}}<path d="{{.}}"/>{{/icon}}</svg></span><div><h3>{{title}}</h3><p>{{text}}</p></div></li>
+                {{/ways}}
+            </ul>
+        </div>
+    </section>
+
+    <section class="hk2-verse">
+        <img src="{{pix}}rosette.svg" alt="">
+        <figure class="hk2-wrap">
+            <blockquote data-hk-reveal>
+                <p class="hk2-verse__arabic" lang="ar" dir="rtl">يُؤْتِي الْحِكْمَةَ مَن يَشَاءُ ۚ وَمَن يُؤْتَ الْحِكْمَةَ فَقَدْ أُوتِيَ خَيْرًا كَثِيرًا</p>
+                <p class="hk2-verse__text">{{#str}}about_verse_text, theme_hikmah{{/str}}</p>
+            </blockquote>
+            <figcaption>{{#str}}about_verse_source, theme_hikmah{{/str}}</figcaption>
+        </figure>
+    </section>
+
+    <section class="hk2-section">
+        <div class="hk2-wrap">
+            <div class="hk2-cta" data-hk-reveal="scale">
+                <img src="{{pix}}rosette-ink.svg" alt="">
+                <div>
+                    <h2>{{#str}}about_cta_title, theme_hikmah{{/str}}</h2>
+                    <p>{{#str}}about_cta_lead, theme_hikmah{{/str}}</p>
+                </div>
+                <div class="hk2-actions">
+                    <a class="hk2-btn" href="{{catalogurl}}">{{#str}}home2_browse, theme_hikmah{{/str}}{{> theme_hikmah/home2_arrow }}</a>
+                    <a class="hk2-btn hk2-btn--ghost" href="{{contacturl}}">{{#str}}home2_link_contact, theme_hikmah{{/str}}</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+{{#js}}
+require(['theme_hikmah/home2'], function(home2) {
+    home2.init();
+});
+{{/js}}

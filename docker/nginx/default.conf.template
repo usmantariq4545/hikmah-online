@@ -70,7 +70,7 @@ server {
         rewrite ^/course/([a-z0-9-]+)/?$ /local/hikmahurls/course.php?hkslug=$1&hkpage=view last;
         rewrite ^/courses/?$ /theme/hikmah/catalog.php last;
         rewrite ^/courses/([a-z0-9-]+)/?$ /local/hikmahurls/course.php?hkslug=$1&hkpage=info last;
-        rewrite ^/(faq|verify|classroom)/?$ /theme/hikmah/$1.php last;
+        rewrite ^/(about|contact|faq|verify|classroom)/?$ /theme/hikmah/$1.php last;
         rewrite ^ /r.php last;
     }
     # moodledata, reachable only through Moodle's X-Accel-Redirect after an access check.

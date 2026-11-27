@@ -46,7 +46,7 @@ function theme_hikmah_get_main_scss_content($theme): string {
     global $CFG;
 
     $scss = file_get_contents($CFG->dirroot . '/theme/boost/scss/preset/default.scss');
-    foreach (['base', 'motion', 'moodle', 'pages', 'home2', 'app'] as $partial) {
+    foreach (['base', 'motion', 'moodle', 'pages', 'home2', 'infopages', 'app'] as $partial) {
         $scss .= "\n" . file_get_contents(__DIR__ . '/scss/hikmah/_' . $partial . '.scss');
     }
     return $scss;
