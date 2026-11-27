@@ -1,11 +1,6 @@
 // ---- Draft home page v2 (/theme/hikmah/home2.php), built from the design canvas. ---------------------
 // Everything is scoped to .hk2 so the rest of the site is untouched. Course cards reuse .hk-course.
 
-// The site footer's link block is replaced by the page's own footer here.
-body.hk-home2 #page-footer .hk-footer__main {
-    display: none;
-}
-
 .hk2 {
     // One side gutter for the page: grows with the screen and clears phone notches.
     // stylelint-disable-next-line csstree/validator
@@ -1226,17 +1221,21 @@ body.hk-home2 #page-footer .hk-footer__main {
     }
 }
 
-// Footer.
+// Site footer (theme_hikmah/footer_site), on every page: brand left, link columns right, newsletter,
+// then the rights line with the social icons on the right.
 .hk2-footer {
+    // stylelint-disable-next-line csstree/validator
+    --hk2-gutter: clamp(24px, 5.5vw, 64px);
     position: relative;
     overflow: hidden;
     isolation: isolate;
     background: $hk-ink;
     color: rgba(255, 255, 255, .75);
     padding: 72px 0 32px;
+    font-family: $hk-font-body;
     font-size: 15px;
     &::before {
-        // The paper rosette in the top corner, as in the site footer.
+        // The paper rosette in the top corner.
         content: "";
         position: absolute;
         width: 520px;
@@ -1246,6 +1245,13 @@ body.hk-home2 #page-footer .hk-footer__main {
         background: url([[pix:theme|motif-paper]]) center / contain no-repeat;
         pointer-events: none;
         z-index: -1;
+    }
+    &__wrap {
+        max-width: 1200px;
+        margin: 0 auto;
+        // stylelint-disable-next-line csstree/validator
+        padding-inline: max(var(--hk2-gutter), env(safe-area-inset-left)) max(var(--hk2-gutter), env(safe-area-inset-right));
+        box-sizing: border-box;
     }
     &__logo {
         display: block;
@@ -1263,14 +1269,26 @@ body.hk-home2 #page-footer .hk-footer__main {
     }
     &__grid {
         display: grid;
-        grid-template-columns: minmax(0, 1.6fr) repeat(4, minmax(0, 1fr));
-        gap: 36px;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 48px;
+        align-items: start;
+    }
+    &__brand p {
+        margin: 0;
+        line-height: 1.6;
+        max-width: 22rem;
+    }
+    &__cols {
+        display: grid;
+        grid-template-columns: repeat(3, max-content);
+        gap: 56px;
         nav {
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
         h2 {
+            font-family: $hk-font-display;
             color: $hk-sun;
             font-size: 12px;
             font-weight: 700;
@@ -1279,18 +1297,47 @@ body.hk-home2 #page-footer .hk-footer__main {
             margin: 0 0 4px;
         }
     }
-    &__brand p {
-        margin: 0;
-        line-height: 1.6;
-        max-width: 22rem;
-    }
     &__base {
         display: flex;
         flex-wrap: wrap;
+        align-items: center;
         justify-content: space-between;
-        gap: 12px;
+        gap: 12px 24px;
         margin-top: 24px;
+        // Room for Moodle's round help button, fixed in the bottom corner.
+        padding-inline-end: 3.5rem;
         font-size: 14px;
+    }
+    &__social {
+        display: flex;
+        gap: 10px;
+        a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, .25);
+            transition: color .2s ease, border-color .2s ease;
+            &:hover,
+            &:focus-visible {
+                border-color: $hk-sun;
+            }
+        }
+        svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.6;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+    }
+    &__dot {
+        fill: currentColor;
+        stroke: none;
     }
 }
 
@@ -1323,9 +1370,22 @@ body.hk-home2 #page-footer .hk-footer__main {
             border-color: $hk-sun;
         }
     }
-    small {
-        flex-basis: 100%;
-        color: rgba(255, 255, 255, .6);
+}
+
+@media (max-width: 1000px) {
+    .hk2-footer__grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 40px;
+    }
+}
+
+@media (max-width: 600px) {
+    .hk2-footer {
+        padding-top: 56px;
+        &__cols {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 32px 24px;
+        }
     }
 }
 
@@ -1354,12 +1414,6 @@ body.hk-home2 #page-footer .hk-footer__main {
         > .hk-course:nth-child(n+5) {
             display: none;
         }
-    }
-    .hk2-footer__grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-    .hk2-footer__brand {
-        grid-column: 1 / -1;
     }
 }
 
@@ -1454,9 +1508,6 @@ body.hk-home2 #page-footer .hk-footer__main {
         h2 {
             font-size: 28px;
         }
-    }
-    .hk2-footer__grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
@@ -1588,9 +1639,6 @@ body.hk-home2 #page-footer .hk-footer__main {
     }
     .hk2-person__cred {
         font-size: 10.5px;
-    }
-    .hk2-footer__grid {
-        grid-template-columns: 1fr 1fr;
     }
 }
 

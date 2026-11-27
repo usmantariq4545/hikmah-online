@@ -34,38 +34,7 @@
     }
 }}
 <footer id="page-footer" class="hk-footer footer-popover">
-    <div class="hk-footer__main">
-        <div class="hk-container hk-footer__grid">
-            <div class="hk-footer__brand">
-                <img src="{{output.hk_logo_light}}" alt="{{output.hk_sitename}}" class="hk-footer__logo" decoding="async">
-                <p>{{#str}}footer_tagline, theme_hikmah{{/str}}</p>
-            </div>
-            <nav class="hk-footer__col" aria-label="{{#str}}footer_learn, theme_hikmah{{/str}}">
-                <h2 class="hk-footer__title">{{#str}}footer_learn, theme_hikmah{{/str}}</h2>
-                <ul>
-                    <li><a href="{{output.hk_catalog_url}}">{{#str}}nav_courses, theme_hikmah{{/str}}</a></li>
-                    <li><a href="{{output.hk_dashboard_url}}">{{#str}}nav_dashboard, theme_hikmah{{/str}}</a></li>
-                    <li><a href="{{output.hk_verify_url}}">{{#str}}nav_verify, theme_hikmah{{/str}}</a></li>
-                </ul>
-            </nav>
-            <nav class="hk-footer__col" aria-label="{{#str}}footer_help, theme_hikmah{{/str}}">
-                <h2 class="hk-footer__title">{{#str}}footer_help, theme_hikmah{{/str}}</h2>
-                <ul>
-                    <li><a href="{{output.hk_faq_url}}">{{#str}}nav_faq, theme_hikmah{{/str}}</a></li>
-                    <li><a href="{{output.hk_policies_url}}">{{#str}}footer_privacy, theme_hikmah{{/str}}</a></li>
-                    {{# output.supportemail }}<li>{{{ output.supportemail }}}</li>{{/ output.supportemail }}
-                </ul>
-            </nav>
-            <div class="hk-footer__col hk-footer__account">
-                <h2 class="hk-footer__title">{{#str}}footer_account, theme_hikmah{{/str}}</h2>
-                <div class="logininfo">{{{ output.login_info }}}</div>
-            </div>
-        </div>
-        <div class="hk-container hk-footer__base">
-            <span>© {{output.hk_year}} {{output.hk_sitename}}</span>
-            <span class="hk-footer__motto" lang="ar" dir="rtl">حكمة</span>
-        </div>
-    </div>
+    {{{ output.hk_footer }}}
 
     <div data-region="footer-container-popover">
         {{#output.has_communication_links}}
