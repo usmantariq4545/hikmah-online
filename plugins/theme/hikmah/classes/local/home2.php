@@ -44,9 +44,6 @@ class home2 {
         'maaz' => ['', 1, false, 36],
     ];
 
-    /** @var string WhatsApp chat link for Hikmah Online (+92 331 2755374). */
-    private const WHATSAPP = 'https://wa.me/923312755374';
-
     /** @var array Line icons as SVG path data on a 24px grid. */
     private const ICONS = [
         'book' => ['M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z', 'M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z'],
@@ -71,21 +68,16 @@ class home2 {
      * @return array
      */
     public static function export(): array {
-        global $OUTPUT, $SITE;
         $data = home::export();
         $catalog = $data['catalogurl'];
         $pix = (new moodle_url('/theme/hikmah/pix/home2/'))->out(false);
 
         $data['pix'] = $pix;
         $data['primaryurl'] = $data['cansignup'] ? $data['signupurl'] : $catalog;
-        $data['policiesurl'] = (new moodle_url('/admin/tool/policy/viewall.php'))->out(false);
-        $data['year'] = userdate(time(), '%Y');
-        $data['logo'] = $OUTPUT->image_url('logo-light', 'theme_hikmah')->out(false);
-        $data['sitename'] = format_string($SITE->fullname, true, ['context' => \context_system::instance()]);
         $data['khizerphoto'] = self::photo_url('khizer');
         // Until the guide video is ready, its card leads back to the home page.
         $data['homeurl'] = (new moodle_url('/', ['redirect' => 0]))->out(false);
-        $data['whatsappurl'] = self::WHATSAPP;
+        $data['whatsappurl'] = footer::WHATSAPP;
 
         $data['promises'] = self::with_icons(self::numbered('promise', 4), ['book', 'bulb', 'globe', 'award']);
         $data['sessions'] = self::numbered('session', 3);

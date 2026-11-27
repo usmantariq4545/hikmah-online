@@ -165,6 +165,15 @@ class core_renderer extends \theme_boost\output\core_renderer {
     }
 
     /**
+     * The site footer (theme_hikmah/footer_site), shown on every page.
+     *
+     * @return string HTML
+     */
+    public function hk_footer(): string {
+        return $this->render_from_template('theme_hikmah/footer_site', \theme_hikmah\local\footer::export());
+    }
+
+    /**
      * Boost always heads an activity page with the activity's name; a held live class says "Class recording".
      *
      * @param array|null $headerinfo

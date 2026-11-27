@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-11-27 — Home page v2 footer on every page
+
+- The site footer is now the v2 footer (templates/footer_site.mustache, class local/footer.php, renderer
+  hk_footer()) on every page, the login page included; the live-class page stays without one. Home v2 no longer
+  carries its own copy.
+- Owner's edits: logo and mission on the left, Learn / About / Help on the right; "Institute" renamed "About";
+  "Become a teacher" removed; the "Preview only" newsletter note removed; newsletter text "Get new courses and
+  session alerts in your inbox."; rights line ends "Powered by Ottom Solutions"; WhatsApp, Instagram and Facebook
+  as icons on the right of that line (inline SVG, labelled, open in a new tab). Theme version 2026112700.
+
 ## 2026-11-27 — Clean links: no ".php", courses by name
 
 - New plugin local_hikmahurls ($CFG->urlrewriteclass) prints every Moodle link without ".php":
