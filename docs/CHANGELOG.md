@@ -14,7 +14,31 @@
 - Footer: "About us" and "Contact us" now open these pages (Contact used to open WhatsApp).
 - Teachers: Khizer Khalid and Shahzaib Aijaz show "LUMS · Aalimiyyah Graduate" (home page too); a credential still
   in [brackets] is no longer shown.
-- Clean links /about and /contact (rewriter, Nginx, smoke test). Theme version 2026112701.
+- Clean links /about and /contact (rewriter, Nginx, smoke test). Theme version 2026112702.
+## 2026-11-27 — Privacy Policy, Terms of Use and Refund Policy live
+
+- The owner approved the texts. They are in config/settings/policies/*.html, and 130-privacy.php publishes them as
+  revision 1.0 of "Privacy Policy" (new version of the old draft privacy notice), "Terms of Use" (new version of the
+  old draft terms) and "Refund Policy" (new). All three are compulsory, so every user accepts them again at their
+  next sign-in. To change a text later: edit the file and raise its revision in 130-privacy.php.
+- Defaults filled in for the doc's open items: owner Hikmah Institute; contact hikmahonline1@gmail.com (the site's
+  support email); under-18s need a parent or guardian's permission; Pakistani law with no city named; activity logs
+  kept 2 years (logstore_standard loglifetime 730, set here); recordings "a limited time"; learning records kept as
+  long as the account exists.
+- Branded public pages /privacy-policy, /terms-of-use and /refund-policy (theme_hikmah privacy.php, terms.php,
+  refund.php, local/policypage.php, policy.mustache, .hk-policy styles), showing the current tool_policy version.
+  The site footer, the sign-in page and the sign-up checkbox link to them by these three names ("I agree to the
+  Terms of Use, Privacy Policy and Refund Policy"). Clean URL aliases in local_hikmahurls and nginx.
+- theme_hikmah and local_hikmahaccess version 2026112701.
+
+## 2026-11-27 — Marketing opt-in on sign-up
+
+- The sign-up form has a second, optional checkbox under "I agree to the Terms of Use and Privacy Policy":
+  "Send me news about new courses and offers by email". It is unticked by default and saved to the profile field
+  hkconsentcomms, which learners can change in their profile. That field is renamed to the same words
+  (040-profile.php now also syncs field names). local_hikmahaccess version 2026112700.
+- The terms checkbox and its record were already in place: each new account gets a versioned acceptance of every
+  compulsory policy (Site administration > Users > Privacy and policies > User agreements, with download).
 
 ## 2026-11-27 — Home page v2 footer on every page
 

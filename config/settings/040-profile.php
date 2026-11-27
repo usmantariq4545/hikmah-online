@@ -26,13 +26,17 @@ $fields = [
     'hkphone' => ['Mobile / WhatsApp number', 'text', 1, 0, ['param1' => 30, 'param2' => 30, 'param3' => 0]],
     'hkguardian' => ['Guardian contact (for learners under 18)', 'text', 0, 0, ['param1' => 40, 'param2' => 100,
         'param3' => 0]],
-    'hkconsentcomms' => ['I agree to receive course announcements by email', 'checkbox', 0, 0, ['defaultdata' => 0]],
+    'hkconsentcomms' => ['Send me news about new courses and offers by email', 'checkbox', 0, 0, ['defaultdata' => 0]],
 ];
 
 $sort = 0;
 foreach ($fields as $shortname => [$name, $datatype, $required, $signup, $extra]) {
     $sort++;
-    if ($existing = $DB->get_record('user_info_field', ['shortname' => $shortname], 'id, signup')) {
+    if ($existing = $DB->get_record('user_info_field', ['shortname' => $shortname], 'id, name, signup')) {
+        if ($existing->name !== $name) {
+            $DB->set_field('user_info_field', 'name', $name, ['id' => $existing->id]);
+            hk_changed("profile field $shortname renamed");
+        }
         if ((int) $existing->signup !== $signup) {
             $DB->set_field('user_info_field', 'signup', $signup, ['id' => $existing->id]);
             hk_changed("profile field $shortname " . ($signup ? 'on' : 'off') . ' the sign-up form');

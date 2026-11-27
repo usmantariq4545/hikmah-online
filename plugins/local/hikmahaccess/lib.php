@@ -49,7 +49,7 @@ function local_hikmahaccess_extend_navigation_user_settings(
 /**
  * Sign-up form: only the basic details. The Hikmah profile details (and city and country) are asked
  * after the first sign-in; the password rules sit under the password box; one checkbox records
- * agreement to the Terms of Use and Privacy Policy (owner's decision, 2026-11-20).
+ * agreement to the Terms of Use, Privacy Policy and Refund Policy (owner's decisions, 2026-11-20 and 2026-11-27).
  *
  * @param MoodleQuickForm $mform
  */
@@ -63,17 +63,15 @@ function local_hikmahaccess_extend_signup_form(MoodleQuickForm $mform): void {
         $mform->insertElementBefore($mform->removeElement('passwordpolicyinfo', false), 'email');
     }
 
-    $links = ['terms' => get_string('termsofuse', 'local_hikmahaccess'),
-        'privacy' => get_string('privacypolicy', 'local_hikmahaccess')];
-    if (class_exists('\tool_policy\api')) {
-        foreach (\tool_policy\api::list_current_versions() as $version) {
-            $key = (int) $version->type === \tool_policy\policy_version::TYPE_PRIVACY ? 'privacy' : 'terms';
-            $url = new moodle_url('/admin/tool/policy/view.php', ['policyid' => $version->policyid]);
-            $links[$key] = html_writer::link($url, get_string(
-                $key === 'privacy' ? 'privacypolicy' : 'termsofuse',
-                'local_hikmahaccess'
-            ), ['target' => '_blank', 'rel' => 'noopener']);
-        }
+    // Links open the theme's policy pages, which show the current tool_policy versions that the account accepts.
+    $links = [];
+    foreach (['terms' => 'termsofuse', 'privacy' => 'privacypolicy', 'refund' => 'refundpolicy'] as $kind => $string) {
+        $name = get_string($string, 'local_hikmahaccess');
+        $links[$kind] = class_exists('\theme_hikmah\local\policypage') ? html_writer::link(
+            \theme_hikmah\local\policypage::url($kind),
+            $name,
+            ['target' => '_blank', 'rel' => 'noopener']
+        ) : $name;
     }
     // Checked on submit (validate_extend_signup_form below); no "*" marker, which would sit on a line of its own.
 
@@ -100,6 +98,14 @@ function local_hikmahaccess_extend_signup_form(MoodleQuickForm $mform): void {
     }
 
     $mform->addElement('checkbox', 'hkagree', '', get_string('signupagree', 'local_hikmahaccess', (object) $links));
+
+    // Optional marketing opt-in, unticked. Named after the profile field so auth_email's profile_save_data() stores
+    // it on the new account; the field itself stays off the sign-up form, where it would add a section of its own.
+    global $DB;
+    if ($DB->record_exists('user_info_field', ['shortname' => 'hkconsentcomms'])) {
+        $label = get_string('signupmarketing', 'local_hikmahaccess');
+        $mform->addElement('checkbox', 'profile_field_hkconsentcomms', '', $label);
+    }
 }
 
 /**

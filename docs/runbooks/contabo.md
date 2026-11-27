@@ -162,7 +162,8 @@ and log in as the administrator.
 Then, in the browser:
 - If you use Moodle's free BBB tier, accept its data processing agreement once (Site administration
   → Plugins → Activity modules → BigBlueButton). Nobody does this on your behalf.
-- Replace the draft privacy notice and terms (Site administration → Users → Privacy and policies).
+- Done 2026-11-27: the Privacy Policy, Terms of Use and Refund Policy are published by config/settings/130-privacy.php
+  from config/settings/policies/ (edit the file and raise its revision there, not in the admin UI).
 
 ## 8. Off-site backups (Cloudflare R2)
 

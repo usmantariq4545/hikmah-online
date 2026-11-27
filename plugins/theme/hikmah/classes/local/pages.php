@@ -77,7 +77,7 @@ class pages {
             'facebookurl' => footer::FACEBOOK,
             'email' => self::EMAIL,
             'faqurl' => (new moodle_url('/theme/hikmah/faq.php'))->out(false),
-            'policiesurl' => (new moodle_url('/admin/tool/policy/viewall.php'))->out(false),
+            'policiesurl' => policypage::url('privacy')->out(false),
             'contacturl' => (new moodle_url('/theme/hikmah/contact.php'))->out(false),
             'form' => $form,
             'hasform' => $form !== '',

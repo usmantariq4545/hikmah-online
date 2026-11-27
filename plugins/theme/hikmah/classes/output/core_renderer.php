@@ -109,12 +109,30 @@ class core_renderer extends \theme_boost\output\core_renderer {
     }
 
     /**
-     * Site policies URL (privacy and terms), when the policy tool is the handler.
+     * Privacy Policy page URL.
      *
      * @return string
      */
-    public function hk_policies_url(): string {
-        return (new moodle_url('/admin/tool/policy/viewall.php'))->out(false);
+    public function hk_privacy_url(): string {
+        return \theme_hikmah\local\policypage::url('privacy')->out(false);
+    }
+
+    /**
+     * Terms of Use page URL.
+     *
+     * @return string
+     */
+    public function hk_terms_url(): string {
+        return \theme_hikmah\local\policypage::url('terms')->out(false);
+    }
+
+    /**
+     * Refund Policy page URL.
+     *
+     * @return string
+     */
+    public function hk_refund_url(): string {
+        return \theme_hikmah\local\policypage::url('refund')->out(false);
     }
 
     /**

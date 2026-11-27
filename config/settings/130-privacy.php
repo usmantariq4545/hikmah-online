@@ -1,9 +1,8 @@
 <?php
 // 130 — Site policies and data retention (PRD section 11).
 //
-// The policy texts created here are DRAFTS so that sign-up consent works from day one. They are
-// clearly marked as drafts and must be replaced by wording approved by Hikmah (legal and privacy
-// review is an open decision in the PRD). Retention periods are the PRD defaults.
+// Publishes the Privacy Policy, Terms of Use and Refund Policy approved by the owner on 2026-11-27
+// (texts in policies/). Retention periods are the PRD defaults.
 require(__DIR__ . '/lib.php');
 
 global $DB;
@@ -14,46 +13,54 @@ hk_set('automaticdeletionrequests', 0, 'tool_dataprivacy');
 hk_set('showdataretentionsummary', 1, 'tool_dataprivacy');
 
 // ---- Policies -------------------------------------------------------------------------------------
+// The approved texts (owner, 2026-11-27) live in policies/*.html. To publish a change, edit the file AND raise
+// its revision: a new revision becomes the current version and everyone accepts it again at their next sign-in.
+// One policy per type; the Refund Policy is the only "other" one. The first run replaces the drafts of
+// 2026-11-20 ("Privacy notice (draft)", "Terms of use (draft)") with new versions of the same policies.
 $policies = [
-    'Privacy notice (draft)' => [
-        \tool_policy\policy_version::TYPE_PRIVACY,
-        'How Hikmah Online uses your personal data.',
-        '<p><strong>Draft for review. Not yet approved by Hikmah Institute.</strong></p>' .
-        '<p>Hikmah Online stores the details you give when you register (name, email address and profile fields), ' .
-        'your course activity, grades and attendance, and, for paid courses, the transfer details and receipt you ' .
-        'upload. This data is used to run your courses, verify payments, record attendance and issue certificates.</p>' .
-        '<p>Receipts can be opened only by Hikmah finance reviewers and are deleted after the retention period. ' .
-        'Live class recordings can be watched only by enrolled learners who are signed in. A certificate can be ' .
-        'verified by anyone who has its code; verification shows your name, the course and the issue date only.</p>' .
-        '<p>You can ask for a copy of your data or for its deletion from your profile page.</p>',
-    ],
-    'Terms of use (draft)' => [
-        \tool_policy\policy_version::TYPE_SITE,
-        'The rules for using Hikmah Online.',
-        '<p><strong>Draft for review. Not yet approved by Hikmah Institute.</strong></p>' .
-        '<p>Your account is personal. Keep your password private and do not share access to courses, live classes ' .
-        'or recordings. Submit your own work. A place on a paid course is confirmed only after Hikmah has verified ' .
-        'your payment. Hikmah may suspend accounts that break these rules.</p>',
-    ],
+    'Privacy Policy' => [\tool_policy\policy_version::TYPE_PRIVACY, '1.0', 'privacy.html',
+        'What personal data Hikmah Online collects, who can see it and how long it is kept.'],
+    'Terms of Use' => [\tool_policy\policy_version::TYPE_SITE, '1.0', 'terms.html',
+        'The rules for using Hikmah Online, its courses and live classes.'],
+    'Refund Policy' => [\tool_policy\policy_version::TYPE_OTHER, '1.0', 'refund.html',
+        'When and how you can get a refund for a paid course.'],
 ];
-$existing = $DB->get_fieldset_select('tool_policy_versions', 'name', '1 = 1');
-foreach ($policies as $name => [$type, $summary, $content]) {
-    if (in_array($name, $existing, true)) {
+foreach ($policies as $name => [$type, $revision, $file, $summary]) {
+    $current = $DB->get_record_sql(
+        'SELECT p.id AS policyid, v.name, v.revision
+           FROM {tool_policy} p
+           JOIN {tool_policy_versions} v ON v.id = p.currentversionid
+          WHERE v.type = ?
+       ORDER BY p.id',
+        [$type],
+        IGNORE_MULTIPLE
+    );
+    if ($current && $current->name === $name && $current->revision === $revision) {
         continue;
     }
-    $version = \tool_policy\api::form_policydoc_add((object) [
+    $form = (object) [
         'name' => $name,
         'type' => $type,
         'audience' => \tool_policy\policy_version::AUDIENCE_ALL,
-        'revision' => 'draft-1',
-        'summary_editor' => ['text' => $summary, 'format' => FORMAT_HTML, 'itemid' => 0],
-        'content_editor' => ['text' => $content, 'format' => FORMAT_HTML, 'itemid' => 0],
+        'revision' => $revision,
+        'summary_editor' => ['text' => "<p>$summary</p>", 'format' => FORMAT_HTML, 'itemid' => 0],
+        'content_editor' => ['text' => file_get_contents(__DIR__ . "/policies/$file"), 'format' => FORMAT_HTML,
+            'itemid' => 0],
         'agreementstyle' => \tool_policy\policy_version::AGREEMENTSTYLE_CONSENTPAGE,
         'optional' => \tool_policy\policy_version::AGREEMENT_COMPULSORY,
-    ]);
+    ];
+    if ($current) {
+        $form->policyid = $current->policyid;
+        $version = \tool_policy\api::form_policydoc_update_new($form);
+    } else {
+        $version = \tool_policy\api::form_policydoc_add($form);
+    }
     \tool_policy\api::make_current($version->get('id'));
-    hk_changed("policy \"$name\" created");
+    hk_changed("policy \"$name\" revision $revision published");
 }
+
+// Activity logs are kept 2 years (Privacy Policy, section 3).
+hk_set('loglifetime', 730, 'logstore_standard');
 
 // ---- Retention: purposes and categories -------------------------------------------------------------
 $purposes = [

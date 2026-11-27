@@ -23,7 +23,7 @@ use moodle_url;
  *
  *   /course/view.php?id=5           -> /course/foundations-of-fiqh
  *   /theme/hikmah/course.php?id=5   -> /courses/foundations-of-fiqh
- *   /theme/hikmah/catalog.php       -> /courses        (also /about, /contact, /faq, /verify, /classroom)
+ *   /theme/hikmah/catalog.php       -> /courses        (also /about, /contact, /faq, /verify, /classroom, /privacy-policy, ...)
  *   /mod/quiz/view.php?id=9         -> /mod/quiz/view?id=9
  *   /my/index.php                   -> /my/
  *
@@ -44,6 +44,9 @@ class rewriter implements \core\output\url_rewriter {
         '/theme/hikmah/faq.php' => '/faq',
         '/theme/hikmah/verify.php' => '/verify',
         '/theme/hikmah/classroom.php' => '/classroom',
+        '/theme/hikmah/privacy.php' => '/privacy-policy',
+        '/theme/hikmah/terms.php' => '/terms-of-use',
+        '/theme/hikmah/refund.php' => '/refund-policy',
     ];
 
     /**

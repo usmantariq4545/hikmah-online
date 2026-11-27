@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Public Contact us page (/contact). The message form is Moodle's own "Contact site support" form, so it
  * follows the site's support settings: who may write (supportavailability), where it goes (supportemail)
