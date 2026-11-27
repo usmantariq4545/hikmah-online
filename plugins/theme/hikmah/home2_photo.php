@@ -15,19 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Serves a teacher photo for the home page v2 draft. Photos live in moodledata/hikmah-media/teachers
- * (kept out of the public code repository) and, like the draft page, only site administrators can see them.
+ * Serves a teacher photo for the public home page. Photos live in moodledata/hikmah-media/teachers
+ * (kept out of the public code repository). Anyone can see them, like the home page itself.
  *
  * @package    theme_hikmah
  * @copyright  2026 Hikmah Institute
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// Public image for the home page: no session needed.
+define('NO_MOODLE_COOKIES', true);
+
+// phpcs:ignore moodle.Files.RequireLogin.Missing
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/filelib.php');
-
-require_login(null, false);
-require_capability('moodle/site:config', context_system::instance());
 
 $name = required_param('name', PARAM_ALPHA);
 // Only the known teacher keys map to a file, so the name can never reach outside the photo folder.

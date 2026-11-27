@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-27 — Home page v2 is the public home page again; previous home kept as an admin draft
+
+- At the owner's request, re-applies "Home page v2 is now the public home page" (undoing the rollback): / shows v2
+  for everyone, with the WhatsApp, Instagram and Facebook links, the guide video card leading home, and no app link;
+  teacher photos are public again; /theme/hikmah/home2.php stays as an admin preview.
+- The previous home page is kept at /theme/hikmah/home1.php for site administrators only (templates/home1.mustache,
+  same markup, home::export()). Theme version 2026112605.
+
 ## 2026-11-26 — Cloudflare ECH turned off
 
 - The owner's laptop and phone got ERR_CONNECTION_RESET on hikmahonline.com while curl and the in-app browser worked:
