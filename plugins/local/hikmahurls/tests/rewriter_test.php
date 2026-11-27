@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 namespace local_hikmahurls;
 
 use moodle_url;
@@ -46,8 +47,8 @@ final class rewriter_test extends \advanced_testcase {
         slugs::reset_cache();
 
         $this->assertSame('/course/foundations-of-fiqh', $this->clean(new moodle_url('/course/view.php', ['id' => $course->id])));
-        $this->assertSame('/course/foundations-of-fiqh?section=2',
-            $this->clean(new moodle_url('/course/view.php', ['id' => $course->id, 'section' => 2])));
+        $section = new moodle_url('/course/view.php', ['id' => $course->id, 'section' => 2]);
+        $this->assertSame('/course/foundations-of-fiqh?section=2', $this->clean($section));
         $info = new moodle_url('/theme/hikmah/course.php', ['id' => $course->id]);
         $this->assertSame('/courses/foundations-of-fiqh', $this->clean($info));
         $this->assertSame('/course/view?id=999', $this->clean(new moodle_url('/course/view.php', ['id' => 999])));
@@ -65,7 +66,7 @@ final class rewriter_test extends \advanced_testcase {
      * Links other systems call, file links and theme assets keep ".php"; other sites are left alone.
      */
     public function test_keeps(): void {
-        foreach ([
+        $keep = [
             '/admin/oauth2callback.php',
             '/login/token.php',
             '/lib/ajax/service.php',
@@ -77,7 +78,8 @@ final class rewriter_test extends \advanced_testcase {
             '/pluginfile.php/1/a/b.jpg',
             '/theme/image.php/hikmah/core/1/logo',
             '/r.php/api/x',
-        ] as $path) {
+        ];
+        foreach ($keep as $path) {
             $this->assertSame($path, $this->clean(new moodle_url($path)), $path);
         }
         $other = new moodle_url('https://example.org/a.php');

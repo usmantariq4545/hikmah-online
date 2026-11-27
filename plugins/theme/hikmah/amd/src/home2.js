@@ -42,7 +42,7 @@ const glide = (track, target) => {
     const distance = target - from;
     const duration = Math.min(1100, 650 + Math.abs(distance) / 4);
     const started = performance.now();
-    const ease = (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+    const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
     track.style.scrollSnapType = 'none';
     const tick = (now) => {
         const progress = Math.min(1, (now - started) / duration);

@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 namespace local_hikmahurls;
 
 /**
@@ -30,7 +31,7 @@ final class slugs_test extends \advanced_testcase {
     public function test_slugify(): void {
         $this->assertSame('foundations-of-fiqh', slugs::slugify('Foundations of Fiqh'));
         $this->assertSame('the-world-behind-an-islamic-ruling', slugs::slugify('  The World Behind an Islamic Ruling! '));
-        $this->assertSame('seerah-101-makkah', slugs::slugify("Seerah 101 — Makkah's years"));
+        $this->assertSame('seerah-101-makkahs-years', slugs::slugify("Seerah 101 — Makkah's years"));
         $this->assertSame('aqeedah-belief', slugs::slugify('Aqeedah &amp; Belief'));
         $this->assertSame('', slugs::slugify('★ ★ ★'));
         $this->assertLessThanOrEqual(80, strlen(slugs::slugify(str_repeat('long title ', 30))));

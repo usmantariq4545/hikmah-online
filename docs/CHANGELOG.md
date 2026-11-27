@@ -12,6 +12,13 @@
   callback, BigBlueButton, the Moodle App, web services, AJAX, file and theme asset links.
 - Kill switch: CLEAN_URLS=0 in the env file (then recreate the moodle container) prints ".php" links again.
 - Links that core JavaScript or templates build as plain text still show ".php" and keep working.
+## 2026-11-27 — Home page v2 is the public home page again; previous home kept as an admin draft
+
+- At the owner's request, re-applies "Home page v2 is now the public home page" (undoing the rollback): / shows v2
+  for everyone, with the WhatsApp, Instagram and Facebook links, the guide video card leading home, and no app link;
+  teacher photos are public again; /theme/hikmah/home2.php stays as an admin preview.
+- The previous home page is kept at /theme/hikmah/home1.php for site administrators only (templates/home1.mustache,
+  same markup, home::export()). Theme version 2026112605.
 
 ## 2026-11-26 — Cloudflare ECH turned off
 
