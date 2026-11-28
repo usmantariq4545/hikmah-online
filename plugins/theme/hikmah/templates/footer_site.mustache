@@ -27,6 +27,9 @@
         "logo": "logo-light.svg",
         "sitename": "Hikmah Online",
         "year": "2026",
+        "newsurl": "#",
+        "sesskey": "abc",
+        "returnurl": "/",
         "catalogurl": "#",
         "freeurl": "#",
         "liveurl": "#",
@@ -74,11 +77,13 @@
                 </nav>
             </div>
         </div>
-        <div class="hk2-news">
+        <form class="hk2-news" method="post" action="{{newsurl}}">
+            <input type="hidden" name="sesskey" value="{{sesskey}}">
+            <input type="hidden" name="returnurl" value="{{returnurl}}">
             <label for="hk2-news-email">{{#str}}home2_news_label, theme_hikmah{{/str}}</label>
-            <input id="hk2-news-email" type="email" autocomplete="email" placeholder="{{#str}}home2_news_placeholder, theme_hikmah{{/str}}">
-            <button class="hk2-btn hk2-btn--sun" type="button">{{#str}}home2_news_button, theme_hikmah{{/str}}</button>
-        </div>
+            <input id="hk2-news-email" name="email" type="email" required maxlength="254" autocomplete="email" placeholder="{{#str}}home2_news_placeholder, theme_hikmah{{/str}}">
+            <button class="hk2-btn hk2-btn--sun" type="submit">{{#str}}home2_news_button, theme_hikmah{{/str}}</button>
+        </form>
         <div class="hk2-footer__base">
             <span>{{#str}}home2_footer_rights, theme_hikmah, {{year}}{{/str}}</span>
             <div class="hk2-footer__social">

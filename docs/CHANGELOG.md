@@ -5,6 +5,17 @@
 - scripts/dev/hk.py (Python 3.12): branch, pr, checks (counts plus only the error lines of failed jobs), status
   (open PRs, live commit, deploy running), merged, deploy (refuses while another deploy runs). Short output, so
   Claude sessions spend fewer tokens on routine git and CI steps.
+## 2026-11-28 — Newsletter list from the footer
+
+- The footer box "Get new courses and session alerts" now works: it posts to local/hikmahaccess/news_subscribe.php,
+  which stores the address (table local_hikmahaccess_news) and emails a confirmation link (double opt-in; no new
+  email within 24 h, at most 3 sign-ups per browser session). Confirming adds the address to the list; every
+  address has an unsubscribe link (a button on the page, so email scanners cannot unsubscribe anyone).
+- Site administration > Users > Newsletter list (capability local/hikmahaccess:managenews, managers): confirmed
+  addresses plus accounts that ticked the news box at sign-up, with a CSV download that includes each address's
+  unsubscribe link for the mailing tool.
+- Privacy API: list rows are matched to accounts by email for export and delete. PHPUnit news_test.php.
+- local_hikmahaccess version 2026112800 (new table).
 ## 2026-11-28 — Cookie banner: analytics only after Accept
 
 - PostHog no longer loads for everyone. Its snippet now only defines window.hkAnalytics(); it runs when the cookie
