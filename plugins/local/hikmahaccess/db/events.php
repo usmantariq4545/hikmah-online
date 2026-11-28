@@ -37,4 +37,13 @@ $observers = [
         'eventname' => '\core\event\user_enrolment_created',
         'callback' => '\local_hikmahaccess\observer::user_enrolment_created',
     ],
+    // PostHog key events (local_hikmahaccess\analytics): queued for the person, sent from their browser after consent.
+    ['eventname' => '\core\event\user_created', 'callback' => '\local_hikmahaccess\analytics::observe'],
+    ['eventname' => '\core\event\user_updated', 'callback' => '\local_hikmahaccess\analytics::observe'],
+    ['eventname' => '\core\event\course_viewed', 'callback' => '\local_hikmahaccess\analytics::observe'],
+    ['eventname' => '\core\event\user_enrolment_created', 'callback' => '\local_hikmahaccess\analytics::observe'],
+    ['eventname' => '\paygw_hikmahtransfer\event\request_submitted', 'callback' => '\local_hikmahaccess\analytics::observe'],
+    ['eventname' => '\paygw_hikmahtransfer\event\request_approved', 'callback' => '\local_hikmahaccess\analytics::observe'],
+    ['eventname' => '\mod_bigbluebuttonbn\event\meeting_joined', 'callback' => '\local_hikmahaccess\analytics::observe'],
+    ['eventname' => '\tool_certificate\event\certificate_issued', 'callback' => '\local_hikmahaccess\analytics::observe'],
 ];
