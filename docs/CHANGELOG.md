@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-11-28 — Newsletter list from the footer
+
+- The footer box "Get new courses and session alerts" now works: it posts to local/hikmahaccess/news_subscribe.php,
+  which stores the address (table local_hikmahaccess_news) and emails a confirmation link (double opt-in; no new
+  email within 24 h, at most 3 sign-ups per browser session). Confirming adds the address to the list; every
+  address has an unsubscribe link (a button on the page, so email scanners cannot unsubscribe anyone).
+- Site administration > Users > Newsletter list (capability local/hikmahaccess:managenews, managers): confirmed
+  addresses plus accounts that ticked the news box at sign-up, with a CSV download that includes each address's
+  unsubscribe link for the mailing tool.
+- Privacy API: list rows are matched to accounts by email for export and delete. PHPUnit news_test.php.
+- local_hikmahaccess version 2026112800 (new table).
+
 ## 2026-11-28 — Broken-link check of the public site
 
 - Crawled 150 public pages and tested all 177 links on them: every page and link works. The only dead link was the

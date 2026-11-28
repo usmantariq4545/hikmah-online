@@ -35,3 +35,11 @@ if ($hassiteconfig) {
     ));
     $ADMIN->add('localplugins', $settings);
 }
+
+// Managers without site settings still reach the newsletter list (the page checks its own capability).
+$ADMIN->add('accounts', new admin_externalpage(
+    'local_hikmahaccess_news',
+    new lang_string('news_admin', 'local_hikmahaccess'),
+    new moodle_url('/local/hikmahaccess/news.php'),
+    'local/hikmahaccess:managenews'
+));

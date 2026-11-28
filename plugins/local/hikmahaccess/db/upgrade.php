@@ -47,5 +47,22 @@ function xmldb_local_hikmahaccess_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2026112302, 'local', 'hikmahaccess');
     }
 
+    if ($oldversion < 2026112800) {
+        $table = new xmldb_table('local_hikmahaccess_news');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('email', XMLDB_TYPE_CHAR, '254', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('token', XMLDB_TYPE_CHAR, '32', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('confirmed', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('timeconfirmed', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_index('email', XMLDB_INDEX_UNIQUE, ['email']);
+        $table->add_index('token', XMLDB_INDEX_UNIQUE, ['token']);
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+        upgrade_plugin_savepoint(true, 2026112800, 'local', 'hikmahaccess');
+    }
+
     return true;
 }

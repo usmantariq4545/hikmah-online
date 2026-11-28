@@ -41,13 +41,16 @@ class footer {
      * @return array
      */
     public static function export(): array {
-        global $OUTPUT, $SITE;
+        global $OUTPUT, $PAGE, $SITE;
         $catalog = new moodle_url('/theme/hikmah/catalog.php');
         $home = new moodle_url('/', ['redirect' => 0]);
         return [
             'logo' => $OUTPUT->image_url('logo-light', 'theme_hikmah')->out(false),
             'sitename' => format_string($SITE->fullname, true, ['context' => \context_system::instance()]),
             'year' => userdate(time(), '%Y'),
+            'newsurl' => (new moodle_url('/local/hikmahaccess/news_subscribe.php'))->out(false),
+            'sesskey' => sesskey(),
+            'returnurl' => $PAGE->has_set_url() ? $PAGE->url->out_as_local_url(false) : '/',
             'catalogurl' => $catalog->out(false),
             'freeurl' => (new moodle_url($catalog, ['price' => 'free']))->out(false),
             'liveurl' => (new moodle_url($catalog, ['mode' => 'live']))->out(false),
