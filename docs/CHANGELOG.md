@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-28 — Git helper script
+
+- scripts/dev/hk.py (Python 3.12): branch, pr, checks (counts plus only the error lines of failed jobs), status
+  (open PRs, live commit, deploy running), merged, deploy (refuses while another deploy runs). Short output, so
+  Claude sessions spend fewer tokens on routine git and CI steps.
 ## 2026-11-28 — Newsletter list from the footer
 
 - The footer box "Get new courses and session alerts" now works: it posts to local/hikmahaccess/news_subscribe.php,
