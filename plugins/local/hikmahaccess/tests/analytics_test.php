@@ -31,8 +31,11 @@ final class analytics_test extends \advanced_testcase {
         $course = $this->getDataGenerator()->create_course(['fullname' => 'Foundations of Tajweed']);
         $learner = $this->getDataGenerator()->create_user();
 
-        // The learner's own action waits in their session.
+        // Creating the account queued "signed up" for the learner's first page.
         $this->setUser($learner);
+        $this->assertSame(['signed up'], array_column(analytics::take(), 'event'));
+
+        // The learner's own action waits in their session.
         \core\event\course_viewed::create(['context' => \context_course::instance($course->id)])->trigger();
         $items = analytics::take();
         $this->assertSame('course viewed', $items[0]['event']);

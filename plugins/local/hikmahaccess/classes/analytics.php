@@ -74,8 +74,8 @@ class analytics {
         if (!empty($event->courseid) && (int) $event->courseid !== SITEID) {
             $properties['course_id'] = (int) $event->courseid;
             $course = get_course($event->courseid);
-            $properties['course_name'] = \core_text::substr(format_string($course->fullname, true,
-                ['context' => \context_course::instance($course->id)]), 0, 60);
+            $coursename = format_string($course->fullname, true, ['context' => \context_course::instance($course->id)]);
+            $properties['course_name'] = \core_text::substr($coursename, 0, 60);
         }
         $item = ['event' => $name, 'properties' => $properties];
 
