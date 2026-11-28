@@ -1,0 +1,76 @@
+{
+  "name": "Welcome to Hikmah Online",
+  "description": "A short tour of the dashboard, shown once to each person on their first visit (owner, 2026-11-28).",
+  "pathmatch": "/my/%",
+  "enabled": "1",
+  "sortorder": "0",
+  "endtourlabel": "Start learning",
+  "configdata": "{\"placement\":\"bottom\",\"orphan\":\"1\",\"backdrop\":\"1\",\"reflex\":\"0\",\"filtervalues\":{\"accessdate\":{\"filter_accessdate\":\"tool_usertours_accountcreation\",\"filter_accessdate_range\":0,\"filter_accessdate_enabled\":\"0\"},\"category\":[],\"course\":[],\"courseformat\":[],\"role\":[],\"theme\":[\"hikmah\"],\"cssselector\":[]}}",
+  "displaystepnumbers": true,
+  "version": "2026112800",
+  "steps": [
+    {
+      "title": "Welcome to Hikmah Online",
+      "content": "<p>Assalamu alaikum! This short tour shows you around your dashboard. It takes about a minute.</p>",
+      "contentformat": "1",
+      "targettype": "2",
+      "targetvalue": "",
+      "sortorder": "0",
+      "configdata": "{}"
+    },
+    {
+      "title": "Your progress",
+      "content": "<p>Your courses, completed courses and certificates at a glance.</p>",
+      "contentformat": "1",
+      "targettype": "0",
+      "targetvalue": ".hk-dash__stats",
+      "sortorder": "1",
+      "configdata": "{\"placement\":\"bottom\"}"
+    },
+    {
+      "title": "Your courses",
+      "content": "<p>Open a course to see its classes, recordings, quizzes and your attendance.</p>",
+      "contentformat": "1",
+      "targettype": "0",
+      "targetvalue": ".hk-dash__grid > .hk-dash__panel:first-child",
+      "sortorder": "2",
+      "configdata": "{\"placement\":\"right\"}"
+    },
+    {
+      "title": "Upcoming live classes",
+      "content": "<p>Your next live classes appear here. The Join button opens 5 minutes before the class starts.</p>",
+      "contentformat": "1",
+      "targettype": "0",
+      "targetvalue": ".hk-dash__grid > .hk-dash__panel:last-child",
+      "sortorder": "3",
+      "configdata": "{\"placement\":\"left\"}"
+    },
+    {
+      "title": "Find a course",
+      "content": "<p>Browse all courses here. Free courses open at once; for paid courses you upload your transfer receipt and we confirm your place.</p>",
+      "contentformat": "1",
+      "targettype": "0",
+      "targetvalue": ".primary-navigation a[href$=\"/courses\"]",
+      "sortorder": "4",
+      "configdata": "{\"placement\":\"bottom\"}"
+    },
+    {
+      "title": "Your account",
+      "content": "<p>Your profile, grades, payments and settings are in this menu.</p>",
+      "contentformat": "1",
+      "targettype": "0",
+      "targetvalue": "#user-menu-toggle",
+      "sortorder": "5",
+      "configdata": "{\"placement\":\"left\"}"
+    },
+    {
+      "title": "Need help?",
+      "content": "<p>Questions? See the FAQ or message us on WhatsApp from the links at the bottom of every page.</p>",
+      "contentformat": "1",
+      "targettype": "2",
+      "targetvalue": "",
+      "sortorder": "6",
+      "configdata": "{}"
+    }
+  ]
+}

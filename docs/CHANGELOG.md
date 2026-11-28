@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-28 — Welcome tour on first sign-in
+
+- Owner's choice: Moodle user tours (PostHog has no step-by-step tours). config/settings/150-tours.php imports
+  tours/welcome.json: 7 steps on the dashboard (welcome, progress, your courses, upcoming live classes, find a
+  course, account menu, help), shown once to each person with the Hikmah theme. Missing targets show as plain
+  pop-ups. Changing the JSON re-imports it (hash in theme_hikmah | welcometourhash) and shows it once more.
 ## 2026-11-28 — PostHog key events and person details
 
 - local_hikmahaccessnalytics queues named events for the person they are about: signed up, profile completed
