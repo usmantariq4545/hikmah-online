@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-11-28 — Live classes: preload the classroom app; meeting limit found
+
+- Measured from Pakistan: the BigBlueButton classroom app on BiggerBlueButton is one 9.4 MB file sent without
+  compression through their host in Germany; it took 214 s on a laptop that gets about 500 KB/s from Cloudflare
+  (0.8 s from our Singapore server). Meeting start took 11.7 s, the join redirects about 3.3 s; our server's API
+  calls about 0.2 s.
+- New hourly task theme_hikmah	askbbb_bundle reads the app's current address from the classroom page
+  (theme_hikmah | bbbbundle). Pages then add <link rel="prefetch"> for people with a live class in the next 24 hours,
+  so browsers download it in the background and keep it for a year. PHPUnit bbb_bundle_test.php.
+- "Sometimes not opening": the plan's concurrent-meeting limit was full (one class plus its 4 breakout rooms = 5
+  meetings, all empty). Those were ended on 2026-11-28 with the owner's OK. theme_hikmah version 2026112802.
+
 ## 2026-11-28 — Welcome tour on first sign-in
 
 - Owner's choice: Moodle user tours (PostHog has no step-by-step tours). config/settings/150-tours.php imports

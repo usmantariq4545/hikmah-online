@@ -81,6 +81,37 @@ class hook_callbacks {
             . s($hook->renderer->image_url('logo-dark', 'theme_hikmah')->out(false)) . '">'
         );
         $hook->add_html(self::posthog());
+        $hook->add_html(self::bbb_prefetch());
+    }
+
+    /**
+     * Lets the browser download the BigBlueButton classroom app (9.4 MB, slow from Pakistan) in the background while
+     * the person has a live class in the next 24 hours, so joining is quick when the class starts. The browser keeps
+     * the file for a year. The app's address comes from the hourly task theme_hikmah\task\bbb_bundle.
+     *
+     * @return string
+     */
+    public static function bbb_prefetch(): string {
+        global $DB, $SESSION;
+        $url = (string) get_config('theme_hikmah', 'bbbbundle');
+        if ($url === '' || !isloggedin() || isguestuser() || during_initial_install()) {
+            return '';
+        }
+        // Worked out at most every 10 minutes per session.
+        if (!isset($SESSION->hkbbbprefetch) || $SESSION->hkbbbprefetch['time'] < time() - 600) {
+            $courses = array_keys(enrol_get_my_courses('id'));
+            $soon = false;
+            if ($courses) {
+                [$insql, $params] = $DB->get_in_or_equal($courses);
+                $soon = $DB->record_exists_select(
+                    'bigbluebuttonbn',
+                    "course $insql AND openingtime > 0 AND openingtime < ? AND closingtime > ?",
+                    array_merge($params, [time() + DAYSECS, time()])
+                );
+            }
+            $SESSION->hkbbbprefetch = ['time' => time(), 'soon' => $soon];
+        }
+        return $SESSION->hkbbbprefetch['soon'] ? '<link rel="prefetch" as="script" href="' . s($url) . '">' : '';
     }
 
     /**
