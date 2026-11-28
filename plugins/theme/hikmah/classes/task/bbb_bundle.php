@@ -43,6 +43,8 @@ class bbb_bundle extends \core\task\scheduled_task {
      * Reads the app address from the client page; keeps the last known one if that fails.
      */
     public function execute() {
+        global $CFG;
+        require_once($CFG->libdir . '/filelib.php');
         $curl = new \curl(['ignoresecurity' => true]);
         $html = (string) $curl->get(self::CLIENT, [], ['CURLOPT_TIMEOUT' => 20]);
         $url = self::parse($html);
