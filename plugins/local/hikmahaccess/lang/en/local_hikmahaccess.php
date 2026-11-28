@@ -35,12 +35,43 @@ $string['enrolledon'] = 'Enrolled on';
 $string['eventuserslistviewed'] = 'Users list viewed';
 $string['hikmahaccess:choosecolumns'] = 'Choose which details the list of all users shows';
 $string['hikmahaccess:exportusers'] = 'Download the list of all users';
+$string['hikmahaccess:managenews'] = 'See and download the newsletter list';
 $string['hikmahaccess:viewallusers'] = 'See the list of all users';
 $string['hikmahaccess:viewlearners'] = 'See the learners of the courses one teaches';
+$string['news_admin'] = 'Newsletter list';
+$string['news_admin_intro'] = '{$a} people want news about courses and offers: addresses confirmed from the footer form, and accounts that ticked the news box at sign-up. Every newsletter must carry the unsubscribe link from the download (accounts change it in their profile).';
+$string['news_checkinbox'] = 'Thank you. Check your inbox and click the link to confirm your subscription.';
+$string['news_confirmed'] = 'Your subscription is confirmed. You will get news about new courses and offers.';
+$string['news_download'] = 'Download as CSV';
+$string['news_email_subject'] = 'Confirm your subscription to {$a->site}';
+$string['news_email_text'] = 'Hello,
+
+Someone (we hope you) asked to get news about new courses and offers from {$a->site} at this address.
+
+To confirm, open this link:
+{$a->confirm}
+
+If this was not you, ignore this email and nothing will be sent. You can leave the list at any time:
+{$a->unsubscribe}';
+$string['news_invalid'] = 'Please enter a valid email address.';
+$string['news_since'] = 'Since';
+$string['news_source'] = 'Source';
+$string['news_source_account'] = 'Sign-up news box';
+$string['news_source_list'] = 'Footer form';
+$string['news_toomany'] = 'Too many sign-ups from this browser. Please try again later.';
+$string['news_unknownlink'] = 'This link is no longer valid. The address may already have been removed.';
+$string['news_unsubscribe'] = 'Unsubscribe';
+$string['news_unsubscribe_confirm'] = 'Stop sending news about courses and offers to this address?';
+$string['news_unsubscribed'] = 'You have been removed from the newsletter list.';
+$string['news_unsubscribelink'] = 'Unsubscribe link';
 $string['nolearners'] = 'No learners on your courses yet.';
 $string['phone'] = 'Mobile / WhatsApp';
 $string['pluginname'] = 'Hikmah access rules';
 $string['privacy:metadata'] = 'The Hikmah access rules plugin stores no personal data. It sets the standard Moodle messaging privacy preference of students.';
+$string['privacy:metadata:news'] = 'Email addresses on the newsletter list (from the site footer form). They are matched to accounts by email address.';
+$string['privacy:metadata:news:email'] = 'The email address.';
+$string['privacy:metadata:news:timeconfirmed'] = 'When the address was confirmed.';
+$string['privacy:metadata:news:timecreated'] = 'When the confirmation email was sent.';
 $string['privacy:metadata:preference:usercolumns'] = 'The columns this person chose to show on the Users page.';
 $string['privacypolicy'] = 'Privacy Policy';
 $string['publishat'] = 'Goes public on';
