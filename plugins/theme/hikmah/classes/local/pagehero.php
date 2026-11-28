@@ -35,6 +35,7 @@ class pagehero {
         'payment-gateway-hikmahtransfer-status' => 'hero_payments',
         'user-preferences' => 'hero_preferences',
         'course-edit' => 'hero_courseedit',
+        'user-edit' => 'hero_useredit',
     ];
 
     /**
@@ -65,6 +66,14 @@ class pagehero {
                 if ($courseid && ($course = get_course($courseid))) {
                     $title = format_string($course->fullname, true, ['context' => \context_course::instance($courseid)]);
                     $lead = get_string('hero_courseedit_editlead', 'theme_hikmah');
+                }
+                break;
+
+            case 'user-edit':
+                // New accounts land here after their first sign-in to answer the required profile questions.
+                if (user_not_fully_set_up($USER, true)) {
+                    $title = get_string('hero_useredit_newtitle', 'theme_hikmah');
+                    $lead = get_string('hero_useredit_newlead', 'theme_hikmah');
                 }
                 break;
 
