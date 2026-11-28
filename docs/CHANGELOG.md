@@ -6,6 +6,17 @@
   tours/welcome.json: 7 steps on the dashboard (welcome, progress, your courses, upcoming live classes, find a
   course, account menu, help), shown once to each person with the Hikmah theme. Missing targets show as plain
   pop-ups. Changing the JSON re-imports it (hash in theme_hikmah | welcometourhash) and shows it once more.
+## 2026-11-28 — PostHog key events and person details
+
+- local_hikmahaccessnalytics queues named events for the person they are about: signed up, profile completed
+  (once), course viewed, enrolled, payment submitted, payment approved, live class joined, certificate issued, with
+  the course id and name. Own actions wait in the session; actions by others (a reviewer, cron) wait in a user
+  preference. theme_hikmah prints them into the next page inside window.hkAnalytics, so they reach PostHog only after
+  Accept in the cookie banner; without consent they are dropped.
+- posthog.identify now also sends role (student / teacher / staff / admin), country and number of courses. Never
+  name, email or phone.
+- Privacy API: the two new user preferences and PostHog as an external location. PHPUnit analytics_test.php.
+  local_hikmahaccess version 2026112801.
 ## 2026-11-28 — Date of birth fix, profession and qualification, branded details page
 
 - Date of birth could not be picked on a new account: Moodle's date selector (lib/form/yui dateselector,

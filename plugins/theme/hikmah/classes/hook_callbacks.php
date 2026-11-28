@@ -98,7 +98,17 @@ class hook_callbacks {
         if ($key === '' || during_initial_install()) {
             return '';
         }
-        $identify = isloggedin() && !isguestuser() ? 'posthog.identify(' . json_encode('u' . $USER->id) . ');' : '';
+        $identify = '';
+        if (isloggedin() && !isguestuser()) {
+            // Person details (role, country, number of courses) and the key events queued by local_hikmahaccess.
+            $hasanalytics = class_exists('\local_hikmahaccess\analytics');
+            $person = $hasanalytics ? \local_hikmahaccess\analytics::person() : [];
+            $identify = 'posthog.identify(' . json_encode('u' . $USER->id) . ',' . json_encode((object) $person) . ');';
+            foreach ($hasanalytics ? \local_hikmahaccess\analytics::take() : [] as $item) {
+                $identify .= 'posthog.capture(' . json_encode($item['event']) . ',' .
+                    json_encode((object) $item['properties']) . ');';
+            }
+        }
         return '<script>window.hkAnalytics=function(){if(window.hkAnalyticsOn){return;}window.hkAnalyticsOn=1;' .
             '!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){' .
             'function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){' .
