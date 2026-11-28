@@ -2132,9 +2132,11 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
     }
 }
 
-// "Complete your details" / Edit profile (user/edit.php, banner from pagehero): each form section is a white
-// rounded card like the profile and preferences pages, with the name heading above the form removed (the banner
-// already shows it) and the Save button given room under the last card.
+// "Complete your details" / Edit profile (user/edit.php, banner from pagehero): one white card with one column of
+// fields, labels above the boxes (owner, 2026-11-28). Moodle's sections are flattened: no headings, nothing
+// collapsed; Additional names, Optional, email visibility and description are not asked. Order: name and contact,
+// the Hikmah questions, then the picture. The Save / Cancel buttons sit under the fields instead of in Moodle's
+// floating bar.
 #page-user-edit {
     #region-main {
         background: transparent;
@@ -2145,26 +2147,135 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
     [role="main"] > h2:first-of-type {
         display: none;
     }
-    .mform > fieldset {
-        margin-bottom: 1rem;
+    form.mform {
+        display: flex;
+        flex-direction: column;
+        max-width: 44rem;
+        margin-inline: auto;
         // stylelint-disable-next-line csstree/validator
-        padding: clamp(1rem, 2vw, 1.5rem);
+        padding: clamp(1.25rem, 3vw, 2rem);
         background: #fff;
         border: 1px solid $hk-line;
         border-radius: $hk-radius-lg;
+        font-size: 1rem;
     }
-    .mform > fieldset .ftoggler h3,
-    .mform > fieldset legend {
-        font-family: $hk-font-display;
+    .collapsible-actions,
+    #id_moodle_additional_names,
+    #id_moodle_optional,
+    #fitem_id_maildisplay,
+    #fitem_id_description_editor,
+    form.mform > fieldset > legend,
+    form.mform .ftoggler {
+        // stylelint-disable-next-line declaration-no-important
+        display: none !important;
+    }
+    form.mform > fieldset {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        > .fcontainer {
+            // stylelint-disable-next-line declaration-no-important
+            display: block !important; // Moodle collapses sections that have no required field.
+            height: auto;
+        }
+    }
+    #id_moodle {
+        order: 1;
+    }
+    #id_category_1 {
+        order: 2;
+    }
+    #id_moodle_picture {
+        order: 3;
+    }
+    #sticky-footer {
+        order: 4;
+    }
+    .fitem {
+        flex-direction: column;
+        margin: 0 0 1.15rem;
+        > .col-md-3,
+        > .col-md-9 {
+            flex: 0 0 100%;
+            width: 100%;
+            max-width: 100%;
+            padding-inline: 0;
+        }
+        > .col-md-3:empty {
+            display: none;
+        }
+    }
+    // A new account cannot add a picture until the form is saved; Moodle only shows a notice there, so hide it.
+    #id_moodle_picture:has(#fitem_id_userpicturewarning) {
+        display: none;
+    }
+    .col-form-label {
+        // stylelint-disable-next-line declaration-no-important
+        justify-content: flex-start !important; // The required mark right after the label, not at the far end.
+        gap: .3rem;
+    }
+    .col-form-label,
+    .col-form-label label {
+        padding: 0 0 .35rem;
+        font-size: 1rem;
         font-weight: 500;
+        color: $hk-ink;
     }
-    .mform .fdate_selector {
+    .form-control,
+    .form-select {
+        min-height: 2.75rem;
+        font-size: 1rem;
+    }
+    .form-control {
+        width: 100%;
+    }
+    .fdate_selector {
         gap: .5rem;
         .form-select {
             width: auto;
         }
     }
-    #fgroup_id_buttonar {
-        margin-top: 1.5rem;
+    // Moodle's floating button bar becomes a plain row of buttons under the last field.
+    #sticky-footer {
+        // stylelint-disable-next-line declaration-no-important
+        position: static !important;
+        margin-top: .5rem;
+        // stylelint-disable-next-line declaration-no-important
+        background: transparent !important;
+        // stylelint-disable-next-line declaration-no-important
+        border: 0 !important;
+        box-shadow: none;
+        // stylelint-disable-next-line declaration-no-important
+        height: auto !important;
+        .sticky-footer-content {
+            flex-wrap: wrap;
+            // stylelint-disable-next-line declaration-no-important
+            height: auto !important;
+            gap: .75rem;
+            // stylelint-disable-next-line declaration-no-important
+            padding: 0 !important;
+            // stylelint-disable-next-line declaration-no-important
+            justify-content: flex-start !important;
+        }
+        .btn {
+            padding: .7rem 1.6rem;
+            border-radius: 999px;
+            font-weight: 600;
+        }
     }
+    .drawers.hasstickyfooter {
+        padding-bottom: 0;
+    }
+}
+
+// Every form on the site: a small required mark beside the label, and no "* Required" note under the form
+// (owner, 2026-11-28).
+.mform .form-label-addon .text-danger .icon {
+    font-size: .5rem;
+    width: auto;
+    vertical-align: super;
+}
+.mform .fdescription.required {
+    // stylelint-disable-next-line declaration-no-important
+    display: none !important;
 }
