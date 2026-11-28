@@ -1259,13 +1259,23 @@
         width: auto;
         margin-bottom: 18px;
     }
-    a {
+    a,
+    &__linkbtn {
         color: #fff;
         text-decoration: none;
         &:hover,
         &:focus-visible {
             color: $hk-sun;
         }
+    }
+    // "Cookie settings" opens the cookie banner, so it is a button that looks like the links beside it.
+    &__linkbtn {
+        padding: 0;
+        border: 0;
+        background: none;
+        font: inherit;
+        text-align: start;
+        cursor: pointer;
     }
     &__grid {
         display: grid;
