@@ -2213,6 +2213,10 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
         // stylelint-disable-next-line declaration-no-important
         justify-content: flex-start !important; // The required mark right after the label, not at the far end.
         gap: .3rem;
+        .form-label-addon {
+            // stylelint-disable-next-line declaration-no-important
+            margin-inline-start: 0 !important; // Moodle pushes it to the end of the row on wide screens.
+        }
     }
     .col-form-label,
     .col-form-label label {
