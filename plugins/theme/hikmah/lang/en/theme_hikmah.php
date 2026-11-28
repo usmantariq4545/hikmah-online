@@ -341,7 +341,6 @@ $string['home2_link_allcourses'] = 'All courses';
 $string['home2_link_contact'] = 'Contact us';
 $string['home2_link_free'] = 'Free courses';
 $string['home2_link_live'] = 'Upcoming live classes';
-$string['home2_link_support'] = 'Support our work';
 $string['home2_link_teachers'] = 'Our teachers';
 $string['home2_link_topics'] = 'Browse by topic';
 $string['home2_link_verify'] = 'Verify a certificate';

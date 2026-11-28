@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-28 — Broken-link check of the public site
+
+- Crawled 150 public pages and tested all 177 links on them: every page and link works. The only dead link was the
+  footer's "Support our work" (href="#"); removed with its string at the owner's request until a donation page
+  exists. The Google button needs a browser session, so a script sees it as 404; it works in a browser once the
+  Google redirect address is fixed.
 ## 2026-11-28 — PostHog analytics (US cloud)
 
 - theme_hikmah prints the PostHog snippet on every page while POSTHOG_KEY is set (config/settings/140-analytics.php
