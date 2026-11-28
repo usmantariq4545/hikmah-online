@@ -35,7 +35,8 @@ class userlist {
     const DEFAULT_COLUMNS = ['email', 'phone', 'courses', 'lastaccess'];
 
     /** @var string[] columns one may add to the all-users list, in display order (report builder user columns, or ours) */
-    const COLUMNS = ['email', 'phone', 'profilefield_hkgender', 'profilefield_hkdob', 'profilefield_hkguardian',
+    const COLUMNS = ['email', 'phone', 'profilefield_hkgender', 'profilefield_hkdob', 'profilefield_hkprofession',
+        'profilefield_hkqualification', 'profilefield_hkguardian',
         'profilefield_hkconsentcomms', 'city', 'country', 'username', 'auth', 'roles', 'courses', 'confirmed', 'suspended',
         'timecreated', 'firstaccess', 'lastaccess', 'lastip'];
 

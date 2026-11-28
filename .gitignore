@@ -22,3 +22,4 @@ Thumbs.db
 # graphify: the knowledge graph is rebuilt locally (graphify update .); other sessions' worktrees
 graphify-out/
 .claude/worktrees/
+__pycache__/

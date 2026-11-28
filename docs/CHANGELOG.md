@@ -6,6 +6,18 @@
   tours/welcome.json: 7 steps on the dashboard (welcome, progress, your courses, upcoming live classes, find a
   course, account menu, help), shown once to each person with the Hikmah theme. Missing targets show as plain
   pop-ups. Changing the JSON re-imports it (hash in theme_hikmah | welcometourhash) and shows it once more.
+## 2026-11-28 — Date of birth fix, profession and qualification, branded details page
+
+- Date of birth could not be picked on a new account: Moodle's date selector (lib/form/yui dateselector,
+  set_date_from_selects) rebuilds the date on every change and, with a part still empty, writes "not a number" back
+  into day and month. theme_hikmah blankdates now holds that change back until all three parts are picked (capture
+  listener); Moodle's own correction (31 February -> 3 March) still runs. Reproduced and checked in the browser.
+- Two required profile fields, asked after the first sign-in: Profession (hkprofession) and Highest qualification
+  (hkqualification), free text. Existing accounts are asked at their next sign-in. 040-profile.php now also keeps
+  the field order. Both are columns on the Users page.
+- Privacy Policy 1.2 lists them (everyone accepts the new version at their next sign-in).
+- The details page (user/edit.php) has the Hikmah banner ("Complete your details" for new accounts, "Edit profile"
+  otherwise) and its sections as white rounded cards. theme_hikmah version 2026112801.
 
 ## 2026-11-28 — Git helper script
 

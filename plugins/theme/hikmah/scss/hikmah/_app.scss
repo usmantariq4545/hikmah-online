@@ -2057,7 +2057,8 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
 #page-user-profile,
 #page-grade-report-overview-index,
 #page-payment-gateway-hikmahtransfer-status,
-#page-user-preferences {
+#page-user-preferences,
+#page-user-edit {
     #page-header .page-context-header,
     #page-header .page-header-headings {
         // stylelint-disable-next-line declaration-no-important
@@ -2128,5 +2129,42 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
     .hk-btn--ghost {
         color: #fff;
         border-color: rgba(255, 255, 255, .45);
+    }
+}
+
+// "Complete your details" / Edit profile (user/edit.php, banner from pagehero): each form section is a white
+// rounded card like the profile and preferences pages, with the name heading above the form removed (the banner
+// already shows it) and the Save button given room under the last card.
+#page-user-edit {
+    #region-main {
+        background: transparent;
+        box-shadow: none;
+        border: 0;
+        padding: 0;
+    }
+    [role="main"] > h2:first-of-type {
+        display: none;
+    }
+    .mform > fieldset {
+        margin-bottom: 1rem;
+        // stylelint-disable-next-line csstree/validator
+        padding: clamp(1rem, 2vw, 1.5rem);
+        background: #fff;
+        border: 1px solid $hk-line;
+        border-radius: $hk-radius-lg;
+    }
+    .mform > fieldset .ftoggler h3,
+    .mform > fieldset legend {
+        font-family: $hk-font-display;
+        font-weight: 500;
+    }
+    .mform .fdate_selector {
+        gap: .5rem;
+        .form-select {
+            width: auto;
+        }
+    }
+    #fgroup_id_buttonar {
+        margin-top: 1.5rem;
     }
 }
