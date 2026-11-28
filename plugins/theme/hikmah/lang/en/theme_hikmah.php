@@ -594,6 +594,7 @@ $string['sum_quiz'] = '{$a} quiz';
 $string['sum_quizs'] = '{$a} quizzes';
 $string['sum_reading'] = '{$a} reading';
 $string['sum_readings'] = '{$a} readings';
+$string['task_bbbbundle'] = 'Find the address of the live classroom app (for preloading)';
 $string['verify_button'] = 'Verify';
 $string['verify_certificate'] = 'Certificate';
 $string['verify_code'] = 'Code';
