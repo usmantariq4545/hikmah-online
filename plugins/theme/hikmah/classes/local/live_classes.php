@@ -122,12 +122,32 @@ class live_classes {
      */
     public static function dates(stdClass $room, ?int $now = null): string {
         $now = $now ?? time();
+        $start = self::start($room);
         return '<span>' . get_string(
             $now > $room->closingtime ? 'live_started' : 'live_starts',
             'theme_hikmah',
-            userdate($room->openingtime, get_string('live_dateformat', 'theme_hikmah'))
+            userdate($start, get_string('live_dateformat', 'theme_hikmah'))
         ) . '</span> · <span>'
-            . get_string('live_duration', 'theme_hikmah', format_time($room->closingtime - $room->openingtime)) . '</span>';
+            . get_string('live_duration', 'theme_hikmah', format_time($room->closingtime - $start)) . '</span>';
+    }
+
+    /**
+     * Seconds a live room opens before its class starts (bbbext_hikmah \local\schedule; 0 without it).
+     *
+     * @return int
+     */
+    public static function early(): int {
+        return (int) get_config('bbbext_hikmah', 'earlyopen');
+    }
+
+    /**
+     * When the class starts: the room's opening time plus early(). Joining is open from the opening time.
+     *
+     * @param stdClass $room with openingtime
+     * @return int
+     */
+    public static function start(stdClass $room): int {
+        return (int) $room->openingtime > 0 ? (int) $room->openingtime + self::early() : 0;
     }
 
     /**

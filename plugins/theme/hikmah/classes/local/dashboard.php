@@ -102,12 +102,13 @@ class dashboard {
                 self::MAX_EVENTS
             );
             foreach ($rooms as $room) {
+                $start = live_classes::start($room);
                 $events[] = [
                     'name' => get_string('dash_liveclass', 'theme_hikmah'),
                     'course' => format_string($eventcourses[$room->course]->fullname),
-                    'day' => userdate($room->openingtime, '%d'),
-                    'month' => userdate($room->openingtime, '%b'),
-                    'time' => userdate($room->openingtime, get_string('strftimetime', 'langconfig')),
+                    'day' => userdate($start, '%d'),
+                    'month' => userdate($start, '%b'),
+                    'time' => userdate($start, get_string('strftimetime', 'langconfig')),
                     'islive' => true,
                     'isnow' => $room->openingtime <= $now,
                     'url' => self::module_url('bigbluebuttonbn', (int) $room->id, (int) $room->course)->out(false),
@@ -146,7 +147,9 @@ class dashboard {
                     );
                     $opening = $rooms ? $DB->get_records_list('bigbluebuttonbn', 'id', array_keys($rooms), '', 'id, openingtime')
                         : [];
-                    $gap = static fn($id) => abs(($opening[$id]->openingtime ?: PHP_INT_MAX / 2) - $event->timestart);
+                    $gap = static fn($id) => abs(
+                        ($opening[$id]->openingtime ? live_classes::start($opening[$id]) : PHP_INT_MAX / 2) - $event->timestart
+                    );
                     uksort($rooms, static fn($a, $b) => (int) ($gap($a) <=> $gap($b)));
                     if ($cm = reset($rooms)) {
                         $url = new moodle_url('/mod/bigbluebuttonbn/view.php', ['id' => $cm->id]);
@@ -288,7 +291,7 @@ class dashboard {
         $classes = $DB->count_records_select(
             'bigbluebuttonbn',
             "course $insql AND openingtime >= ? AND openingtime < ?",
-            array_merge($params, [$now, $now + 7 * DAYSECS])
+            array_merge($params, [$now - live_classes::early(), $now + 7 * DAYSECS - live_classes::early()])
         );
         $registers = [];
         foreach ($DB->get_records_select('attendance', "course $insql", $params, 'id DESC', 'id, course') as $att) {

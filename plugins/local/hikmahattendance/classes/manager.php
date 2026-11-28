@@ -292,7 +292,8 @@ class manager {
         if (!$room || (int) $room->openingtime <= 0 || (int) $room->closingtime <= (int) $room->openingtime) {
             return null;
         }
-        $start = (int) $room->openingtime;
+        // The room opens a few minutes before the class (see bbbext_hikmah's schedule class); the window is the class.
+        $start = (int) $room->openingtime + (int) get_config('bbbext_hikmah', 'earlyopen');
         $end = (int) $room->closingtime;
         $courseid = (int) $room->course;
         $result = null;

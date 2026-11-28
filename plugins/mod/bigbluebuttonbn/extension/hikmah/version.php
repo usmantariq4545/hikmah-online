@@ -25,10 +25,10 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'bbbext_hikmah';
-$plugin->version = 2026112100;
+$plugin->version = 2026112800;
 $plugin->requires = 2026100500; // Moodle 5.3.
 $plugin->supported = [503, 503];
 $plugin->maturity = MATURITY_BETA;
-$plugin->release = '0.1.0';
+$plugin->release = '0.2.0';
 // The logos come from theme_hikmah's pix folder; it is not a hard dependency so this plugin installs on its own in CI.
 $plugin->dependencies = ['mod_bigbluebuttonbn' => 2026100500];

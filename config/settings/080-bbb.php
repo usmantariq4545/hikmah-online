@@ -36,8 +36,15 @@ hk_set('bigbluebuttonbn_recordings_preview_default', 0);
 hk_set('bigbluebuttonbn_recording_protect_editable', 1);
 hk_set('bigbluebuttonbn_recording_default', 1);
 
-// Learners wait for the instructor; instructors moderate.
-hk_set('bigbluebuttonbn_waitformoderator_default', 1);
+// Nobody waits for the teacher (owner, 2026-11-28): the class opens for every enrolled learner when the room opens,
+// 5 minutes before the start (bbbext_hikmah\local\schedule). Teachers moderate. The setting is hidden from the
+// activity form, and existing classes are switched over here.
+hk_set('bigbluebuttonbn_waitformoderator_default', 0);
+hk_set('bigbluebuttonbn_waitformoderator_editable', 0);
+if ($n = $DB->count_records('bigbluebuttonbn', ['wait' => 1])) {
+    $DB->set_field('bigbluebuttonbn', 'wait', 0, ['wait' => 1]);
+    hk_changed("$n live classes no longer wait for the teacher");
+}
 hk_set('bigbluebuttonbn_participant_moderator_default', '0');
 
 // Hikmah look inside the live class (bbbext_hikmah): colours and logo are requested from the BBB

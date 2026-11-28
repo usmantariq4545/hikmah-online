@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-11-28 — Live classes open 5 minutes early, no waiting for the teacher
+
+- Owner's request: every enrolled learner can join a live class from 5 minutes before its start, and nobody waits
+  for the teacher to start it.
+- Moodle lets nobody in before an activity's opening time (core, unchanged), so bbbext_hikmah now stores the opening
+  time 5 minutes before the class start the teacher enters (mod_instance_helper), and the activity form shows the
+  class start again (mod_form_addons). Hikmah's course page, dashboard and the attendance window add the 5 minutes
+  back (setting bbbext_hikmah | earlyopen = 300, helper bbbext_hikmah\local\schedule). Moodle's calendar entry keeps
+  the class start. The upgrade to bbbext_hikmah 2026112800 moved every existing class's opening time back once.
+- 080-bbb.php: wait for moderator off by default, hidden from the activity form, and turned off on every existing
+  class.
+- Not changed: Moodle's own activity header and the "Opens" date in some core lists show the room's opening time
+  (5 minutes before the start).
+
 ## 2026-11-27 — Sign-up form in the usual order
 
 - Owner's request: first and last name side by side, email, password with a live checklist (10+ characters, upper
