@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-11-28 — "Complete your details" as one clean form
+
+- user/edit.php is one white card with one column: labels above the boxes, standard 1rem text, no section headings or
+  collapsed parts. Not asked there: Additional names, Optional, email visibility, description; the picture block is
+  hidden while Moodle only shows "add a picture after saving". Order: name and contact, Hikmah questions, picture.
+- Update profile / Cancel sit under the fields instead of in Moodle's floating bar (and wrap on phones).
+- Site-wide: the required mark is small and right after the label; the "* Required" note under forms is gone.
+  CSS only (no version change). Checked in the browser at desktop and 375 px by injecting the same styles.
+
 ## 2026-11-28 — Live classes: preload the classroom app; meeting limit found
 
 - Measured from Pakistan: the BigBlueButton classroom app on BiggerBlueButton is one 9.4 MB file sent without
