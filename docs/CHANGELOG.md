@@ -5,6 +5,15 @@
 - scripts/dev/hk.py (Python 3.12): branch, pr, checks (counts plus only the error lines of failed jobs), status
   (open PRs, live commit, deploy running), merged, deploy (refuses while another deploy runs). Short output, so
   Claude sessions spend fewer tokens on routine git and CI steps.
+## 2026-11-28 — Cookie banner: analytics only after Accept
+
+- PostHog no longer loads for everyone. Its snippet now only defines window.hkAnalytics(); it runs when the cookie
+  hk_consent=all is set, which happens when a visitor presses Accept in the new cookie banner
+  (theme_hikmah/cookiebanner, printed on every page while POSTHOG_KEY is set). "Essential only" keeps it off and
+  stops it if it was on. The choice is kept for a year; "Cookie settings" in the footer opens the banner again.
+- Moodle's guest bar ("If you continue browsing this website, you agree to our policies") is replaced by an empty
+  theme override of tool_policy/guestconsent: the banner, the footer policy links and the sign-up checkbox cover it.
+- theme_hikmah version 2026112800.
 
 ## 2026-11-28 — Broken-link check of the public site
 

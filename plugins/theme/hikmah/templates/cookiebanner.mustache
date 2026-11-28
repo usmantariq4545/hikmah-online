@@ -1,0 +1,74 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_hikmah/cookiebanner
+
+    Cookie choice, shown until the visitor picks Accept or Essential only. The choice is kept in the cookie
+    hk_consent (all | essential) for a year; "Cookie settings" in the footer opens the banner again. Accept starts
+    PostHog analytics (window.hkAnalytics, printed in the page head); Essential only stops it.
+
+    Example context (json):
+    {
+        "privacyurl": "#"
+    }
+}}
+<section class="hk-cookies" id="hk-cookies" role="region" aria-label="{{#str}}cookie_label, theme_hikmah{{/str}}" hidden>
+    <p class="hk-cookies__text">{{#str}}cookie_text, theme_hikmah, {{privacyurl}}{{/str}}</p>
+    <div class="hk-cookies__actions">
+        <button type="button" class="hk-btn hk-btn--ghost" data-hk-consent="essential">{{#str}}cookie_essential, theme_hikmah{{/str}}</button>
+        <button type="button" class="hk-btn hk-btn--sun" data-hk-consent="all">{{#str}}cookie_accept, theme_hikmah{{/str}}</button>
+    </div>
+</section>
+<script>
+(function(d, w) {
+    var box = d.getElementById('hk-cookies');
+    if (!box) {
+        return;
+    }
+    var choice = function() {
+        var m = /(?:^|; )hk_consent=(all|essential)(?:;|$)/.exec(d.cookie);
+        return m ? m[1] : '';
+    };
+    var save = function(value) {
+        d.cookie = 'hk_consent=' + value + '; path=/; max-age=31536000; SameSite=Lax; Secure';
+        box.hidden = true;
+    };
+    if (!choice()) {
+        box.hidden = false;
+    }
+    box.querySelector('[data-hk-consent="all"]').addEventListener('click', function() {
+        save('all');
+        if (w.hkAnalytics) {
+            w.hkAnalytics();
+        }
+    });
+    box.querySelector('[data-hk-consent="essential"]').addEventListener('click', function() {
+        save('essential');
+        if (w.hkAnalyticsOn && w.posthog) {
+            w.posthog.opt_out_capturing();
+            w.posthog.reset();
+        }
+    });
+    d.addEventListener('click', function(e) {
+        if (e.target.closest && e.target.closest('[data-hk-cookie-settings]')) {
+            e.preventDefault();
+            box.hidden = false;
+            box.querySelector('[data-hk-consent="all"]').focus();
+        }
+    });
+})(document, window);
+</script>
