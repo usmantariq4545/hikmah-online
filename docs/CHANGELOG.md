@@ -6,6 +6,13 @@
   footer's "Support our work" (href="#"); removed with its string at the owner's request until a donation page
   exists. The Google button needs a browser session, so a script sees it as 404; it works in a browser once the
   Google redirect address is fixed.
+## 2026-11-28 — PostHog analytics (US cloud)
+
+- theme_hikmah prints the PostHog snippet on every page while POSTHOG_KEY is set (config/settings/140-analytics.php
+  stores it as theme_hikmah | posthogkey; empty = off). Page views, clicks and session recordings with every input
+  masked; signed-in people identified only as "u<user id>", never by name or email.
+- Privacy Policy revision 1.1 in the same release: usage data and recordings, PostHog analytics cookies (US), kept
+  up to 1 year (recordings about 1 month). Everyone accepts the new version at their next sign-in.
 
 ## 2026-11-28 — Live classes open 5 minutes early, no waiting for the teacher
 
