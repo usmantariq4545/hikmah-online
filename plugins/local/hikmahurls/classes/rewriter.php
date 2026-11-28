@@ -51,11 +51,14 @@ class rewriter implements \core\output\url_rewriter {
 
     /**
      * @var string[] Scripts that keep ".php": registered with Google, BigBlueButton or the Moodle App, called by
-     * JavaScript or other servers, or serving files and theme assets. A trailing "/" means everything under it.
+     * JavaScript or other servers, or serving files and theme assets; MFA and policy pages, which compare the
+     * address with their own ".php" one and otherwise redirect forever. A trailing "/" means everything under it.
      */
     private const KEEP = [
         '/admin/oauth2callback.php',
+        '/admin/tool/mfa/',
         '/admin/tool/mobile/',
+        '/admin/tool/policy/',
         '/admin/cron.php',
         '/auth/oauth2/',
         '/draftfile.php',
