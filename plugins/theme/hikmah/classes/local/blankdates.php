@@ -38,9 +38,16 @@ class blankdates {
             return;
         }
         $labels = [get_string('day', 'form'), get_string('month', 'form'), get_string('year', 'form')];
-        $PAGE->requires->js_init_code('(function(n,l){["day","month","year"].forEach(function(p,i){'
-            . 'var s=document.querySelector(\'select[name="\'+n+"["+p+\']"]\');if(!s){return;}'
-            . 's.insertBefore(new Option(l[i],""),s.firstChild);s.value="";s.required=true;});})('
-            . json_encode($name) . ',' . json_encode($labels) . ');');
+        // Moodle's date selector (lib/form/yui dateselector, set_date_from_selects) rebuilds the date on every change;
+        // with a part still empty that date is invalid and it blanks the day and month again. So its handler only gets
+        // the change once all three parts are picked (a capture listener stops the event before it reaches the select).
+        $PAGE->requires->js_init_code('(function(n,l){var q=function(p){'
+            . 'return document.querySelector(\'select[name="\'+n+"["+p+\']"]\');};'
+            . '["day","month","year"].forEach(function(p,i){var s=q(p);if(!s){return;}'
+            . 's.insertBefore(new Option(l[i],""),s.firstChild);s.value="";s.required=true;});'
+            . 'document.addEventListener("change",function(e){var t=e.target;'
+            . 'if(!t.name||t.name.indexOf(n+"[")!==0){return;}'
+            . 'if(["day","month","year"].some(function(p){var s=q(p);return s&&s.value==="";})){e.stopPropagation();}'
+            . '},true);})(' . json_encode($name) . ',' . json_encode($labels) . ');');
     }
 }
