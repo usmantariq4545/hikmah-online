@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-28 — Git helper script
+
+- scripts/dev/hk.py (Python 3.12): branch, pr, checks (counts plus only the error lines of failed jobs), status
+  (open PRs, live commit, deploy running), merged, deploy (refuses while another deploy runs). Short output, so
+  Claude sessions spend fewer tokens on routine git and CI steps.
+
 ## 2026-11-28 — Broken-link check of the public site
 
 - Crawled 150 public pages and tested all 177 links on them: every page and link works. The only dead link was the
