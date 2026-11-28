@@ -63,6 +63,7 @@ class footer {
             'privacyurl' => policypage::url('privacy')->out(false),
             'termsurl' => policypage::url('terms')->out(false),
             'refundurl' => policypage::url('refund')->out(false),
+            'cookiesettings' => (string) get_config('theme_hikmah', 'posthogkey') !== '',
             'whatsappurl' => self::WHATSAPP,
             'instagramurl' => self::INSTAGRAM,
             'facebookurl' => self::FACEBOOK,

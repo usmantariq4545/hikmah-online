@@ -2088,3 +2088,45 @@ body:not(.notloggedin) :is(.primary-navigation, .drawer-primary) a[href$="/theme
 .primary-navigation .moremenu.hk-pending {
     overflow: hidden;
 }
+
+// Cookie banner (templates/cookiebanner.mustache): a card fixed to the bottom of the screen until a choice is made.
+.hk-cookies {
+    position: fixed;
+    inset-inline: 1rem;
+    bottom: 1rem;
+    z-index: 1050;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 1.5rem;
+    max-width: 56rem;
+    margin-inline: auto;
+    padding: 1.1rem 1.4rem;
+    border-radius: $hk-radius;
+    background: $hk-ink;
+    color: #fff;
+    box-shadow: $hk-shadow-3;
+    &[hidden] {
+        display: none;
+    }
+    &__text {
+        flex: 1 1 22rem;
+        margin: 0;
+        font-size: .92rem;
+        line-height: 1.5;
+        a {
+            color: $hk-sun;
+            text-decoration: underline;
+        }
+    }
+    &__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .6rem;
+    }
+    .hk-btn--ghost {
+        color: #fff;
+        border-color: rgba(255, 255, 255, .45);
+    }
+}

@@ -86,7 +86,9 @@ class hook_callbacks {
     /**
      * PostHog analytics (US cloud): page views, clicks and session recordings with every input masked. Signed-in
      * people are identified only by "u" + their user id, never by name or email. Off while the key is empty
-     * (POSTHOG_KEY in the env file, set by config/settings/140-analytics.php).
+     * (POSTHOG_KEY in the env file, set by config/settings/140-analytics.php). Nothing loads until the visitor
+     * presses Accept in the cookie banner (cookie hk_consent=all, see cookiebanner.mustache): the snippet only
+     * defines window.hkAnalytics(), which runs here when consent is already stored, or from the banner.
      *
      * @return string
      */
@@ -97,7 +99,8 @@ class hook_callbacks {
             return '';
         }
         $identify = isloggedin() && !isguestuser() ? 'posthog.identify(' . json_encode('u' . $USER->id) . ');' : '';
-        return '<script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){' .
+        return '<script>window.hkAnalytics=function(){if(window.hkAnalyticsOn){return;}window.hkAnalyticsOn=1;' .
+            '!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){' .
             'function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){' .
             't.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type=' .
             '"text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com",' .
@@ -111,7 +114,8 @@ class hook_callbacks {
             'getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);' .
             'e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);' .
             'posthog.init(' . json_encode($key) . ',{api_host:"https://us.i.posthog.com",' .
-            'person_profiles:"identified_only",session_recording:{maskAllInputs:true}});' . $identify . '</script>';
+            'person_profiles:"identified_only",session_recording:{maskAllInputs:true}});' . $identify . '};' .
+            'if(/(?:^|; )hk_consent=all(?:;|$)/.test(document.cookie)){window.hkAnalytics();}</script>';
     }
 
     /**
@@ -211,6 +215,12 @@ class hook_callbacks {
      */
     public static function before_footer(\core\hook\output\before_footer_html_generation $hook): void {
         global $PAGE, $DB;
+        if (self::is_active() && (string) get_config('theme_hikmah', 'posthogkey') !== '' && !during_initial_install()) {
+            // Cookie choice (Accept / Essential only); PostHog starts only after Accept (see posthog()).
+            $hook->add_html($hook->renderer->render_from_template('theme_hikmah/cookiebanner', [
+                'privacyurl' => \theme_hikmah\local\policypage::url('privacy')->out(false),
+            ]));
+        }
         if (self::is_active()) {
             self::courseindex($hook);
             // The footer sits over the side lists (_app.scss); shorten them to end where it starts, so their

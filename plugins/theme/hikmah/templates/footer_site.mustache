@@ -42,6 +42,7 @@
         "privacyurl": "#",
         "termsurl": "#",
         "refundurl": "#",
+        "cookiesettings": true,
         "whatsappurl": "#",
         "instagramurl": "#",
         "facebookurl": "#"
@@ -72,6 +73,7 @@
                     <a href="{{privacyurl}}">{{#str}}policy_privacy, theme_hikmah{{/str}}</a>
                     <a href="{{termsurl}}">{{#str}}policy_terms, theme_hikmah{{/str}}</a>
                     <a href="{{refundurl}}">{{#str}}policy_refund, theme_hikmah{{/str}}</a>
+                    {{#cookiesettings}}<button type="button" class="hk2-footer__linkbtn" data-hk-cookie-settings>{{#str}}cookie_settings, theme_hikmah{{/str}}</button>{{/cookiesettings}}
                 </nav>
             </div>
         </div>
