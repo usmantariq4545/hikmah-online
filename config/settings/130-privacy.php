@@ -18,7 +18,7 @@ hk_set('showdataretentionsummary', 1, 'tool_dataprivacy');
 // One policy per type; the Refund Policy is the only "other" one. The first run replaces the drafts of
 // 2026-11-20 ("Privacy notice (draft)", "Terms of use (draft)") with new versions of the same policies.
 $policies = [
-    'Privacy Policy' => [\tool_policy\policy_version::TYPE_PRIVACY, '1.0', 'privacy.html',
+    'Privacy Policy' => [\tool_policy\policy_version::TYPE_PRIVACY, '1.1', 'privacy.html',
         'What personal data Hikmah Online collects, who can see it and how long it is kept.'],
     'Terms of Use' => [\tool_policy\policy_version::TYPE_SITE, '1.0', 'terms.html',
         'The rules for using Hikmah Online, its courses and live classes.'],

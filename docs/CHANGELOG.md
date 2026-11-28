@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-28 — PostHog analytics (US cloud)
+
+- theme_hikmah prints the PostHog snippet on every page while POSTHOG_KEY is set (config/settings/140-analytics.php
+  stores it as theme_hikmah | posthogkey; empty = off). Page views, clicks and session recordings with every input
+  masked; signed-in people identified only as "u<user id>", never by name or email.
+- Privacy Policy revision 1.1 in the same release: usage data and recordings, PostHog analytics cookies (US), kept
+  up to 1 year (recordings about 1 month). Everyone accepts the new version at their next sign-in.
+
 ## 2026-11-28 — Live classes open 5 minutes early, no waiting for the teacher
 
 - Owner's request: every enrolled learner can join a live class from 5 minutes before its start, and nobody waits
