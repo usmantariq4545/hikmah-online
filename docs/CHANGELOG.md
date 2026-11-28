@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-11-28 — PostHog key events and person details
+
+- local_hikmahaccessnalytics queues named events for the person they are about: signed up, profile completed
+  (once), course viewed, enrolled, payment submitted, payment approved, live class joined, certificate issued, with
+  the course id and name. Own actions wait in the session; actions by others (a reviewer, cron) wait in a user
+  preference. theme_hikmah prints them into the next page inside window.hkAnalytics, so they reach PostHog only after
+  Accept in the cookie banner; without consent they are dropped.
+- posthog.identify now also sends role (student / teacher / staff / admin), country and number of courses. Never
+  name, email or phone.
+- Privacy API: the two new user preferences and PostHog as an external location. PHPUnit analytics_test.php.
+  local_hikmahaccess version 2026112801.
+
 ## 2026-11-28 — Git helper script
 
 - scripts/dev/hk.py (Python 3.12): branch, pr, checks (counts plus only the error lines of failed jobs), status

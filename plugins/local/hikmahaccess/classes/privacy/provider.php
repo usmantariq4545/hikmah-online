@@ -48,6 +48,14 @@ class provider implements
      */
     public static function get_metadata(collection $collection): collection {
         $collection->add_user_preference(userlist::PREFERENCE, 'privacy:metadata:preference:usercolumns');
+        $collection->add_user_preference(\local_hikmahaccess\analytics::PREFERENCE, 'privacy:metadata:preference:analytics');
+        $collection->add_user_preference(\local_hikmahaccess\analytics::PROFILEDONE, 'privacy:metadata:preference:profiledone');
+        $collection->add_external_location_link('posthog', [
+            'userid' => 'privacy:metadata:posthog:userid',
+            'role' => 'privacy:metadata:posthog:role',
+            'country' => 'privacy:metadata:posthog:country',
+            'events' => 'privacy:metadata:posthog:events',
+        ], 'privacy:metadata:posthog');
         $collection->add_database_table(news::TABLE, [
             'email' => 'privacy:metadata:news:email',
             'timecreated' => 'privacy:metadata:news:timecreated',
@@ -62,14 +70,21 @@ class provider implements
      * @param int $userid
      */
     public static function export_user_preferences(int $userid) {
-        $value = get_user_preferences(userlist::PREFERENCE, null, $userid);
-        if ($value !== null) {
-            writer::export_user_preference(
-                'local_hikmahaccess',
-                userlist::PREFERENCE,
-                $value,
-                get_string('privacy:metadata:preference:usercolumns', 'local_hikmahaccess')
-            );
+        $preferences = [
+            userlist::PREFERENCE => 'usercolumns',
+            \local_hikmahaccess\analytics::PREFERENCE => 'analytics',
+            \local_hikmahaccess\analytics::PROFILEDONE => 'profiledone',
+        ];
+        foreach ($preferences as $name => $string) {
+            $value = get_user_preferences($name, null, $userid);
+            if ($value !== null) {
+                writer::export_user_preference(
+                    'local_hikmahaccess',
+                    $name,
+                    $value,
+                    get_string('privacy:metadata:preference:' . $string, 'local_hikmahaccess')
+                );
+            }
         }
     }
 
