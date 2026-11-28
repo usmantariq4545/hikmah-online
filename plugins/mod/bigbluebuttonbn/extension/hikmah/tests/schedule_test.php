@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 namespace bbbext_hikmah;
 
 use bbbext_hikmah\local\schedule;
@@ -29,6 +30,7 @@ final class schedule_test extends \advanced_testcase {
     public function test_room_opens_early_and_shows_start(): void {
         global $DB;
         $this->resetAfterTest();
+        $this->setAdminUser(); // Creating a class with a start time adds a calendar event.
         $this->assertEquals(schedule::EARLY, schedule::early(), 'db/install.php sets the setting');
 
         $course = $this->getDataGenerator()->create_course();
